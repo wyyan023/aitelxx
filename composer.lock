@@ -1,0 +1,712 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "8c8c11ffe7dd266d9b81d3d4398efe26",
+    "packages": [
+        {
+            "name": "aliyuncs/oss-sdk-php",
+            "version": "v2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aliyun/aliyun-oss-php-sdk.git",
+                "reference": "e69f57916678458642ac9d2fd341ae78a56996c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aliyun/aliyun-oss-php-sdk/zipball/e69f57916678458642ac9d2fd341ae78a56996c8",
+                "reference": "e69f57916678458642ac9d2fd341ae78a56996c8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0",
+                "satooshi/php-coveralls": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OSS\\": "src/OSS"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aliyuncs",
+                    "homepage": "http://www.aliyun.com"
+                }
+            ],
+            "description": "Aliyun OSS SDK for PHP",
+            "homepage": "http://www.aliyun.com/product/oss/",
+            "time": "2018-01-08T06:59:35+00:00"
+        },
+        {
+            "name": "endroid/qrcode",
+            "version": "1.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/endroid/qr-code.git",
+                "reference": "ab09b42778ad67cfe850f9c23165f8d08b756680"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/endroid/qr-code/zipball/ab09b42778ad67cfe850f9c23165f8d08b756680",
+                "reference": "ab09b42778ad67cfe850f9c23165f8d08b756680",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "php": ">=5.4",
+                "symfony/options-resolver": "^2.3|^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0|^5.0",
+                "sensio/framework-extra-bundle": "^3.0",
+                "symfony/browser-kit": "^2.3|^3.0",
+                "symfony/framework-bundle": "^2.3|^3.0",
+                "symfony/http-kernel": "^2.3|^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Endroid\\QrCode\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeroen van den Enden",
+                    "email": "info@endroid.nl",
+                    "homepage": "http://endroid.nl/"
+                }
+            ],
+            "description": "Endroid QR Code",
+            "homepage": "https://github.com/endroid/QrCode",
+            "keywords": [
+                "bundle",
+                "code",
+                "endroid",
+                "qr",
+                "qrcode",
+                "symfony"
+            ],
+            "abandoned": "endroid/qr-code",
+            "time": "2017-01-03T11:02:14+00:00"
+        },
+        {
+            "name": "flc/alidayu",
+            "version": "v2.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flc1125/alidayu.git",
+                "reference": "866158461c61b33305b92116e7b8353207f37872"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/flc1125/alidayu/zipball/866158461c61b33305b92116e7b8353207f37872",
+                "reference": "866158461c61b33305b92116e7b8353207f37872",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Flc\\Alidayu\\": "src/Alidayu/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "叶子坑 - 阿里大于API",
+            "keywords": [
+                "alidayu",
+                "flc"
+            ],
+            "time": "2016-10-25T10:35:33+00:00"
+        },
+        {
+            "name": "flc/dysms",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flc1125/dysms.git",
+                "reference": "a60645c6b35a15fe7fed6282784d2094368fc8f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/flc1125/dysms/zipball/a60645c6b35a15fe7fed6282784d2094368fc8f5",
+                "reference": "a60645c6b35a15fe7fed6282784d2094368fc8f5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Flc\\Dysms\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "阿里短信-适用Laravel、Yii、Thinkphp等任何PHP项目...",
+            "keywords": [
+                "dysms",
+                "flc",
+                "阿里短信"
+            ],
+            "time": "2017-08-12T03:35:57+00:00"
+        },
+        {
+            "name": "overtrue/pinyin",
+            "version": "3.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/overtrue/pinyin.git",
+                "reference": "3b781d267197b74752daa32814d3a2cf5d140779"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/overtrue/pinyin/zipball/3b781d267197b74752daa32814d3a2cf5d140779",
+                "reference": "3b781d267197b74752daa32814d3a2cf5d140779",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Overtrue\\Pinyin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos",
+                    "homepage": "http://github.com/overtrue"
+                }
+            ],
+            "description": "Chinese to pinyin translator.",
+            "homepage": "https://github.com/overtrue/pinyin",
+            "keywords": [
+                "Chinese",
+                "Pinyin",
+                "cn2pinyin"
+            ],
+            "time": "2017-07-10T07:20:01+00:00"
+        },
+        {
+            "name": "phpmailer/phpmailer",
+            "version": "v5.2.21",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPMailer/PHPMailer.git",
+                "reference": "1d51856b76c06fc687fcd9180efa7a0bed0d761e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/1d51856b76c06fc687fcd9180efa7a0bed0d761e",
+                "reference": "1d51856b76c06fc687fcd9180efa7a0bed0d761e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "*",
+                "phpunit/phpunit": "4.7.*"
+            },
+            "suggest": {
+                "league/oauth2-google": "Needed for Google XOAUTH2 authentication"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "class.phpmailer.php",
+                    "class.phpmaileroauth.php",
+                    "class.phpmaileroauthgoogle.php",
+                    "class.smtp.php",
+                    "class.pop3.php",
+                    "extras/EasyPeasyICS.php",
+                    "extras/ntlm_sasl_client.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Jagielski",
+                    "email": "jimjag@gmail.com"
+                },
+                {
+                    "name": "Marcus Bointon",
+                    "email": "phpmailer@synchromedia.co.uk"
+                },
+                {
+                    "name": "Andy Prevost",
+                    "email": "codeworxtech@users.sourceforge.net"
+                },
+                {
+                    "name": "Brent R. Matzelle"
+                }
+            ],
+            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "time": "2016-12-28T15:35:48+00:00"
+        },
+        {
+            "name": "phpoffice/phpexcel",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPOffice/PHPExcel.git",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xml": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPExcel": "Classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Maarten Balliauw",
+                    "homepage": "http://blog.maartenballiauw.be"
+                },
+                {
+                    "name": "Mark Baker"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "http://blog.rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                }
+            ],
+            "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
+            "homepage": "http://phpexcel.codeplex.com",
+            "keywords": [
+                "OpenXML",
+                "excel",
+                "php",
+                "spreadsheet",
+                "xls",
+                "xlsx"
+            ],
+            "abandoned": "phpoffice/phpspreadsheet",
+            "time": "2015-05-01T07:00:55+00:00"
+        },
+        {
+            "name": "qiniu/php-sdk",
+            "version": "v7.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/qiniu/php-sdk.git",
+                "reference": "b91653485e36b4797d7a302cc86c49695e47a642"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/qiniu/php-sdk/zipball/b91653485e36b4797d7a302cc86c49695e47a642",
+                "reference": "b91653485e36b4797d7a302cc86c49695e47a642",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Qiniu\\": "src/Qiniu"
+                },
+                "files": [
+                    "src/Qiniu/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Qiniu",
+                    "email": "sdk@qiniu.com",
+                    "homepage": "http://www.qiniu.com"
+                }
+            ],
+            "description": "Qiniu Resource (Cloud) Storage SDK for PHP",
+            "homepage": "http://developer.qiniu.com/",
+            "keywords": [
+                "cloud",
+                "qiniu",
+                "sdk",
+                "storage"
+            ],
+            "time": "2016-11-18T02:57:31+00:00"
+        },
+        {
+            "name": "symfony/options-resolver",
+            "version": "v2.8.16",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/options-resolver.git",
+                "reference": "cc343e8e30e0e9785a0871196af722665d8b970e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/cc343e8e30e0e9785a0871196af722665d8b970e",
+                "reference": "cc343e8e30e0e9785a0871196af722665d8b970e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\OptionsResolver\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony OptionsResolver Component",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "config",
+                "configuration",
+                "options"
+            ],
+            "time": "2017-01-02T20:30:24+00:00"
+        },
+        {
+            "name": "workerman/gateway-worker",
+            "version": "v3.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/GatewayWorker.git",
+                "reference": "4444c59da4b5cd68679172904a40b66e1338389c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/GatewayWorker/zipball/4444c59da4b5cd68679172904a40b66e1338389c",
+                "reference": "4444c59da4b5cd68679172904a40b66e1338389c",
+                "shasum": ""
+            },
+            "require": {
+                "workerman/workerman": ">=3.1.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GatewayWorker\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "homepage": "http://www.workerman.net",
+            "keywords": [
+                "communication",
+                "distributed"
+            ],
+            "time": "2017-06-26T14:49:54+00:00"
+        },
+        {
+            "name": "workerman/gateway-worker-for-win",
+            "version": "v3.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/GatewayWorker-for-win.git",
+                "reference": "ea75b5d581db1762e9928f5729200a1abcaba496"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/GatewayWorker-for-win/zipball/ea75b5d581db1762e9928f5729200a1abcaba496",
+                "reference": "ea75b5d581db1762e9928f5729200a1abcaba496",
+                "shasum": ""
+            },
+            "require": {
+                "workerman/workerman-for-win": ">=3.1.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GatewayWorker\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "homepage": "http://www.workerman.net",
+            "keywords": [
+                "communication",
+                "distributed"
+            ],
+            "time": "2017-06-26T14:51:29+00:00"
+        },
+        {
+            "name": "workerman/gatewayclient",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/GatewayClient.git",
+                "reference": "e58edc1f5eee7465c24fc97d8adff1f59b1b8455"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/GatewayClient/zipball/e58edc1f5eee7465c24fc97d8adff1f59b1b8455",
+                "reference": "e58edc1f5eee7465c24fc97d8adff1f59b1b8455",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GatewayClient\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "homepage": "http://www.workerman.net",
+            "time": "2016-12-07T09:06:11+00:00"
+        },
+        {
+            "name": "workerman/workerman",
+            "version": "v3.5.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/Workerman.git",
+                "reference": "f6e129079e5f5398bffc218024f2dd95678fc564"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/Workerman/zipball/f6e129079e5f5398bffc218024f2dd95678fc564",
+                "reference": "f6e129079e5f5398bffc218024f2dd95678fc564",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "suggest": {
+                "ext-event": "For better performance. "
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Workerman\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "walkor",
+                    "email": "walkor@workerman.net",
+                    "homepage": "http://www.workerman.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An asynchronous event driven PHP framework for easily building fast, scalable network applications.",
+            "homepage": "http://www.workerman.net",
+            "keywords": [
+                "asynchronous",
+                "event-loop"
+            ],
+            "time": "2017-12-06T04:17:52+00:00"
+        },
+        {
+            "name": "workerman/workerman-for-win",
+            "version": "v3.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/workerman-for-win.git",
+                "reference": "cbaae3193e4567fd9cfc8099931c63d9b12174ee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/workerman-for-win/zipball/cbaae3193e4567fd9cfc8099931c63d9b12174ee",
+                "reference": "cbaae3193e4567fd9cfc8099931c63d9b12174ee",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Workerman\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "walkor",
+                    "email": "walkor@workerman.net",
+                    "homepage": "http://www.workerman.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An asynchronous event driven PHP framework for easily building fast, scalable network applications.",
+            "homepage": "http://www.workerman.net",
+            "keywords": [
+                "asynchronous",
+                "event-loop"
+            ],
+            "time": "2017-08-28T10:05:00+00:00"
+        },
+        {
+            "name": "zoujingli/pay-php-sdk",
+            "version": "v1.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zoujingli/pay-php-sdk.git",
+                "reference": "c9dbdb66b56c1207ddc2e101ca5d6fc6d9ea97ba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zoujingli/pay-php-sdk/zipball/c9dbdb66b56c1207ddc2e101ca5d6fc6d9ea97ba",
+                "reference": "c9dbdb66b56c1207ddc2e101ca5d6fc6d9ea97ba",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Pay\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "WxPay and AliPay development of SDK",
+            "homepage": "https://github.com/zoujingli/pay-php-sdk",
+            "keywords": [
+                "Wxpay",
+                "alipay",
+                "pay-php-sdk"
+            ],
+            "time": "2017-12-02T08:35:22+00:00"
+        },
+        {
+            "name": "zoujingli/wechat-php-sdk",
+            "version": "v1.3.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zoujingli/wechat-php-sdk.git",
+                "reference": "cd8c1427747531cd801ec91e934b785fce77e931"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zoujingli/wechat-php-sdk/zipball/cd8c1427747531cd801ec91e934b785fce77e931",
+                "reference": "cd8c1427747531cd801ec91e934b785fce77e931",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Wechat\\": "./Wechat"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "WeChat development of SDK",
+            "homepage": "http://www.kancloud.cn/zoujingli/wechat-php-sdk",
+            "keywords": [
+                "wechat-php-sdk"
+            ],
+            "time": "2016-12-31T10:05:37+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

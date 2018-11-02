@@ -1,0 +1,19 @@
+{
+    "require": {
+        "flc/alidayu": "^2.0",
+        "phpoffice/phpexcel": "^1.8",
+        "phpmailer/phpmailer": "^5.2",
+        "zoujingli/wechat-php-sdk": "^1.3",
+        "qiniu/php-sdk": "^7.1",
+        "endroid/qrcode": "^1.9",
+        "flc/dysms": "^1.0",
+        "zoujingli/pay-php-sdk": "^1.0",
+        "workerman/gatewayclient": "^3.0",
+        "workerman/workerman": "^3.5",
+        "workerman/gateway-worker": "^3.0",
+        "workerman/workerman-for-win": "^3.5",
+        "workerman/gateway-worker-for-win": "^3.0",
+        "aliyuncs/oss-sdk-php": "^2.3",
+        "overtrue/pinyin": "~3.0"
+    }
+}
