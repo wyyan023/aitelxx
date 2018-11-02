@@ -1,0 +1,245 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<!-- datepicker statr -->
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+
+<script type="text/javascript" src="__PUBLIC__/plugs/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/bootstrap-select/dist/css/bootstrap-select.min.css" />
+
+<style type="text/css">
+.textwidth{
+width:250px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.nav-tabs {
+border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+color: #555;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+background-color: #FFFFFF;
+border-color: #FFFFFF;
+color: #FFFFFF;
+border-radius: 0;
+background-clip: padding-box;
+}
+
+
+.dropup > .btn-default{
+   background-color: #fff;
+   border: 1px solid #ccc;
+   color: #555;
+}
+
+.dropup > .btn-default:hover, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+ background-color: #fff;
+ border: 1px solid #ccc;
+}
+.bootstrap-select>.dropdown-toggle.bs-placeholder, .bootstrap-select>.dropdown-toggle.bs-placeholder:active, .bootstrap-select>.dropdown-toggle.bs-placeholder:focus, .bootstrap-select>.dropdown-toggle.bs-placeholder:hover {
+    color: #555;
+}
+.dropup > .btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+  color: #555;
+}
+ 
+.checkbox-wrapper{
+	 margin-right: 20px;
+}
+.word{
+	  line-height: 40px;
+    font-size: 14px;
+}
+.bootstrap-select.form-control:not([class*=col-]) {
+     width: 250px;
+}
+.dropdown-menu>li>a>span{
+    color: #000;
+}
+
+.btn-group > .btn-default{
+    background-color: #fff;
+    border: 1px solid #ccc;
+    color: #555;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+             <header class="main-box-header clearfix">
+		   <div class="pull-left">
+			  <h1><span>{$current|default=''}</span>页面</h1>
+		   </div>
+		</header>
+         </div>
+	  <div class="panel-body">
+		  
+	 <form id="form" method="post" onsubmit="return checkform();" class="form-horizontal" enctype="multipart/form-data" method="post">	
+	    
+	    <div class="tab-content">
+		  <div role="tabpanel" class="tab-pane active" id="home">
+	
+		      <div class="main-box-body clearfix">
+		      
+			    <div class="form-group" style="margin-top:20px;">
+					<label class="col-lg-2 control-label">标题：</label>
+					<div class="col-lg-10 col-sm-10">
+					   <input type="text" class="form-control textwidth" name="title" id="title" value="{$doclist.title|default=''}" />
+					</div>
+			    </div>
+			    <div class="form-group">
+							<label class="col-lg-2 control-label">发送对象：</label>
+							<div class="col-lg-10 col-sm-10">
+								
+							
+								  <div class="ivu-checkbox-group">
+											
+									  <label class="checkbox-wrapper">
+											<input type="checkbox" name="sendall" id="sendall"
+											 {if condition="isset($doclist.sendall) && $doclist.sendall eq 0 "}
+											  value="0" 
+											 {else/}
+												checked 
+												 value="1" 
+											 {/if}
+											 >
+										    <span class="word">所有人</span>
+										</label>
+										
+										
+									
+
+									</div>
+												
+								  <select id="send_obj" name="send_obj[]" class="selectpicker form-control textwidth" multiple  
+								  {if condition="isset($doclist.sendall) && $doclist.sendall eq 0 "}
+											  
+											 {else/}
+													disabled="true" 
+											 {/if}
+								
+								  
+								  title="请选择发送对象">
+										{volist name="adminlist" id="vo"}
+										<option 
+										
+												{if condition="isset($doclist.keyword) && in_array($vo.id, $doclist.keyword)"}
+											   	selected 
+												{/if}
+
+											 value="{$vo.id}">{$vo.username}</option>
+										{/volist}
+								
+									</select>
+						
+							</div>
+						</div>
+				 
+				
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">内容：</label>
+					<div class="col-lg-10 col-sm-10">
+					  <textarea name="content" id="content" style="width: 100%;height:200px;">{$rescon.content|default=""}</textarea>
+					</div>
+			    </div>
+			 
+			  <div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">	<!--   target-form="form-horizontal" -->	
+				    <input type="hidden" name="docId" id="docId" value="{$doclist.id|default=''}" />	
+				    <input type="hidden" name="contentType" id="contentType" value="{$doclist.type|default=$type}" />	
+					<button class="btn btn-success submit-btn" type="submit">保存</button>
+					<button id="saveAndSend" class="btn btn-success" >保存并发送</button>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">取消</button>
+				</div>
+			</div>
+		 
+		
+		      </div>
+		  </div>
+
+		</div>
+		
+		 </form>
+
+	  </div>
+</div>	
+					
+	
+					
+<!-- 样式文件 -->
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/umeditor/themes/default/css/umeditor.css">
+<!-- 配置文件 -->
+<script type="text/javascript" src="__PUBLIC__/plugs/umeditor/umeditor.config.js?vi=ddd"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__PUBLIC__/plugs/umeditor/umeditor.js"></script>
+
+<script type="text/javascript">
+   $(function(){
+        var um = UM.getEditor('content',{ 
+        	imageUrl: "{:url('upload/editor')}"
+        });
+    }); 
+	
+	$("#sendall").change(function() { 
+		 if($(this).is(':checked')){
+			$('#send_obj').prop('disabled', true);
+			$(this).attr("value",1);
+		
+		}
+		else{
+			$(this).attr("value",0);
+			$('#send_obj').prop('disabled', false);
+			$('#send_obj').selectpicker('refresh');
+		}
+	});
+</script>
+
+<script type="text/javascript">
+
+//检查表单的必填项
+function checkform(){
+
+	 
+
+      
+}
+
+$("#saveAndSend").bind("click", function () {  
+    var url = location.href+'/send/1';  
+    //更改form的action  
+    $("#form").attr("action", url);  
+    //触发submit事件，提交表单   
+    //$("#form").submit();  
+});  
+
+</script>
+
+
+</div>
+
+</div>
+
+{/block}
+

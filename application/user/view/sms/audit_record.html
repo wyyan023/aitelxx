@@ -1,0 +1,115 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<script type="text/javascript" href="__PUBLIC__/plugs/bootstrap/popover.js"></script>
+
+<link href="/public/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="/public/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="/public/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/record.css"/>
+
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="main-box clearfix">	
+			<header class="main-box-header n_head_box n_head_box_b clearfix">
+			  <div class="pull-left">
+				  <span class="n_panel_title"><i class="icon iconfont icon-duanxin1"></i>审核记录</span>
+			  </div>
+			</header>
+				<div class="main-context main-box-body"> 	
+					<section class="navbar clearfix">		
+							<div class="clearfix">
+								<div class="form-inline pull-left" method="get" role="form">
+									<div class="form-group">
+										<label class="statusSelect fl">日期：</label>
+										<input type="text" style="" class="form-control s_inputwidth" id="startshow" name="startshow" value="" readonly="" />
+										<script>
+											$('#startshow').fdatepicker({
+												format: 'yyyy-mm-dd ',
+											});
+										</script>	
+											到
+										<input type="text" class="form-control s_inputwidth" id="endshow" name="endshow" value="" readonly="" />
+										<script>
+											$('#endshow').fdatepicker({
+												format: 'yyyy-mm-dd ',
+											});
+										</script>	
+									</div>
+			
+									<div class="form-group"> 
+										<label class="statusSelect">短信类型：</label>
+										<select style="width:100px;" name="status" id="smsState" class="form-control">
+											<option value=" " selected="">请选择</option>
+											<option value=" ">短信模板</option>
+											<option value=" ">短信签名</option>
+										</select>
+									</div>
+									
+									<div class="form-group"> 
+										<label class="statusSelect">审核状态：</label>
+										<select style="width:100px;" name="status" id="auditState" class="form-control">
+											<option value=" " selected="">请选择</option>
+											<option value=" ">未审核</option>
+											<option value=" ">审核中</option>
+											<option value=" ">审核通过</option>
+											<option value=" ">审核不通过</option>
+										</select>
+									</div>
+									
+									<span class="btn btn-primary" type="button" onclick=";">搜索</span>
+									
+									<span class="btn btn-primary" type="button" onclick=";">重置</span>
+								
+								</div>
+							</div>  
+							
+						</section>
+					<table class="table table-bordered table-hover r_sendtable r_layout"> 
+						<thead class="ant-table-thead ">
+							<tr>
+								<th>模板ID</th>
+								<th>企业账户</th>
+								<th>短信类型</th>
+								<th>模板内容</th>
+								<th>模板类型</th>
+								<th>创建时间</th>
+								<th>审核状态</th>
+								<th>审核人</th>
+								<th>审核日期</th>
+								<th>审核操作</th>
+							</tr>
+						</thead>
+						
+						<tbody class="ant-table-tbody" id="datadisplay">
+							<tr>
+								<td>abcd</td>
+								<td>7002</td>
+								<td>短信模板</td>
+								<td>你好</td>
+								<td>验证码</td>
+								<td>2018.10.20</td>
+								<td>未审核</td>
+								<td></td>
+								<td></td>
+								<td>
+									<a href="javascript:void(0);" onclick="">通过</a>
+											 &nbsp;
+										<a href="javascript:void(0);" onclick="">不通过</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<div id="statpage"></div>
+					
+					<div class="component-page-empty" id="statdesempty">
+					</div>
+				</div>
+
+		</div>
+	</div>				
+</div>
+
+{/block}
+

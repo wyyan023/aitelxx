@@ -1,0 +1,410 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+.table tbody>tr>td {
+padding: 12px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+
+.messageinfo{
+ text-align:right;
+ 
+}
+.infotable tr td{
+ padding:5px;
+}
+
+.textwidth{
+	width:250px;
+}
+
+</style>
+<div class="row">
+<div class="col-lg-12">
+	
+	
+	<div class="main-box clearfix">	
+		<header class="main-box-header n_head_box n_head_box_b clearfix">
+		  <div class="pull-left">
+			  <span class="n_panel_title"><i class="icon iconfont icon-boda"></i>号码管理</span>
+		  </div>
+		  <button class="btn btn-primary pull-right" onclick="showModal(0);">添加</button>
+		</header>
+		
+		   
+		<div class="main-box-body clearfix">
+		
+		
+			<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>
+			<div class="table-responsive">
+			
+				<table class="table table-bordered table-hover">
+				<thead>
+						<tr>
+								<th class="text-center"></th>
+								<th class="text-center">设备名称</th>
+								<th class="text-center">sim卡位置</th>
+								<th class="text-center">所属用户</th>
+								<th class="text-center">号码</th>
+								<th class="text-center">呼叫前缀</th>
+								<th class="text-center">呼叫次数</th>
+								<th class="text-center">状态</th>
+								<th class="text-center">备注</th>
+								<th class="text-center">操作</th>  
+						</tr>
+					</thead>
+				<tbody>
+						{volist  name="list" id="vo"}
+							<tr>
+						    <td class="text-center">
+									<input type="checkbox" name="customerIds" class="customerIds" value="{$vo.id}"/>
+								</td>
+					    	
+
+								<td class="text-center">{$vo.devicename}</td>
+								<td class="text-center">{$vo.position}端口</td>
+								<td class="text-center">{$vo.username}</td>
+								
+								<td class="text-center">
+									{$vo.phone}
+								</td>	
+								<td class="text-center">
+									{$vo.call_prefix}
+								</td>
+								
+								<td class="text-center">
+									{$vo.call_num}
+								</td>
+								<td class="text-center">
+									{switch name="$vo.status"}
+										{case value="1"}
+												<a href="javascript:void(0);" onclick="setstatus({$vo.id},0);">开启</a>
+										{/case}
+										{default /}
+												<a href="javascript:void(0);" onclick="setstatus({$vo.id},1);">关闭</a>
+									{/switch}
+								</td>
+								<td class="text-center">
+								 {$vo.remark}
+								</td>
+							
+								<td class="text-center">
+									 
+										<a href="javascript:void(0);" onclick="showModal({$vo.id});">编辑</a>
+											 &nbsp;
+										<a href="javascript:void(0);" onclick="delSim('{$vo.id}');">删除</a>
+								</td>
+							</tr>
+								{/volist}
+					</tbody>
+				</table>
+					<div class="row">
+						<div class="col-sm-4 text-left">
+								<div class="pull-left">
+										<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+										<button class="btn btn-primary" onclick="delSim(0);" target-form="ids">删 除</button>
+								</div>	
+											
+						</div>
+						<div class="col-sm-8 text-right">{$page}</div>
+					</div>
+			</div>
+				     
+		</div>
+					
+	</div>					
+    
+
+
+</div>
+
+ <script type="text/javascript">
+ 
+ //全选
+  function allcheck(){			
+  	if ($('.check-all').is(":checked")) {	
+  		$('.customerIds').prop("checked","checked");
+  	}else{
+  		$('.customerIds').prop("checked",false);
+  	}
+  }
+  
+	//设置状态
+	function setstatus(id,status){			
+			var url = "{:url('setSimStatus')}";	
+			$.ajax({
+						url : url,
+						dataType : "json", 
+						type : "post",
+						data : {'sId':id,'status':status},
+						success: function(data){
+							if (data.code) { 
+							alert(data.msg);
+					}else{
+							location.reload();
+					}
+						},
+						error : function() {
+							alert('失败。');
+						}
+			});
+	}
+	
+	
+ 
+ //删除
+ function delSim(id){
+ 
+ 	 var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+
+     	 var ids=[];
+    	if(id){
+    		ids.push(id);
+    	}else{
+    		
+        	 var roleids = document.getElementsByName("customerIds");
+    		 for ( var j = 0; j < roleids.length; j++) {
+    		    if (roleids.item(j).checked == true) {
+    		    	ids.push(roleids.item(j).value);
+    		    }
+    		 }
+    	}
+		
+    	if(!ids.length){
+    		alert("至少选择一条。");
+    		 return false; 
+    	}
+  		 $.post("{:url('delSim')}",{'id':ids},function(data){
+				if(data){
+					alert(data);
+				}else{
+					window.location.href=window.location.href;
+				}
+		}); 
+ }
+
+
+ </script>
+  
+</div>
+
+
+
+<!-- 添加与编辑 -->
+
+<div class="modal fade" id="checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+		
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">编辑号码信息</h4>
+       </div>
+       <div class="modal-body pagelists">
+				 
+          	
+	        <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+	      
+					     <div class="form-group">
+								<label class="col-lg-4 control-label">号码：</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="phone" id="phone" />
+								</div>
+					    </div>
+					     <div class="form-group">
+								<label class="col-lg-4 control-label">呼叫前缀</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="call_prefix" id="call_prefix" />
+								</div>
+					    </div>
+					    <div class="form-group">
+								<label class="col-lg-4 control-label">所属用户：</label>
+								<div class="col-lg-8 col-sm-8">
+								    <select class="form-control textwidth" id="member_id" name="member_id">
+										    <option value="">请选择用户</option>
+												{volist name="memberList" id="item"}
+														<option value="{$item.id}">{$item.username}</option>
+												{/volist}
+										</select>
+								</div>
+					    </div>
+					    
+						<div class="form-group">
+								<label class="col-lg-4 control-label">SIM卡位置：</label>
+								<div class="col-lg-8 col-sm-8">
+								    <select class="form-control textwidth" id="position" name="position">
+										    <option value="">请选择SIM卡位置</option>
+												
+											<option value="0">0端口</option>
+											<option value="1">1端口</option>
+											<option value="2">2端口</option>
+											<option value="3">3端口</option>
+											<option value="4">4端口</option>
+											<option value="5">5端口</option>
+											<option value="6">6端口</option>
+											<option value="7">7端口</option>
+											<option value="8">8端口</option>
+											<option value="9">9端口</option>
+											<option value="10">10端口</option>
+											<option value="11">11端口</option>
+											<option value="12">12端口</option>
+											<option value="13">13端口</option>
+											<option value="14">14端口</option>
+											<option value="15">15端口</option>
+											<option value="16">16端口</option>
+											<option value="17">17端口</option>
+											<option value="18">18端口</option>
+											<option value="19">19端口</option>
+											<option value="20">20端口</option>
+											<option value="21">21端口</option>
+											<option value="22">22端口</option>
+											<option value="23">23端口</option>
+											<option value="24">24端口</option>
+											<option value="25">25端口</option>
+											<option value="26">26端口</option>
+											<option value="27">27端口</option>
+											<option value="28">28端口</option>
+											<option value="29">29端口</option>
+											<option value="30">30端口</option>
+											<option value="31">31端口</option>
+												
+										</select>
+								</div>
+					    </div>
+							
+							<div class="form-group">
+								<label class="col-lg-4 control-label">备注：</label>
+								<div class="col-lg-8 col-sm-8">
+									<textarea class="form-control textwidth" id="remark" name="remark"></textarea>
+								</div>
+							</div>
+
+
+					    <div class="form-group" style="text-align: center;">
+							   	<input type="hidden" name="deviceId" id="deviceId" value="{$thisId|default=''}">
+								  <input type="hidden" name="simId" id="simId" value="">
+									<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						 </div>
+		
+			
+		     </form>
+				 
+					
+       </div>
+       <div style="clear:both"></div>
+      
+			
+	 
+	 </div>
+           
+  </div>
+
+	<script type="text/javascript">
+			
+		function showModal(id){
+		
+			 
+			 if(id){
+						var url = "{:url('user/Device/getSimInfo')}";	
+					 $.ajax({
+							url : url,
+							dataType : "json", 
+							type : "post",
+							data : {'id':id},
+							success: function(data){
+									 $("#phone").val(data.phone);
+									 $("#member_id").val(data.member_id);
+									 $("#call_prefix").val(data.call_prefix);
+									  $("#position").val(data.position);
+									 $("#remark").val(data.remark);
+									 $("#simId").val(data.id);
+								
+									 $('#checkpage').modal('show')
+							},
+							error : function() {
+								alert('获取信息失败。');
+							}
+						});
+				
+			 }
+			 else{
+
+					 $('#checkpage').modal('show');
+					 
+			 }
+			
+
+		}
+	 
+	 
+	 //检查表单的必填项
+		function checkform(){
+
+			var phone = $("#phone").val();
+			if(!phone){
+				alert("号码不能为空"); 
+				return false; 
+			}
+			
+			var call_prefix = $("#call_prefix").val();
+			if(!call_prefix){
+				alert("呼叫前缀不能为空"); 
+				return false; 
+			}
+			
+			var member_id = $("#member_id").val();
+			if(!member_id){
+				alert("所属用户不能为空"); 
+				return false; 
+			}
+			
+			 var simId = $("#simId").val();
+
+			 var href = "{:url('user/Device/addSim')}";
+			 if(simId){
+					 href = "{:url('user/Device/editSim')}";
+			 }
+
+			 
+			 $.ajax({
+					 type: "POST",
+					 dataType:'json',
+					 url: href,
+					 cache: false,
+					 data: $("#form").serialize(),
+					 success: function(data) {
+						if (data.code == 0) {
+							 // alert(data.msg);
+								$('#checkpage').modal('hide');
+							 location.reload();
+						}else{
+							 alert(data.msg);
+
+						}
+				
+					 },
+					 error: function(data) {
+						 alert("提交失败");
+					 }
+			 })  
+		}
+
+
+	
+	</script>
+	
+   
+</div>
+
+
+{/block}
+

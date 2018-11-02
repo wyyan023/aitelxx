@@ -1,0 +1,186 @@
+{extend name="public/base" /}
+{block name="body"}
+<style type="text/css">
+.table tbody>tr>td {
+padding: 12px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+.imgclass > td > p>img{
+width:50px;
+}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header n_head_box n_head_box_b clearfix">
+		  <div class="pull-left">
+			  <span class="n_panel_title"><i class="icon iconfont icon-jiaoseguanli"></i>角色管理</span>
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+		
+	        <section class="navbar main-box-header clearfix">
+	         <div  class="pull-left">
+			   <form class="form-inline"  method="get" role="form">
+			     
+				  <div class="form-group">
+				    <label>角色名 ：</label>
+				    <input type="text" class="form-control" id="keyword" name="keyword" placeholder="请输入角色">
+				  </div>
+			    <button class="btn btn-primary" type="submit">搜索</button>
+			  </form>
+			 </div>
+			 <a class="btn btn-primary pull-right" href="{:url('addrole')}">添加角色</a>
+		   </section>
+
+		     <!--<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>-->
+		     
+			  <div class="table-responsive">
+			  
+				 <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					        <th class="text-center"></th>
+					        <th class="text-center">角色名称</th>
+					        <th class="text-center">简介</th>
+					        <th class="text-center">创建时间</th>
+					        <th class="text-center">状态</th>
+					        <th class="text-center">操作</th> 
+					    </tr>
+				    </thead>
+				   <tbody>
+				        {volist name="list" id="vo"}
+					    <tr>
+					     <td class="text-center">
+					        <input type="checkbox" name="roleids" class="rolecheck" value="{$vo.id}"/>
+					     </td>
+						  <td class="text-center">{$vo.name}</td>
+						  <td class="text-center">{$vo.intro}</td>
+						  <td class="text-center">{$vo.create_time}</td>
+						  <td class="text-center">
+						    {switch name="$vo.status" }
+						      {case value="1"}
+                                 <a href="javascript:void(0);" onclick="setstatus({$vo.id},0);">开启</a>
+						      {/case}
+						      {default /}
+                                  <a href="javascript:void(0);" onclick="setstatus({$vo.id},1);">关闭</a>
+						    {/switch}
+						  
+						  </td>
+						 
+						  <td class="text-center">
+						    <a href="{:url('editRole',array('id'=>$vo.id))}">编辑</a>
+					        <a href="javascript:void(0);" onclick="delRole({$vo.id});">删除</a>	
+					 	  </td>
+						</tr>
+				       {/volist}
+		          
+				    </tbody>
+				  </table>
+				    <div class="row">
+                        <div class="col-sm-4 text-left"></div>
+                        <div class="col-sm-8 text-right">{$page}</div>
+                    </div>
+			  </div>
+		
+		<footer class="main-box-footer clearfix">
+			<div class="pull-left">
+		    	<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+				<button class="btn btn-primary" onclick="delRole(0);" target-form="ids">删 除</button>
+			</div>
+		</footer>
+		</div>
+					
+	</div>					
+    
+
+
+</div>
+
+ <script type="text/javascript">
+ 
+ $(function(){
+		var keyword = "{$_GET['keyword']|default=''}";
+		$('#keyword').val(keyword);
+})
+ 
+//设置状态
+ function setstatus(id,status){			
+ 	 var url = "{:url('setstatus')}";	
+ 	 $.ajax({
+ 	        url : url,
+ 	        dataType : "json", 
+ 	        type : "post",
+ 	        data : {'roleId':id,'status':status},
+ 	        success: function(data){
+ 	        	if (data.code) {
+		    		 alert(data.msg);
+		    	}else{
+		    		 location.reload();
+		    	}
+ 	        },
+ 	        error : function() {
+ 	        	alert('失败。');
+ 	        }
+ 	  });
+ }
+
+ 
+//删除角色
+ function delRole(id){
+    var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+     	   var ids;
+ 	    	if(id){
+ 	    		var Ids=[];
+ 	    		Ids.push(id);
+ 	    		ids = Ids;
+ 	    	}else{
+ 	    		 var IdsVal = [];
+ 	        	 var roleids = document.getElementsByName("roleids");
+ 	    		 for ( var j = 0; j < roleids.length; j++) {
+ 	    		    if (roleids.item(j).checked == true) {
+ 	    		    	IdsVal.push(roleids.item(j).value);
+ 	    		    }
+ 	    		 }
+ 	    		 ids = IdsVal;
+ 	    	}
+ 		
+ 	    	if(!ids.length){
+ 	    		alert("至少选择一条。");
+ 	    		 return false; 
+ 	    	}
+ 	    	
+     		 $.post("{:url('delRole')}",{'role_id':ids},function(data){
+     			if (data.code) {
+		    		 alert(data.msg);
+		    	}else{
+		    		 location.reload();
+		    	}
+ 				
+ 			}); 
+     
+
+ }
+//全选
+ function allcheck(){			
+ 	if ($('.check-all').is(":checked")) {	
+ 		$('.rolecheck').prop("checked","checked");
+ 	}else{
+ 		$('.rolecheck').prop("checked",false);
+ 	}
+
+ }
+  
+ </script>
+  
+</div>
+
+{/block}
+

@@ -1,0 +1,376 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+.table tbody>tr>td {
+   padding: 6px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+
+.messageinfo{
+ text-align:right;
+ 
+}
+.infotable tr td{
+ padding:5px;
+}
+.textwidth{
+	width:250px;
+}
+
+</style>
+
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header clearfix">
+		  <div class="pull-left">
+			    <h1>拨打计划</h1>
+				  <button class="btn btn-primary" onclick="showModal(0);"><i class="fa fa-plus-circle fa-lg"></i>添  加</button>
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+		
+		
+			<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>
+			<div class="table-responsive">
+			
+				<table class="table table-bordered table-hover">
+			    	<thead>
+							<tr>
+									<th class="text-center"></th>
+									<th class="text-center">编号</th>
+									<th class="text-center">计划名称</th>
+									<th class="text-center">域名</th>
+									<th class="text-center">所属人</th>
+							    <th class="text-center">任务名</th>
+									<th class="text-center">操作</th> 
+							</tr>
+						</thead>
+				   <tbody>
+						   {notempty name="list"}
+				        	{volist name="list" id="vo"}
+				        			<tr>
+				        				<td class="text-center">
+				        					<input type="checkbox" name="customerIds" class="customerIds" value="{$vo.uuid}"/>
+				        				</td>
+				        		
+				        				<td class="text-center">{$vo.uuid}</td>
+				        				<td class="text-center">
+				        					{$vo.name}
+				        				</td>
+				        				<td class="text-center">
+				        					{$vo.domain}
+				        				</td>
+				        				<td class="text-center">{$vo.memberName}</td>
+				        				<td class="text-center">{$vo.taskname}</td>
+
+				        				<td class="text-center">
+				        					  <a href="{:url('projectDetail',array('id'=>$vo.uuid))}">时间明细</a>
+				        						    &nbsp;&nbsp;
+				        						<a href="javascript:void(0);" onclick="showModal('{$vo.uuid}');">编辑</a>
+				        							&nbsp;&nbsp;
+				        						<a href="javascript:void(0);" onclick="delPlan('{$vo.uuid}');">删除</a>
+				        				</td>
+				        			</tr>
+				          {/volist}
+								{/notempty}
+
+					</tbody>
+				</table>
+				
+				  {$page}
+
+			</div>
+				     
+		</div>
+					
+	</div>					
+    
+
+
+</div>
+
+ <script type="text/javascript">
+ //设置状态
+  function setstatus(id,status){			
+  	 var url = "{:url('setstatus')}";	
+  	 $.ajax({
+  	        url : url,
+  	        dataType : "json", 
+  	        type : "post",
+  	        data : {'pId':id,'status':status},
+  	        success: function(data){
+  	        	if (data.code) {
+ 		    		 alert(data.msg);
+ 		    	}else{
+ 		    		 location.reload();
+ 		    	}
+  	        },
+  	        error : function() {
+  	        	alert('失败。');
+  	        }
+  	  });
+  }
+ 
+  
+  //删除
+  function delPlan(id){
+  
+  	 var r=confirm('确认删除?');
+      	if (!r) 
+            return; 
+ 
+      	 var ids=[];
+     	if(id){
+     		ids.push(id);
+     	}else{
+     		
+         	 var roleids = document.getElementsByName("customerIds");
+     		 for ( var j = 0; j < roleids.length; j++) {
+     		    if (roleids.item(j).checked == true) {
+     		    	ids.push(roleids.item(j).value);
+     		    }
+     		 }
+     	}
+ 		
+     	if(!ids.length){
+     		alert("至少选择一条。");
+     		 return false; 
+     	}
+   		 $.post("{:url('delProject')}",{'id':ids},function(data){
+ 				if(data){ 
+ 					alert(data);
+ 				}else{
+ 					window.location.href=window.location.href;
+ 				}
+ 		}); 
+  }
+ 
+ </script>
+  
+</div>
+
+
+
+
+
+
+<div class="modal fade" id="checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">添加拨打计划</h4>
+       </div>
+       <div class="modal-body pagelists">
+				 
+          	
+	        <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+	      
+					     <div class="form-group">
+								<label class="col-lg-4 control-label">时间组名称：</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="name" id="name" />
+								</div>
+					    </div> 
+					    
+							<div class="form-group">
+								<label class="col-lg-4 control-label">域名：</label>
+								<div class="col-lg-8 col-sm-8">
+									<input type="text" class="form-control textwidth" name="domain" id="domain" />
+								</div>
+							</div>
+							
+								<div class="form-group">
+									<label class="col-lg-4 control-label">选择任务：</label>
+									<div class="col-lg-8 col-sm-8">
+											<select name="task" id="task" class="form-control textwidth">
+												<option value="">请选任务</option>
+												  {volist name="tasklist" id="titem"}
+														<option value="{$titem['uuid']}">
+															{$titem['name']}
+														</option>
+											  	{/volist}
+											</select>
+									</div>
+								</div>
+	
+							{eq name="$isAdmin|default=0" value="1" }
+
+								<div class="form-group">
+									<label class="col-lg-4 control-label">任务所属人：</label>
+									<div class="col-lg-8 col-sm-8">
+											<select name="member_id" id="member_id" class="form-control textwidth">
+												<option value="">请选所属人</option>
+												{volist name="adminlist" id="item"}
+													<option value="{$item['id']}" 
+															{eq name="$list.member_id|default=''" value="$item.id" }
+																				selected 
+															{/eq}>
+														{$item['username']}
+													</option>
+												{/volist}
+											</select>
+									</div>
+								</div>
+								
+			       	{/eq}
+							
+						
+					    <div class="form-group" style="text-align: center;">
+								  <input type="hidden" name="planId" id="planId" value="">
+									<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						 </div>
+		
+			
+		     </form>
+				 
+					
+       </div>
+       <div style="clear:both"></div>
+
+	 </div>
+           
+    </div>
+   
+      <script type="text/javascript">
+	      	
+				var taskId = 0;	
+	      function showModal(id){
+				
+					 
+					 if(id){
+						    var url = "{:url('user/Plan/getPlanInfo')}";	
+							 $.ajax({
+									url : url,
+									dataType : "json", 
+									type : "post",
+									data : {'id':id},
+									success: function(data){	
+										
+										   $("#planId").val(data.uuid);
+											 $("#name").val(data.name);
+											 $("#domain").val(data.domain);
+											 
+											 taskId = data.taskId;
+
+											 $("#task_"+taskId+"").remove();
+											 if(data.taskId){
+												 $("#task").append('<option id="task_'+data.taskId+'" value="'+data.taskId+'">'+data.taskName+'</option>');
+											 }
+										
+											 $("#task").val(data.taskId);
+
+											 if({$isAdmin|default=0}){
+											   	$("#member_id").val(data.member_id);
+											 }
+		
+								
+											 $('#checkpage').modal('show')
+									},
+									error : function() {
+										alert('审核信息失败。');
+									}
+								});
+						
+					 }
+					 else{
+
+							 $("#planId").val("");
+							 $("#name").val("");
+							 $("#domain").val("");
+					     $("#task_"+taskId+"").remove();
+							 if({$isAdmin|default=0}){
+							 	$("#member_id").val("");
+							 }
+               $('#checkpage').modal('show');
+							 
+					 }
+					
+
+	      }
+	     
+			 
+			 //检查表单的必填项
+				function checkform(){
+
+						var name = $("#name").val();
+						if(!name){
+							alert("时间组名称不能为空"); 
+							return false; 
+						}
+						
+						var domain = $("#domain").val();
+						if(!domain){
+							alert("域名不能为空"); 
+							return false; 
+						}
+						
+						var task = $("#task").val();
+						if(!task){
+							alert("请选择任务"); 
+							return false; 
+						}
+						
+						if({$isAdmin|default=0}){
+							var member_id = $("#member_id").val();
+							if(!member_id){
+								alert("请选所属人"); 
+								return false; 
+							}
+						}
+					
+				   var planId = $("#planId").val();
+	
+					 var href = "{:url('user/Plan/addProject')}";
+           if(planId){
+						   href = "{:url('user/Plan/editProject')}";
+					 }
+	
+					 
+					 $.ajax({
+							 type: "POST",
+							 dataType:'json',
+							 url: href,
+							 cache: false,
+							 data: $("#form").serialize(),
+							 success: function(data) {
+								 
+								if (data.code == 0) {
+										$('#checkpage').modal('hide');
+									  location.reload();
+								}else{
+									  alert(data.msg);
+								}
+								
+							 },
+							 error: function(data) {
+								 alert("提交失败");
+							 }
+					 })  
+				}
+
+
+	    
+      </script>
+      
+   
+  </div>
+
+
+
+{/block}
+

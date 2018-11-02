@@ -1,0 +1,265 @@
+
+<!-- saved from url=(0103)http://corporation.h5h5h5.cn/enterprise-business/v1.0/call/details?id=58c9eef7809e437aad9430b5e641bcfb# -->
+<html style="font-size: 50px;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
+    <meta name="format-detection" content="email=no">
+    <meta name="format-detection" content="address=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>通话详情</title>
+    <link rel="stylesheet" href="__CSS__/style.css">
+    <link rel="stylesheet" href="__CSS__/telephone.css">
+    <link rel="stylesheet" href="__CSS__/audioplayer.css">
+    <script src="__JS__/jquery.js"></script>
+    <script src="__JS__/audioplayer.js"></script>
+    <script type="text/javascript">
+        var Dpr = 1, uAgent = window.navigator.userAgent;
+        var isIOS = uAgent.match(/iphone/i);
+        var isYIXIN = uAgent.match(/yixin/i);
+        var is2345 = uAgent.match(/Mb2345/i);
+        var ishaosou = uAgent.match(/mso_app/i);
+        var isSogou = uAgent.match(/sogoumobilebrowser/ig);
+        var isLiebao = uAgent.match(/liebaofast/i);
+        var isGnbr = uAgent.match(/GNBR/i);
+        function resizeRoot() {
+            var wWidth = (screen.width > 0) ? (window.innerWidth >= screen.width || window.innerWidth == 0) ? screen.width : window.innerWidth : window.innerWidth, wDpr, wFsize;
+            var wHeight = (screen.height > 0) ? (window.innerHeight >= screen.height || window.innerHeight == 0) ? screen.height : window.innerHeight : window.innerHeight;
+            if (window.devicePixelRatio) {
+                wDpr = window.devicePixelRatio;
+            } else {
+                wDpr = isIOS ? wWidth > 818 ? 3 : wWidth > 480 ? 2 : 1 : 1;
+            }
+            if (isIOS) {
+                wWidth = screen.width;
+                wHeight = screen.height;
+            }
+            // if(window.orientation==90||window.orientation==-90){
+            //     wWidth = wHeight;
+            // }else if((window.orientation==180||window.orientation==0)){
+            // }
+            if (wWidth > wHeight) {
+                wWidth = wHeight;
+            }
+            wFsize = wWidth > 1080 ? 144 : wWidth / 7.5;
+            wFsize = wFsize > 24 ? wFsize : 24;
+            window.screenWidth_ = wWidth;
+            if (isYIXIN || is2345 || ishaosou || isSogou || isLiebao || isGnbr) {//YIXIN 和 2345 这里有个刚调用系统浏览器时候的bug，需要一点延迟来获取
+                setTimeout(function () {
+                    wWidth = (screen.width > 0) ? (window.innerWidth >= screen.width || window.innerWidth == 0) ? screen.width : window.innerWidth : window.innerWidth;
+                    wHeight = (screen.height > 0) ? (window.innerHeight >= screen.height || window.innerHeight == 0) ? screen.height : window.innerHeight : window.innerHeight;
+                    wFsize = wWidth > 1080 ? 144 : wWidth / 12.42;
+                    wFsize = wFsize > 24 ? wFsize : 24;
+                    // document.getElementsByTagName('html')[0].dataset.dpr = wDpr;
+                    document.getElementsByTagName('html')[0].style.fontSize = wFsize + 'px';
+                }, 500);
+            } else {
+                // document.getElementsByTagName('html')[0].dataset.dpr = wDpr;
+                document.getElementsByTagName('html')[0].style.fontSize = wFsize + 'px';
+            }
+            // alert("fz="+wFsize+";dpr="+window.devicePixelRatio+";UA="+uAgent+";width="+wWidth+";sw="+screen.width+";wiw="+window.innerWidth+";wsw="+window.screen.width+window.screen.availWidth);
+        }
+        resizeRoot();
+    </script>
+</head>
+<body>
+    <div class="tabTop">
+
+        <p class="title">通话详情</p>
+
+    </div>
+    <ul class="telephoneMessage clear">
+        <li>
+            <h6 class="telephoneMessageGrade">
+							{switch name="$list.memberInfo.duration" }
+								{case value="1"}
+										E类 (无意向)
+								{/case}
+								{case value="2"}
+										D类(待观察)
+								{/case}
+								{case value="3"}
+										C类(很少)
+								{/case}
+								{case value="4"}
+								  	B类 (一般)
+								{/case}
+								{case value="5"}
+										A类(较强)
+								{/case}
+								{default /}
+							  	未知
+							{/switch}
+						
+						</h6>
+            <p>客戶等級</p>
+        </li>
+        <li>
+            <h6 class="telephoneMessageGrade">{$list.memberInfo.duration|default='0'}秒</h6>
+            <p>通话时长</p>
+        </li>
+        <li>
+            <h6 class="telephoneMessageGrade">{$list.memberInfo.call_rotation|default='0'}轮</h6>
+            <p>通话轮次</p>
+        </li>
+    </ul>
+
+    <div class="basicsMessage">
+        <div class="basicsMessageTitle">
+            <span></span>
+            基础信息
+        </div>
+      
+        <p onclick="callMobile()">客户电话:
+				  <a href="http://corporation.h5h5h5.cn/enterprise-business/v1.0/call/details?id=58c9eef7809e437aad9430b5e641bcfb#">
+				  	{$list.memberInfo.mobile|default=''}
+					</a> 
+				</p>
+        <p>客户姓名:{$list.memberInfo.nickname|default=''}</p>
+        <p>命中关键词:{$list.num|default='0'}个</p>
+        <ul class="basicsMessageKeyWorld clear">
+            
+        </ul>
+        <div class="basicsMore block">
+           
+            <p>机器坐席：{$list.memberInfo.originating_call|default='0'}</p>
+        </div>
+				
+      
+    </div>
+    <div class="interval"></div>
+
+    <div class="record">
+        <div class="recordTitle">
+            <span></span>
+            基础信息
+        </div>
+				
+        <div id="wrapper">
+				
+						
+						<audio class="audio" preload="auto" controls="controls" src="/{$list.memberInfo.record_path|default='0'}" ></audio>
+				
+						
+        </div>
+				
+        <ul class="clear">
+					{volist name="$list.bills" id="vo"}
+
+            {if condition="$vo.role == 1 "}
+							<li>
+									<div class="recordClient clear">
+											<span class="recordClientHeader">
+											</span>
+											<h6>客户</h6>
+											<p>
+													<font>{$vo.message}</font>
+													
+											</p>
+									</div>
+							</li>
+						{else /}
+						
+							<li>
+									<div class="recordChat clear">
+											<span class="recordChatHeader">
+											</span>
+											<h6>系统</h6>
+											<p>
+													<font>{$vo.message}</font>
+											</p>
+									</div>
+							</li>
+						
+							
+						{/if}
+
+         
+          
+						
+						{/volist}
+
+					<!-- 	
+            <li>
+                <div class="recordClient clear">
+                    <span class="recordClientHeader">
+                    </span>
+                    <h6>客户</h6>
+                    <p>
+                        <font>喂</font>
+                        <span class="aplay">
+                            <audio src="http://aiphone.h5h5h5.cn/call_16111_5130661_1.wav"></audio>
+                        </span>
+                    </p>
+                </div>
+            </li>
+						
+            <li>
+                <div class="recordChat clear">
+                    <span class="recordChatHeader">
+                    </span>
+                    <h6>系统</h6>
+                    <p>
+                        <font>我们公司目前是省内规模最大的家装公司，拥有自己的家装队伍，时间方便的话可以来店里了解一下的。</font>
+                        <span class="aplay">
+                            <audio src="http://wawaji.h5h5h5.cn/175_cb0c0974dbcd4c328e11040602deb652.wav"></audio>
+                        </span>
+                    </p>
+                </div>
+            </li>
+						 -->
+        </ul>
+				
+    </div>
+		
+    <div class="callPhone">
+        拨打电话
+		</div>
+		
+    <div class="maskPop" style="display: none;">
+        <div class="maskIn">
+            <p class="title">拨打电话</p>
+            <p class="txt">您确定拨打:{$list.memberInfo.mobile|default=''}</p>
+            <div class="btn">
+                <a href="###" class="cancle">取消</a>
+                <div id="mobile" style="display: none">{$list.memberInfo.mobile|default=''}</div>
+
+                <a onclick="callMobile()">呼叫</a>
+            </div>
+        </div>
+    </div>
+		
+		
+    <script>
+			
+         $( function() { $( '.audio' ).audioPlayer(); } );
+ 				
+     
+				
+        $(".cancle").click(function(){
+           $(".maskPop").hide()
+        })
+        $('.callPhone').click(function(){
+            $(".maskPop").show()
+        })
+        var playing = false, currentAudio = null;
+        $("span.aplay").on("click", function () {
+            var $audio = $(this).find("audio");
+            if (playing) {
+                playing = false;
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                currentAudio = null;
+            }
+            playing = true;
+            currentAudio = $audio.get(0);
+            currentAudio.play();
+        });
+
+        function callMobile(){
+            window.location.href="tel:"+$("#mobile").html();
+        }
+    </script>
+
+
+
+</body></html>

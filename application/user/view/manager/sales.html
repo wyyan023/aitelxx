@@ -1,0 +1,951 @@
+{extend name="public/base" /}
+{block name="body"}
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<style type="text/css">
+	.table tbody>tr>td {
+	padding: 12px 8px;
+	}
+	.table-responsive {
+	min-height: .01%;
+	overflow-x: hidden;
+	}
+
+	.messageinfo{
+	 text-align:right;
+
+	}
+	.infotable tr td{
+	 padding:5px;
+	}
+
+	.textwidth{
+		width:250px;
+	}
+	.form-group > label{
+		min-width: 115px;
+	}
+	.form-group > .col-lg-10 {
+			width: 80.333333%;
+	}
+	.field-status{
+			float: left;
+	}
+
+	.modal-footer {
+			text-align: center;
+	}
+	.form-group {
+			margin-bottom: 10px;
+	 }
+  .n_panel_title i {
+    vertical-align: unset;
+  }
+  .n_moneynote {
+    height: 80px;
+    padding: 8px;
+  }
+  .form-group label i {
+  	color: red;
+  	vertical-align: middle;
+  	font-style: normal;
+  	margin-right: 3px;
+  }
+</style>
+
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">
+		<header class="main-box-header n_head_box n_head_box_b clearfix">
+		  <div class="pull-left">
+			  <span class="n_panel_title"><i class="icon iconfont icon-zhuanshuxiaoshourenyuan"></i>销售人员管理</span>
+		  </div>
+		</header>
+
+
+		<div class="main-box-body clearfix">
+
+	        <section class="navbar main-box-header clearfix">
+	         <div  class="pull-left">
+			   <form class="form-inline"  method="get" role="form">
+
+				  <div class="form-group">
+				    <label>用户名 ：</label>
+				    <input type="text" class="form-control" id="keyword" name="keyword" placeholder="请输入用户名">
+				  </div>
+			    <button class="btn btn-primary" type="submit">搜索</button>
+			  </form>
+			 </div>
+			 <a class="btn btn-primary pull-right"  href="javascript:void(0);" onclick="addNew();">添加销售人员</a>
+		   </section>
+
+		     <!--<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>-->
+
+			  <div class="table-responsive">
+
+				 <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					        <th class="text-center"></th>
+					        <th class="text-center">名称</th>
+					        <th class="text-center">手机号码</th>
+									<th class="text-center">余额</th>
+									<th class="text-center">机器人数</th>
+					        <th class="text-center">注册时间</th>
+									<!-- <th class="text-center">到期时间</th> -->
+									<th class="text-center">话术审核</th>
+					        <th class="text-center">状态</th>
+					        <th class="text-center">操作</th>
+					    </tr>
+				    </thead>
+				   <tbody>
+		   				{volist name="list" id="vo"}
+					    <tr>
+					    	<td class="text-center">
+					    		<input type="checkbox" name="adminids" class="admincheck" />
+					      </td>
+						  	<td class="text-center">{$vo.username}</td>
+						  	<td class="text-center">{$vo.mobile}</td>
+							 	<td class="text-center">{$vo.money}</td>
+						   	<td class="text-center">{$vo.robot_cnt}</td>
+						  	<td class="text-center">{$vo.create_time}</td>
+						   	<!-- <td class="text-center">{$vo.expiry_date}</td> -->
+						   	<td class="text-center">
+						   		{if $vo.examine == 1}
+						   		<a href="javascript:void(0);" onclick="openAuditing({$vo.id},0);">开启</a>
+						   		{else/}
+									<a href="javascript:void(0);" onclick="openAuditing({$vo.id},1);">关闭</a>
+									{/if}
+								</td>
+						 		<td class="text-center">
+						 			{if $vo.status == 1}
+                  <a href="javascript:void(0);" onclick="setstatus({$vo.id},0);">开启</a>
+                  {else/}
+                  <a href="javascript:void(0);" onclick="setstatus({$vo.id},1);">锁定</a>
+                  {/if}
+						 	 	</td>
+							  <td class="text-center">
+							      <a href="javascript:void(0);" onclick="addNew({$vo.id});">编辑</a>
+						        <a href="javascript:void(0);" onclick="delAdmin({$vo.id});">删除</a>
+								    <a href="javascript:void(0);" onclick="resetPwd({$vo.id});">重置密码</a>
+										<a href="javascript:void(0);" onclick="addmoney({$vo.id});">充值</a>
+										<a href="javascript:void(0);" onclick="addrobot({$vo.id});">分配机器人</a>
+						 	  </td>
+							</tr>
+				       {/volist}
+				    </tbody>
+				  </table>
+				 <div class="row">
+							<div class="col-sm-4 text-left">
+								 <div class="pull-left"></div>
+							</div>
+							<div class="col-sm-8 text-right">
+								{$page}
+							</div>
+					</div>
+			  </div>
+
+
+		<footer class="main-box-footer clearfix">
+			<div class="pull-left">
+		    <input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+				<!--<button class="btn btn-primary" onclick="delAdmin(0);" target-form="ids">删 除</button>-->
+				<button class="btn btn-primary" onclick="setstatus(0,1);" target-form="ids">开启</button>
+		    <button class="btn btn-primary" onclick="setstatus(0,0);" target-form="ids">锁定</button>
+			</div>
+		</footer>
+		</div>
+
+	</div>
+
+
+
+</div>
+
+ <script type="text/javascript">
+
+ $(function(){
+		var keyword = "{$_GET['keyword']|default=''}";
+		$('#keyword').val(keyword);
+		//调用分页方法
+		// var now_page = "{$_GET['page']|default=1}";
+		// var total_page = 2;
+
+		// fenye(parseInt(total_page),parseInt(now_page));
+})
+
+//分页
+function fenye(total_page,now_page){
+	//设置上一页
+	var pre = now_page - 1;
+	//设置下一页
+	var next = now_page + 1;
+
+	var str = '<ul class="pagination">';
+	if(now_page == 1 || pre < 1 || total_page == 1){
+		str += '<li class="active"><span>1</span></li>';
+	}else	if(pre == 1){
+		str += '<li><a href="/User/manager/index?page='+pre+'"> << </a></li>';
+		str += '<li class="active"><span>'+now_page+'</span></li>';
+	}else	if(pre == 2){
+		str += '<li><a href="/User/manager/index?page='+(pre - 1)+'"> << </a></li>';
+		str += '<li><a href="/User/manager/index?page='+pre+'">'+pre+'</a></li>';
+		str += '<li class="active"><span>'+now_page+'</span></li>';
+	}else{
+		str += '<li><a href="/User/manager/index?page=1">首页</a></li>';
+		str += '<li><a href="/User/manager/index?page='+(pre - 1)+'"> << </a></li>';
+		str += '<li><a href="/User/manager/index?page='+pre+'">'+pre+'</a></li>';
+		str += '<li class="active"><span>'+now_page+'</span></li>';
+	}
+	if(next > total_page){
+		str += '';
+	}else if((total_page - next) == 0){
+		str += '<li><a href="/User/manager/index?page='+total_page+'">'+total_page+'</a></li>';
+	}else	if((total_page - next) == 1){
+		str += '<li><a href="/User/manager/index?page='+next+'">'+next+'</a></li>';
+		str += '<li><a href="/User/manager/index?page='+(next + 1)+'"> >> </a></li>';
+	}else{
+		str += '<li><a href="/User/manager/index?page='+next+'">'+next+'</a></li>';
+		str += '<li><a href="/User/manager/index?page='+(next + 1)+'"> >> </a></li>';
+		str += '<li><a href="/User/manager/index?page='+total_page+'">尾页</a></li>';
+	}
+
+	str += '</ul>';
+	$('.col-sm-8').html(str);
+}
+
+
+//设置状态
+ function setstatus(id,status){
+
+    var ids;
+  	if(id){
+  		var Ids=[];
+  		Ids.push(id);
+  		ids = Ids;
+  	}else{
+  		 var IdsVal = [];
+      	 var roleids = document.getElementsByName("adminids");
+  		 for ( var j = 0; j < roleids.length; j++) {
+  		    if (roleids.item(j).checked == true) {
+  		    	IdsVal.push(roleids.item(j).value);
+  		    }
+  		 }
+  		 ids = IdsVal;
+  	}
+
+  	if(!ids.length){
+ 		alert("至少选择一条。");
+ 		 return false;
+ 	}
+
+ 	 var url = "{:url('setstatus')}";
+ 	 $.ajax({
+ 	        url : url,
+ 	        dataType : "json",
+ 	        type : "post",
+ 	        data : {'arrayIds':ids,'status':status},
+ 	        success: function(data){
+ 	        	if (data.code) {
+		    		 alert(data.msg);
+		    	}else{
+		    		 location.reload();
+		    	}
+ 	        },
+ 	        error : function() {
+ 	        	alert('获取页面列表失败。');
+ 	        }
+ 	  });
+ }
+
+
+//删除Items
+ function delAdmin(id){
+    var r=confirm('确认删除?');
+     	if (!r)
+           return;
+     	   var ids;
+ 	    	if(id){
+ 	    		var Ids=[];
+ 	    		Ids.push(id);
+ 	    		ids = Ids;
+ 	    	}else{
+ 	    		 var IdsVal = [];
+ 	        	 var roleids = document.getElementsByName("adminids");
+ 	    		 for ( var j = 0; j < roleids.length; j++) {
+ 	    		    if (roleids.item(j).checked == true) {
+ 	    		    	IdsVal.push(roleids.item(j).value);
+ 	    		    }
+ 	    		 }
+ 	    		 ids = IdsVal;
+ 	    	}
+
+ 	    	if(!ids.length){
+ 	    		alert("至少选择一条。");
+ 	    		 return false;
+ 	    	}
+
+     		 $.post("{:url('delAdmin')}",{'admin_id':ids},function(data){
+     			if (data.code) {
+		    		 alert(data.msg);
+		    	}else{
+		    		 location.reload();
+		    	}
+
+ 			});
+
+
+ }
+
+ //开通人口座机
+
+  function openAuditing(id,status){
+
+    var ids;
+  	if(id){
+  		var Ids=[];
+  		Ids.push(id);
+  		ids = Ids;
+  	}
+  	else{
+  		 var IdsVal = [];
+      	 var roleids = document.getElementsByName("adminids");
+  		 for ( var j = 0; j < roleids.length; j++) {
+  		    if (roleids.item(j).checked == true) {
+  		    	IdsVal.push(roleids.item(j).value);
+  		    }
+  		 }
+  		 ids = IdsVal;
+  	}
+
+  	if(!ids.length){
+ 		alert("至少选择一条。");
+ 		 return false;
+ 	}
+
+ 	 var url = "{:url('openAuditing')}";
+ 	 $.ajax({
+ 	        url : url,
+ 	        dataType : "json",
+ 	        type : "post",
+ 	        data : {'arrayIds':ids,'status':status},
+ 	        success: function(data){
+ 	        	if (data.code) {
+		    		 alert(data.msg);
+		    	}else{
+		    		 location.reload();
+		    	}
+ 	        },
+ 	        error : function() {
+ 	        	alert('获取页面列表失败。');
+ 	        }
+ 	  });
+ }
+
+
+//全选
+ function allcheck(){
+
+ 	if ($('.check-all').is(":checked")) {
+ 		$('.admincheck').prop("checked","checked");
+ 	}else{
+ 		$('.admincheck').prop("checked",false);
+ 	}
+
+ }
+
+ function resetPwd(id){
+			$.ajax({
+				 type: "POST",
+				 dataType:'json',
+				 url:  "{:url('user/manager/resetPwd')}",
+				 cache: false,
+				 data: {id:id},
+				 success: function(res) {
+					if (res.code == 0){
+						alert(res.msg);
+					}
+					else{
+						alert(res.msg);
+					 }
+				 },
+				 error: function(data) {
+					 alert("提交失败");
+				 }
+			 })
+
+		}
+ </script>
+
+</div>
+
+
+
+
+<!-- 新建人员 -->
+<div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								 <span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">添加销售人员</h4>
+				 </div>
+				 <div class="modal-body">
+						  <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data">
+
+
+									<div class="form-group">
+										<label class="col-lg-2 control-label">用户名：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <input type="text" class="form-control textwidth"  placeholder="请输入用户名" name="username" id="userName" value="" />
+										</div>
+									</div>
+
+
+									<div class="form-group" id="pwgroup">
+										 <label class="col-lg-2 control-label">登陆密码：</label>
+											<div class="col-lg-10 col-sm-10">
+												 <input type="password" class="form-control textwidth" placeholder="请输入密码...." name="password" id="password" value="" />
+											</div>
+									</div>
+
+									<div class="form-group" id="confirm_pwgroup">
+										 <label class="col-lg-2 control-label">确认密码：</label>
+											<div class="col-lg-10 col-sm-10">
+												 <input type="password" class="form-control textwidth" placeholder="再次输入密码...." name="confirm_password" id="confirm_surepassword" value="" />
+											</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-lg-2 control-label">联系手机：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <input type="text" class="form-control textwidth" placeholder="请输入联系手机...." name="mobile" id="mobile" value="" />
+										</div>
+									</div>
+
+									<!-- <div class="form-group">
+										<label class="col-lg-2 control-label">截止日期：</label>
+										<div class="col-lg-10 col-sm-10">
+											<input type="text" class="form-control textwidth" id="expiry_date" name="expiry_date" value="" readonly="">
+													<script>
+													$('#expiry_date').fdatepicker({
+														format: 'yyyy-mm-dd',
+														pickTime: false
+													});
+													</script>
+										</div>
+									</div> -->
+
+									<div class="form-group">
+										<label class="col-lg-2 control-label">联系邮箱：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <input type="text" class="form-control textwidth" placeholder="请输入邮箱...." name="email" id="email" value="" />
+										</div>
+									</div>
+
+									<!--<div class="form-group">-->
+									<!--	<label class="col-lg-2 control-label">角色分组：</label>-->
+									<!--	<div class="col-lg-10 col-sm-10">-->
+									<!--			<select id="roleId" name="roleId" class="form-control textwidth">-->
+									<!--				<option value="">请选择角色</option>-->
+									<!--					 <option ></option>-->
+									<!--				 {/volist}-->
+									<!--			</select>-->
+
+									<!--	</div>-->
+									<!--</div>-->
+
+									<div class="form-group">
+										<label class="col-lg-2 control-label">话术审核：</label>
+										<div class="col-lg-10 col-sm-10" style="margin-top: 6px;">
+
+											<div class="field-status">
+													<input type="radio" class="radio-radioed" id="Isexamine" name="examine" checked value="1" title="是">
+													<span>开启</span>
+											</div>
+											<div class="field-status" style="margin-left:20px;">
+													<input type="radio" class="radio-radioed" id="Notexamine" name="examine" value="0" title="否">
+													<span>关闭</span>
+											</div>
+
+										</div>
+										<div style="clear:both;"></div>
+									</div>
+
+									<!--<div class="form-group">-->
+									<!--	<label class="col-lg-2 control-label">按时计费单价：</label>-->
+									<!--	<div class="col-lg-10 col-sm-10">-->
+									<!--		<input type="text" class="form-control textwidth" placeholder="请输入按时计费单价" name="time_price" id="time_price" value="" />-->
+									<!--	</div>-->
+									<!--</div>-->
+									<div class="form-group">
+										<label class="col-lg-2 control-label">机器人月租：</label>
+										<div class="col-lg-10 col-sm-10">
+											<input type="text" class="form-control textwidth" placeholder="请输入按月计费" name="month_price" id="month_price" value="" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-2 control-label">语音识别费用：</label>
+										<div class="col-lg-10 col-sm-10">
+											<input type="text" class="form-control textwidth" placeholder="识别计费单价" name="asr_price" id="asr_price" value="" />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-lg-2 control-label">可透支额度：</label>
+										<div class="col-lg-10 col-sm-10">
+											<input type="text" class="form-control textwidth" placeholder="请输入可透支额度" name="credit_line" id="credit_line" value="" />
+										</div>
+									</div>
+
+									<!--<div class="form-group">-->
+									<!--	<label class="col-lg-2 control-label">购买机器数：</label>-->
+									<!--	<div class="col-lg-10 col-sm-10">-->
+									<!--		<input type="text" class="form-control textwidth" placeholder="请输入购买的机器数" name="robot_cnt" id="robot_cnt" value="" />-->
+									<!--	</div>-->
+									<!--</div>-->
+
+									<!--<div class="form-group">-->
+									<!--	<label class="col-lg-2 control-label">损耗率：</label>-->
+									<!--	<div class="col-lg-10 col-sm-10">-->
+									<!--		 <input type="number" class="form-control textwidth" style="float: left;" placeholder="请输入损耗率" name="loss_rate" id="loss_rate" value="" />-->
+									<!--	   <span style="line-height: 40px;margin-left: 5px;">%</span>-->
+									<!--		 <div class="help-block">单位是百分比，请输入小于100的整数</div>-->
+									<!--	</div>-->
+									<!--</div>-->
+
+
+				          <input type="hidden" name="adminId" id="mumid" value="" />
+
+
+							</form>
+				  <br/>
+				 </div>
+				 <div style="clear:both;"></div>
+				<div class="modal-footer">
+
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" onclick="uploadData();" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+
+			</div>
+
+    <script type="text/javascript">
+
+	     //保存页面
+		 function addNew(uid){
+			 $("#mumid").val(uid);
+
+			 if(uid > 0){
+
+				   $('#pwgroup').css('display', 'none');
+				   $('#confirm_pwgroup').css('display', 'none');
+
+				 		$.ajax({
+				 				type: "POST",
+				 				dataType:'json',
+				 				url: "{:url('User/Manager/getadmin')}",
+				 				cache: false,
+				 				data: {id:uid},
+				 				success: function(data) {
+
+				             console.log(data);
+				 					//location.href = "{:url('User/member/whitelist')}";
+									if (data.code == 0) {
+
+										  var data = data.data;
+											$("#userName").val(data.username);
+											$("#password").val(data.password);
+                      $("#mobile").val(data.mobile);
+											$("#email").val(data.email);
+											$("#roleId").val(data.role_id);
+
+											if(data.status > 0){
+												$("#statusEnable").prop("checked",true)
+											}else{
+												$("#statusDisable").prop("checked",true)
+											}
+
+											if(data.open_tsr > 0){
+												$("#Openup").prop("checked",true)
+											}else{
+												$("#Notopen").prop("checked",true)
+											}
+
+											if(data.examine > 0){
+												$("#Isexamine").prop("checked",true)
+											}else{
+												$("#Notexamine").prop("checked",true)
+											}
+
+											$("#time_price").val(data.time_price);
+											$("#month_price").val(data.month_price);
+											$("#asr_price").val(data.asr_price);
+											$("#credit_line").val(data.credit_line);
+	            //         $("#robot_cnt").val(data.robot_cnt);
+									   	// $("#loss_rate").val(data.loss_rate);
+                      $('#newModal').modal('show');
+
+									}
+
+ 				 				},
+				 				error: function(data) {
+				 					console.log(data);
+				 					alert("提交失败");
+				 				}
+				 		})
+
+
+			 }else{
+
+				 $("#userName").val("");
+				 $("#password").val("");
+				 $("#mobile").val("");
+				 $("#email").val("");
+				 $("#roleId").val("");
+
+				 $("#statusEnable").prop("checked",true);
+				 $("#Openup").prop("checked",true);
+				 $("#Isexamine").prop("checked",true);
+
+				 $("#time_price").val("");
+				 $("#month_price").val("");
+				 $("#asr_price").val("");
+				 $("#credit_line").val("");
+				 //$("#robot_cnt").val("");
+				 //$("#loss_rate").val("0");
+				 $('#pwgroup').css('display','block');
+				 $('#confirm_pwgroup').css('display', 'block');
+				 $('#newModal').modal('show');
+
+			 }
+
+		 }
+
+
+		 function uploadData(){
+
+		 		var userName = $("#userName").val();
+		 		if(!userName){
+		 			alert("管理员名称不能为空");
+		 			return false;
+		 		}
+
+		 	  var phonenumber = $("#mobile").val();
+		 	  if(phonenumber==''){
+		 		  alert("手机号码不能为空");
+		 		  return false;
+		 	  }
+
+
+		 	  var mobileREa = /^1[3|4|5|6|7|8]\d{9}$/;
+		 	  // var matrix = mobileREa.test(mobile);
+
+		 	 // var reg = /^((\+?86)|(\(\+86\)))?\d{3,4}-\d{7,8}(-\d{3,4})?$|^((\+?86)|(\(\+86\)))?1\d{10}$/;
+		 	  if (!mobileREa.test(phonenumber)) {
+		 	  	 alert("手机号码格式不正确");
+		 	     return false;
+		 	  }
+
+				var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+				var email = $("#email").val();
+				if(email){
+					if(!reg.test(email)){
+							alert("邮箱不符合规则！");
+						return false;
+					}
+				}
+
+				// var roleId = $("#roleId").val();
+				// if(!roleId){
+				// 	alert("请选择角色");
+				// 	return false;
+				// }
+
+				// var robot_mum = $("#robot_mum").val();
+				// if(robot_mum==''){
+				// 	alert("购买机器数不能为空");
+				// 	return false;
+				// }
+
+				// var lossRate = $("#loss_rate").val();
+				// if(lossRate){
+				// 	if(lossRate > 100){
+				// 		alert("损耗率是小于100的正整数。");
+				// 		return false;
+				// 	}
+				// }
+
+
+				var href = "{:url('User/Manager/saveSale')}";
+
+			 var mumid = $("#mumid").val();
+			 if(mumid > 0){
+
+				 href = "{:url('User/Manager/saveSale')}";
+
+			 }else{
+
+				 var password = $("#password").val();
+				 if(!password){
+				 alert("密码不能为空");
+				 return false;
+				 }
+				 if(password.length<6|| password.length>12){
+					 alert("密码必须大于6位小于12位。");
+					 return false;
+				 }
+				 var confirm_password = $('#confirm_surepassword').val();
+				 if(confirm_password != password){
+				 	alert('密码不一致');
+				 	return false;
+				 }
+
+			 }
+
+
+		 		 $.ajax({
+		 		     type: "POST",
+		 		     dataType:'json',
+		 		     url: href,
+		 		     cache: false,
+		 		     data: $("#form").serialize(),
+		 		     success: function(data) {
+
+		 		     	 //location.href = "{:url('User/member/whitelist')}";
+		 		    	if (data.code == 0) {
+		 		    			$('#newModal').modal('hide');
+		 		    	     alert(data.msg + ' 页面即将自动刷新~');
+		 		    	     location.reload();
+		 		    	 	// location.href = "{:url('User/member/whitelist')}";
+		 		    	}else{
+		 		    		 alert(data.msg);
+
+		 		    	}
+
+
+
+		 		     },
+		 		     error: function(data) {
+		 		     		$('#newModal').modal('hide');
+		 		    	 alert("提交失败");
+		 		     }
+		 		 })
+
+
+
+		 }
+
+
+    </script>
+
+</div>
+
+ <!-- 充值-->
+<div class="modal fade" id="MoneyModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								 <span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title">充值</h4>
+				  </div>
+				 <div class="modal-body">
+						  <form id="moneyForm" method="post" class="form-horizontal" enctype="multipart/form-data">
+
+									<div class="form-group">
+										<label class="col-lg-2 control-label">金额：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <input type="text" class="form-control textwidth" placeholder="请输入金额" name="moneyNum" id="moneyNum" value="" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-2 control-label">备注：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <textarea class="form-control textwidth n_moneynote" placeholder="备注充值信息" name='note' id="note"></textarea>
+										</div>
+									</div>
+
+				          <input type="hidden" name="thisAdmin" id="thisAdmin" value="" />
+
+							</form>
+				  <br/>
+				 </div>
+				 <div style="clear:both;"></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" onclick="saveData();" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+
+			</div>
+
+    <script type="text/javascript">
+
+	     //加钱
+		 function addmoney(uid){
+
+			 $("#thisAdmin").val(uid);
+			 $("#moneyNum").val("");
+       $('#MoneyModal').modal('show');
+
+		 }
+
+		 //分配机器人
+		 function addrobot(uid) {
+		 	$('#robot_distribution_form > input[name="member_id"]').val(uid);
+		 	$('#checkpage').modal('show');
+		 }
+
+
+		 function saveData(){
+
+		 		var moneyNum = $("#moneyNum").val();
+		 		if(!moneyNum){
+		 			alert("金额不能为空");
+		 			return false;
+		 		}
+
+				var href = "{:url('User/Manager/addMoney')}";
+		 		 $.ajax({
+		 		     type: "POST",
+		 		     dataType:'json',
+		 		     url: href,
+		 		     cache: false,
+		 		     data: $("#moneyForm").serialize(),
+		 		     success: function(data) {
+		 		    	if (data.code == 0) {
+		 		    	    alert(data.msg + ' 页面即将自动刷新~');
+		 		    	}else{
+		 		    		 alert(data.msg);
+		 		    	}
+
+							location.reload();
+
+		 		     },
+		 		     error: function(data) {
+		 		    	 alert("提交失败");
+		 		     }
+		 		 })
+
+		   $('#MoneyModal').modal('hide');
+
+		 }
+
+		 //检查表单的必填项
+	function checkform(){
+
+		var member_id = $('#robot_distribution_form > input[name="member_id"]').val();
+		if(!member_id){
+			alert('请选择用户');
+			return false;
+		}
+		var number = $('#number').val();
+		if(!number){
+			alert('请输入数量');
+			return false;
+		}
+		var duration = $('#duration').val();
+		if(!duration){
+			alert('请输入时长');
+			return false;
+		}
+		var note = $('#robot_distribution_note').val();
+		var href = '{:url("user/device/open_up_api")}';
+		$.ajax({
+			type: "POST",
+			dataType:'json',
+			url: href,
+			cache: false,
+			data: $("#robot_distribution_form").serialize(),
+			success: function(data) {
+				if(data.code == 0){
+					alert('分配成功');
+					$('#checkpage').modal('hide');
+					window.location.href = '';
+				}else if(data.code == 4){
+					alert('机器人数量不足，请购买机器人！ ');
+				}else{
+					alert('分配失败');
+					$('#checkpage').modal('hide');
+				}
+				console.log(data);
+			},
+			error: function(data) {
+				 alert("提交失败");
+				 $('#checkpage').modal('hide');
+			}
+		})
+	}
+
+    </script>
+
+</div>
+
+<!-- 分配机器人 -->
+<div class="modal fade" id="checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">分配机器人</h4>
+       </div>
+       <div class="modal-body pagelists">
+
+
+	        <form id="robot_distribution_form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >
+
+					   <!--  <div class="form-group">-->
+								<!--<label class="col-lg-4 control-label"><i>*</i>线路商名称：</label>-->
+								<!--<div class="col-lg-8 col-sm-8">-->
+								<!--	 <input type="text" class="form-control textwidth" name="name" id="name" />-->
+								<!--</div>-->
+					   <!-- </div>-->
+							<input type='hidden' name='member_id' />
+						  <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>分配数量：</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="number" id="number" />
+								</div>
+					    </div>
+
+					     <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>开通时长：</label>
+								<div class="col-lg-8 col-sm-8">
+								    <select class="form-control textwidth" id="duration" name="duration">
+										    <option value="">请选择开通时长</option>
+												<option value="7">一星期</option>
+												<option value="30">一个月</option>
+												<option value="365">一年</option>
+										</select>
+								</div>
+					    </div>
+							<div class="form-group">
+								<label class="col-lg-4 control-label">备注：</label>
+								<div class="col-lg-8 col-sm-8">
+									<textarea class="form-control textwidth" id="robot_distribution_note" name="note"></textarea>
+								</div>
+							</div>
+					    <div class="form-group" style="text-align: center;">
+							   	<input type="hidden" name="deviceId" id="deviceId" value="{$thisId|default=''}">
+								  <input type="hidden" name="simId" id="simId" value="">
+									<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						 </div>
+		     </form>
+       </div>
+       <div style="clear:both"></div>
+	 </div>
+  </div>
+</div>
+
+{/block}

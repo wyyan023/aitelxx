@@ -1,0 +1,90 @@
+  
+                 <section class="navbar navbar-default main-box-header clearfix">
+	            
+		         <div class="pull-right">
+				   <div class="form-inline" style=" margin-top: 6px; margin-right: 5px;">
+					  <div class="form-group">
+					    <label>用户名：</label>
+					    <input type="text" class="form-control" style="width:150px;" id="musername" name="username" placeholder="请输入用户名">
+					  </div>&nbsp;&nbsp;&nbsp;
+					  <div class="form-group">
+					    <label>手机号码：</label>
+					    <input type="text" class="form-control" style="width:150px;" id="mmobile" name="mobile" placeholder="请输入手机号码">
+					  </div>&nbsp;&nbsp;
+				    <button class="btn btn-primary" onclick="loadexcel(1);" type="button">搜索</button>
+				  </div>
+				 </div>
+		    </section>
+			  <div class="table-responsive">			  
+				  <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					        <th></th>
+					        <th class="text-center">ID</th>
+					        <th class="text-center">用户名</th>
+					        <th class="text-center">头像</th>
+					        <th class="text-center">昵称</th>
+					        <th class="text-center">手机号</th>
+					        <th class="text-center">部门</th>
+					        <th class="text-center">职称</th>
+					      
+					    </tr>
+				    </thead>
+				   <tbody>
+				      {volist name="list" id="vo"}
+					    <tr class="imgclass">
+					      <td class="text-center">
+					         <input type="radio" name="memberids" class="usercheck" value="{$vo.uid}">
+					      <!--   <input type="checkbox" name="memberids" class="usercheck" value="{$vo.uid}"/> -->
+					      </td>
+						  <td class="text-center">{$vo.uid}</td>
+						  <td class="text-center">{$vo.username}</td>
+						   <td class="text-center">
+						   <img src="{$vo.user_logo}" style="width:30px;" />
+						  </td>
+						  <td class="text-center">{$vo.nickname}</td>
+						  <td class="text-center">{$vo.mobile}</td>
+						  <td class="text-center"></td>
+						  <td class="text-center"></td>
+						
+						</tr>
+                      {/volist}
+				    </tbody>
+				  </table> 
+		           <div class="row">
+                        <div class="col-sm-4 text-left">
+                          
+                        	
+                        </div>
+                        <div class="col-sm-8 text-right">
+                          <ul class="pagination">
+                            {switch name="$Nowpage"}
+							    {case value="1"}
+							       <li id="prevbtn" class="disabled"><span>«</span></li>  
+							    {/case}
+							    {default /}
+							     <li><a href="javascript:void(0);" onclick="loadexcel({$Nowpage-1});"><span>«</span></a></li> 
+							{/switch}
+                            
+                              {for start="0" end="$page"}
+                                {switch name="$i+1"}
+								    {case value="$Nowpage"}
+								      <li class="active"><a href="javascript:void(0);" onclick="loadexcel({$i+1});">{$i+1} </a></li> 
+								    {/case}
+								    {default /}
+								     <li><a href="javascript:void(0);" onclick="loadexcel({$i+1});">{$i+1} </a></li> 
+								{/switch}
+
+							  {/for}
+							{switch name="$Nowpage"}
+							    {case value="$page"}
+							       <li id="prevbtn" class="disabled"><span>»</span></li>  
+							    {/case}
+							    {default /}
+							     <li><a href="javascript:void(0);" onclick="loadexcel({$Nowpage+1});"><span>»</span></a></li> 
+							{/switch}
+                   
+                           </ul>
+                        </div>
+                    </div>
+			  </div>

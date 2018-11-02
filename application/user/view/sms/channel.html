@@ -1,0 +1,471 @@
+{extend name="public/base" /}
+{block name="body"}
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<style type="text/css">
+	.table tbody>tr>td {
+	padding: 12px 8px;
+	}
+	.table-responsive {
+	min-height: .01%;
+	overflow-x: hidden;
+	}
+
+	.messageinfo{
+	 text-align:right;
+	 
+	}
+	.infotable tr td{
+	 padding:5px;
+	}
+
+	.textwidth{
+		width:250px;
+	}
+	.form-group > label{
+		min-width: 65px;
+	}
+	.form-group > .col-lg-10 {
+			width: 80.333333%;
+	}
+	.field-status{
+			float: left;
+	}
+
+	.modal-footer {
+			text-align: center;
+	}
+	.form-group {
+			margin-bottom: 10px;
+	 }
+  .n_panel_title i {
+    vertical-align: unset;
+  }
+  .n_moneynote {
+    height: 80px;
+    padding: 8px;
+  }
+</style>
+
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header n_head_box n_head_box_b clearfix">
+		  <div class="pull-left">
+			  <span class="n_panel_title"><i class="icon iconfont icon-huiyuan"></i>短信通道</span>
+				 <!-- href="{:url('addAdmin')}" -->
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+			<section class="navbar main-box-header clearfix">
+	    	<a class="btn btn-primary pull-left" href="javascript:void(0);" onclick="addNew(0);">添加短信通道</a>
+		  </section>
+      <div class="table-responsive">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+					  	<th class="text-center"></th>
+				        <th class="text-center">通道名称</th>
+				        <th class="text-center">接口地址</th>
+								<th class="text-center">短信帐号</th>
+								<th class="text-center">状态</th>
+								<th class="text-center">默认</th>
+				        <th class="text-center">价格</th>
+								<th class="text-center">剩余数量</th>
+								<th class="text-center">备注</th>
+				        <th class="text-center">操作</th> 
+					    </tr>
+				    </thead>
+				    <tbody>
+					    <tr>
+					     <td class="text-center">
+					        <input type="checkbox" name="adminids" class="admincheck" value=""/>
+					     </td>
+						   <td class="text-center">yyrj</td>
+						   <td class="text-center">http://119.23.255.215:8088/v2sms.aspx</td>
+						   <td class="text-center">僵小鱼</td>
+							 <td class="text-center">有效</td>
+						   <td class="text-center">是</td>
+						   <td class="text-center">/条</td>
+						   <td class="text-center">0</td>
+						   <td class="text-center">备注</td>
+							 <td class="text-center">
+					      <a href="javascript:void(0);" onclick="addNew(id);">编辑</a>
+				        <a href="javascript:void(0);" onclick="delAdmin(id);">删除</a>
+						 	 </td>
+							</tr>
+				    </tbody>
+				  </table>
+				  <div class="row">
+						<div class="col-sm-4 text-left">
+							 <div class="pull-left"></div>	
+						</div>
+						<div class="col-sm-8 text-right">
+							<!--page-->
+						</div>
+					</div>
+			  </div>
+		</div>
+	</div>					
+</div>
+
+<script type="text/javascript">
+ 
+  $(function(){
+		var keyword = "{$_GET['keyword']|default=''}";
+		$('#keyword').val(keyword);
+		//调用分页方法
+		// var now_page = "{$_GET['page']|default=1}";
+		// var total_page = 2;
+		
+		// fenye(parseInt(total_page),parseInt(now_page));
+	})
+
+	//分页
+	function fenye(total_page,now_page){
+		//设置上一页
+		var pre = now_page - 1;
+		//设置下一页
+		var next = now_page + 1;
+		
+		var str = '<ul class="pagination">';
+		if(now_page == 1 || pre < 1 || total_page == 1){
+			str += '<li class="active"><span>1</span></li>';
+		}else	if(pre == 1){
+			str += '<li><a href="/User/sms/channel?page='+pre+'"> << </a></li>';
+			str += '<li class="active"><span>'+now_page+'</span></li>';
+		}else	if(pre == 2){
+			str += '<li><a href="/User/sms/channel?page='+(pre - 1)+'"> << </a></li>';
+			str += '<li><a href="/User/sms/channel?page='+pre+'">'+pre+'</a></li>';
+			str += '<li class="active"><span>'+now_page+'</span></li>';
+		}else{
+			str += '<li><a href="/User/sms/channel?page=1">首页</a></li>';
+			str += '<li><a href="/User/sms/channel?page='+(pre - 1)+'"> << </a></li>';
+			str += '<li><a href="/User/sms/channel?page='+pre+'">'+pre+'</a></li>';
+			str += '<li class="active"><span>'+now_page+'</span></li>';
+		}
+		if(next > total_page){
+			str += '';
+		}else if((total_page - next) == 0){
+			str += '<li><a href="/User/sms/channel?page='+total_page+'">'+total_page+'</a></li>';
+		}else	if((total_page - next) == 1){
+			str += '<li><a href="/User/sms/channel?page='+next+'">'+next+'</a></li>';
+			str += '<li><a href="/User/sms/channel?page='+(next + 1)+'"> >> </a></li>';
+		}else{
+			str += '<li><a href="/User/sms/channel?page='+next+'">'+next+'</a></li>';
+			str += '<li><a href="/User/sms/channel?page='+(next + 1)+'"> >> </a></li>';
+			str += '<li><a href="/User/sms/channel?page='+total_page+'">尾页</a></li>';
+		}
+		
+		str += '</ul>';
+		$('.col-sm-8').html(str);
+	}
+
+
+	//删除Items
+	function delAdmin(id){
+	    var r=confirm('确认删除?');
+	     	if (!r) 
+	           return; 
+	     	   var ids;
+	 	    	if(id){
+	 	    		var Ids=[];
+	 	    		Ids.push(id);
+	 	    		ids = Ids;
+	 	    	}else{
+	 	    		 var IdsVal = [];
+	 	        	 var roleids = document.getElementsByName("adminids");
+	 	    		 for ( var j = 0; j < roleids.length; j++) {
+	 	    		    if (roleids.item(j).checked == true) {
+	 	    		    	IdsVal.push(roleids.item(j).value);
+	 	    		    }
+	 	    		 }
+	 	    		 ids = IdsVal;
+	 	    	}
+	 		
+	 	    	if(!ids.length){
+	 	    		alert("至少选择一条。");
+	 	    		 return false; 
+	 	    	}
+	 	    	
+	     		// $.post("接口",{'admin_id':ids},function(data){
+	     		// 	if (data.code) {
+			    	// 	 alert(data.msg);
+			    	// }else{
+			    	// 	 location.reload();
+			    	// }
+	 				
+	 			// });
+}
+
+	//全选
+	function allcheck(){		
+	 	if ($('.check-all').is(":checked")) {	
+	 		$('.admincheck').prop("checked","checked");
+	 	}else{
+	 		$('.admincheck').prop("checked",false);
+	 	}
+	}
+ 
+</script>
+  
+</div>
+
+<!-- 添加短信通道 -->
+<div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								 <span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">添加短信通道</h4>
+				 </div>
+				 <div class="modal-body">
+						  <form id="form" method="post" class="form-horizontal" enctype="" method="post">
+									<div class="form-group">
+										<label class="col-lg-2 control-label">通道名称：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <input type="text" class="form-control textwidth" onkeyup="checkname(this);"  placeholder="请输入通道名称" name="channelName" id="channel_name" value="" />
+										</div>
+									</div>
+									
+									 
+									<div class="form-group">
+										 <label class="col-lg-2 control-label">接口地址：</label>
+											<div class="col-lg-10 col-sm-10">
+												 <input type="text" class="form-control textwidth" placeholder="请输入接口地址" name="channelUrl" id="channel_url" value="" />
+											</div>
+									</div>         
+									 
+
+									<div class="form-group">
+										<label class="col-lg-2 control-label">短信ID：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <input type="text" class="form-control textwidth" placeholder="请输入短信ID" name="accountId" id="account_id" value="" />
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-lg-2 control-label">短信账号：</label>
+										<div class="col-lg-10 col-sm-10">
+											<input type="text" class="form-control textwidth" id="account_zhanghao" placeholder="请输入短信账号" name="accountZhanghao" value="">
+													<!--<script>-->
+													<!--$('#expiry_date').fdatepicker({-->
+													<!--	format: 'yyyy-mm-dd',-->
+													<!--	pickTime: false-->
+													<!--});-->
+													<!--</script>	-->
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-lg-2 control-label">短信密码：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <input type="text" class="form-control textwidth" placeholder="请输入短信密码" name="smsPw" id="sms_pw" value="" />
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-lg-2 control-label">备注：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <input type="text" class="form-control textwidth" placeholder="请输入备注" name="accountRemark" id="account_remark" value="" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-2 control-label">签名在前：</label>
+										<div class="col-lg-10 col-sm-10" style="margin-top: 6px;">
+											<div class="field-status">
+													<input type="checkbox" class="row-selected" id="Isexamine_singed" name="singed" value="1" title="是">
+											</div>
+										</div>
+									</div>
+				
+									<div class="form-group">
+										<label class="col-lg-2 control-label">是否有效：</label>
+										<div class="col-lg-10 col-sm-10" style="margin-top: 6px;">
+											<div class="field-status">
+													<input type="checkbox" class="row-selected" id="Isexamine_is_send" name="is_send" value="1" title="是">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-2 control-label">默认：</label>
+										<div class="col-lg-10 col-sm-10" style="margin-top: 6px;">
+											<div class="field-status">
+													<input type="checkbox" class="row-selected" id="Isexamine_is_default" name="is_default" value="1" title="是">
+											</div>
+										</div>
+									</div>
+				          <input type="hidden" name="adminId" id="mumid" value="" />
+							</form>
+				  <br/>
+				 </div>
+				 <div style="clear:both;"></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" onclick="uploadData();" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+						 
+			</div>
+		 
+    <script type="text/javascript">
+
+	     //保存页面
+		 function addNew(uid){	
+			 $("#mumid").val(uid);
+			 console.log($("#mumid").val(uid));
+			 
+			 if(uid > 0){
+				$('#pwgroup').css('display','none');
+				// $.ajax({
+		 	// 			type: "POST",
+		 	// 			dataType:'json',
+		 	// 			url: " ",
+		 	// 			cache: false,
+		 	// 			data: {id:uid},
+		 	// 			success: function(data) {
+				// 			console.log(data);
+				// 			if (data.code == 0) {
+				// 			   var data = data.data;
+				// 			 	 $("#channel_name").val(data.);
+				// 				 $("#channel_url").val();
+				// 				 $("#account_id").val();
+				// 				 $("#account_zhanghao").val();
+				// 				 $("#sms_pw").val();
+				// 				 $("#account_remark").val();
+
+				// 				if(data.status > 0){
+				// 					$("#Isexamine_singed").prop("checked",true)
+				// 				}else{
+				// 					$("#Isexamine_singed").prop("checked",true)
+				// 				}
+								
+				// 				if(data.open_tsr > 0){
+				// 					$("#Isexamine_is_send").prop("checked",true)
+				// 				}else{
+				// 					$("#Isexamine_is_send").prop("checked",true)
+				// 				}
+								
+				// 				if(data.examine > 0){
+				// 					$("#Isexamine_is_default").prop("checked",true)
+				// 				}else{
+				// 					$("#Isexamine_is_default").prop("checked",true)
+				// 				}
+								
+    //             $('#newModal').modal('show');
+
+				// 			}
+ 		 //				},
+		 	// 			error: function(data) {
+		 	// 				alert("提交失败");
+		 	// 			}
+		 	// 	}) 
+			 }else{
+				 $("#channel_name").val("");
+				 $("#channel_url").val("");
+				 $("#account_id").val("");
+				 $("#account_zhanghao").val("");
+				 $("#sms_pw").val("");
+				 $("#account_remark").val("");
+
+				 $("#Isexamine_singed").prop("checked",true);
+				 $("#Isexamine_is_send").prop("checked",true);
+				 $("#Isexamine_is_default").prop("checked",true);
+				 
+				 $('#pwgroup').css('display','block');
+				 $('#newModal').modal('show');
+
+			 }
+		 }	
+		 
+		 
+		 function uploadData(){
+		 	
+		 		var channel_name = $("#channel_name").val();
+		 		if(!channel_name){
+		 			alert("通道名称不能为空"); 
+		 			return false; 
+		 		}
+		 	  var channel_url = $("#channel_url").val();
+		 	  if(channel_url==''){
+		 		  alert("接口地址不能为空"); 
+		 		  return false; 
+		 	  }
+				var account_id = $("#account_id").val();
+		 	  if(account_id==''){
+		 		  alert("短信ID不能为空"); 
+		 		  return false; 
+		 	  }
+				var account_zhanghao = $("#account_zhanghao").val();
+		 	  if(account_zhanghao==''){
+		 		  alert("短信账号不能为空"); 
+		 		  return false; 
+		 	  }
+		 	  var sms_pw = $("#sms_pw").val();
+		 	  if(sms_pw==''){
+		 		  alert("短信账号不能为空"); 
+		 		  return false; 
+		 	  }
+		 	  
+				
+				
+				
+				var href = " ";
+				
+			 
+		 		 $.ajax({
+		 		     type: "POST",
+		 		     dataType:'json',
+		 		     url: href,
+		 		     cache: false,
+		 		     data: $("#form").serialize(),
+		 		     success: function(data) {
+		 
+		 		     	 //location.href = "{:url('User/member/whitelist')}";
+		 		    	if (data.code == 0) {
+		 		    	     alert(data.msg + ' 页面即将自动刷新~');
+		 		    	 	// location.href = "{:url('User/member/whitelist')}";
+		 		    	}else{
+		 		    		 alert(data.msg);
+		 		    	}
+							
+							location.reload();
+							
+		 		     },
+		 		     error: function(data) {
+		 		    	 alert("提交失败");
+		 		     }
+		 		 }) 
+		 		 
+		   $('#newModal').modal('hide');
+
+		 }
+		 
+
+		 function checkname(obj){
+		 	
+		 	var name = $(obj).val();
+		 	
+		 	$.post(" ",{'name':name},function(data){
+		 		
+		 		if(!data.code){
+		 			alert(data.msg);
+		 		}else{
+		 			//window.location.href=window.location.href;
+		 		}
+		 		
+		 	}); 
+		 	
+		 }
+		 
+    </script>
+      
+</div>
+
+{/block}

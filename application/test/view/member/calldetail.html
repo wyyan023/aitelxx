@@ -1,0 +1,393 @@
+
+ <style type="text/css">
+	.textwidth{
+		  width:250px;
+	}
+	.add_yuyin{height:.85rem;border-top:1px solid #e5e5e5;margin-left:.28rem;line-height: .85rem;width:100%;;float:left;}
+	.luzhiyy{position:relative;font-size:.3rem;color:#666}
+	.luzhiyy::after{position:absolute;right:.25rem;top:.28rem;width:.3rem;height:.3rem;content:"";background:url("../images/icon.png") no-repeat -5.78rem -3.59rem;background-size:14.57rem 4.86rem;}
+	.luzhiyy s{display: inline-block;width:.48rem;height:.48rem;background:url("../images/icon.png") no-repeat -5.59rem -2.86rem;background-size:14.57rem 4.86rem;vertical-align: middle;margin-right:.24rem;}
+	.tijaobtn{width:90%;height:.8rem;background-color:#f16461;text-align: center;line-height: .8rem;color:#fff;margin:0rem auto;display: block;border-radius: 6px;font-size:.3rem;}
+	.tijaobtn[disabled]{background-color:#f4cac9;}
+	.r_yuyin{color:#999999;height:.4rem;line-height:.4rem;padding:0 .1rem;    background-color: #95ce73;
+	    border: 1px solid #368e42;border-radius: 6px;max-width: 75%;min-width: 18%;position: relative;float:right;}
+	.r_yuyin s{width:.4rem;height:.4rem;position:absolute;right:.2rem;top:.09rem;background:url("../images/icon.png") no-repeat -7.11rem -3.62rem;background-size:14.57rem 4.86rem;}
+	 .deleteicon{width:.55rem;height:.5rem;background:url("../images/icon.png") no-repeat -6.17rem -3.41rem;background-size:14.57rem 4.86rem;margin-top:.12rem;margin-left:.1rem;float:left;}
+
+	.luyin_dialog{position: absolute;z-index: 500;top:0;left:0;bottom:0;right:0;background: url("../images/luyinbg.jpg") no-repeat center center;background-size: cover;display: none;}
+	.r_yuyin i{    float: right;
+	    color: #ffffff;
+	    font-size: 21px;
+	    font-weight: 600;
+		}
+	.header_img {
+	   font-size:30px;
+	}
+	.audio-c{
+	 width: 100%;
+	    background-color: #6b9cb6;
+	    text-align: center;
+		padding-top: 5px;
+
+	}
+	.info{
+		display:block;
+		float:left;
+		width:27%;
+		background-color:#fff;
+		margin-right:7px;
+
+	}
+	.info h4{
+	    font-weight: bold;
+	    background-color: #6b9cb6;
+	    color: #fff;
+	    padding: 5px;
+	    margin-top: 0px;
+		width:100%
+
+	}
+	.item{
+		border-bottom:2px solid #ccc;
+		
+		padding:5px;
+
+	}
+
+	.greenactive{
+
+	    background-color: green;
+		color:white;
+	}
+
+	.tip{
+		font-size:12px;
+	}
+	.popover-content{
+		color:#008cee; 
+		text-align: right;
+		margin-right: 50px;
+}
+</style>
+
+
+<link href="__STATIC__/css/chat.css" rel="stylesheet" type="text/css">
+<script src="__STATIC__/js/audio.js"></script>
+
+
+<!--  通话详情  -->
+
+<div class="modal fade bs-example-modal-lg" id="call-detail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	
+	<div class="modal-dialog modal-lg" role="document">
+
+		<div class="modal-content">
+
+		  <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		    <h4 class="modal-title"><strong>通话详情</strong></h4>
+		  </div>
+
+		  <div class="modal-body">
+
+                <div class="row">
+					<div class="containerss">
+
+						<div class="info" >
+
+							<div style="margin-top: 10px;font-size: 13px;">
+							姓名：<span class="record" style="font-size: 13px;" id="nickname"></span>
+							</div>
+
+							<div style="margin-top: 10px;font-size: 13px;">
+							性别：<span class="iparea" style="font-size: 13px;" id="sex"></span>
+							</div>
+
+							<div style="margin-top: 10px;font-size: 13px;">
+							号码：<span style="font-size: 10px;" id="mobile"></span>
+							</div>
+
+							<h4>通话结果</h4>
+							<div style="margin-top: 10px;font-size: 13px;">
+							拨打时间：<span class="record" style="font-size: 13px;" id="last_dial_time"></span>
+							</div>
+
+							<div style="margin-top: 10px;font-size: 13px;">
+							通话时长：<span class="iparea" style="font-size: 13px;" id="duration"></span>
+							</div>
+							
+							<div style="margin-top: 10px;font-size: 13px;">
+							通话轮次：<span class="iparea" style="font-size: 13px;" id="call_time"></span>
+							</div>
+							<div style="margin-top: 10px;font-size: 13px;">
+							主叫号码：<span class="iparea" style="font-size: 13px;" id="originatingCall"></span>
+							</div>
+							<div style="margin-top: 10px;font-size: 13px;">
+							命中关键词：<span class="iparea" style="font-size: 13px;" id="keyNum"></span>
+							</div>
+							
+							
+
+							<div style="margin-top: 10px;font-size: 13px;">
+							拨打状态:<span style="font-size: 10px;" id="statusinfo"></span>
+							</div>
+							
+							<h4 >客户意向评估等级</h4>
+
+							<div class="item" data-v="6" id="level6">
+							A类<span class="tip" >(有明确意向)</span>
+							</div>
+
+							<div class="item" data-v="5" id="level5">
+							B类<span class="tip">(可能有意向)</span>
+							</div>
+
+							<div class="item" data-v="4" id="level4">
+							C类<span class="tip">(明确拒绝)</span>
+							</div>
+
+							<div class="item" data-v="3" id="level3">
+							D类<span class="tip">(用户忙)</span>
+							</div>
+
+							<div class="item" data-v="2" id="level2">
+							E类<span class="tip">(拨打失败)</span>
+							</div>
+						<div class="item" data-v="1" id="level1">
+							F类<span class="tip">(无效客户)</span>
+							</div>
+							<h5 style="text-align:left;background-color:#ccc;padding-left: 27px;">*点击上面等级可以修改</h5>
+
+						</div>
+
+						<div id="chatcontent" class="content chat-block" tabindex="0">
+
+							<div class="audio-c">
+							    <audio src="" id="record_path" controls="controls"></audio>
+							</div>
+
+							<div id="msglist">
+
+			
+
+
+              </div>
+					
+						</div>
+
+                    <!--  -->
+					</div>
+			    </div>		       
+		  	
+		  </div>
+
+		</div>
+
+	</div>
+
+
+<script type="text/javascript">
+  
+
+	function gotoDetail(uid){
+
+		// window.location.href = "{:url(\'detail\')}/id/"+uid;  
+
+          
+	    $.post("{:url('backdetail')}",{'id':uid},function(data){
+				if(data){
+
+					if(data.code == 0){
+						
+						  var memberInfo = data.data.memberInfo;
+							var bills = data.data.bills;
+
+							$("#nickname").text(memberInfo.nickname);
+							$("#sex").text(memberInfo.sex);
+							$("#mobile").text(memberInfo.mobile);
+							$("#last_dial_time").text(memberInfo.last_dial_time);
+
+							$("#duration").text(memberInfo.duration+'秒');
+							$("#call_time").text(memberInfo.call_times+'轮');  
+							$("#originatingCall").text(memberInfo.originating_call);
+							$("#keyNum").text(data.data.num);
+							var strstatus = "未拨打";
+
+							switch (memberInfo.status) {
+								case '2':
+									strstatus = "已接通";
+									break;
+								case '3':
+									strstatus = "无人接听";
+									break;
+								case '4':
+									strstatus = "停机";
+									break;
+								case '5':
+									strstatus = "空号";
+									break;
+								case '6':
+									strstatus = "正在通话中";
+									break;
+								case '7':
+									strstatus = "关机";
+									break;
+								case '8':
+									strstatus = "用户拒接";
+									break;
+								case '9':
+									strstatus = "网络忙";
+									break;
+								case '10':
+									strstatus = "来电提醒";
+									break;
+								case '11':
+									strstatus = "呼叫转移失败";
+									break;
+								default:
+									strstatus = "--";
+									}	
+							$("#statusinfo").text(strstatus);
+							$(".greenactive").removeClass("greenactive");
+	
+							if(memberInfo.level == 1){
+								 $("#level1").addClass("greenactive");
+							}else if(memberInfo.level == 2){
+								 $("#level2").addClass("greenactive");
+							}else if(memberInfo.level == 3){
+								 $("#level3").addClass("greenactive");
+							}else if(memberInfo.level == 4){
+								 $("#level4").addClass("greenactive");
+							}else if(memberInfo.level == 5){
+								 $("#level5").addClass("greenactive");
+							}
+
+							$("#record_path").attr('src','/'+memberInfo.record_path);
+
+							 $("#msglist").empty();
+
+						for(var i=0;i<bills.length;i++){
+
+							var tempbills = bills[i];
+
+							//var tempstr = "";
+
+							if(tempbills.role == 0){
+								var tempstr = '<div class="jimi_lists clearfix">'
+										+ '<div class="header_img  icon iconfont icon-zuoxi1"></div>' 
+										+ '<table class="msg" cellspacing="0" cellpadding="0">'
+										+ '<tbody>'
+										+ '<tr>'
+										+ '<td></td>'
+										+ '<td></td>'
+										+ '</tr>'
+										+ '<tr>'
+										+ '<td class="lt"></td>'
+										+ '<td class="tt"></td>'
+										+ '<td class="rt"></td>'
+										+ '</tr>'
+										+ '<tr>'
+										+ '<td class="lm"><span></span></td>'
+										+ '<td class="mm">'
+										+ '<span class="wel"><span class="visitor"><p>'
+										+ ''+tempbills.message+'</p></span></span>'
+										+ '</td>'
+										+ '<td class="rm">'	
+										+ '</td>'
+										+ '</tr>'
+										+ '<tr>'
+										+ '<td class="lb"></td>'
+										+ '<td class="bm"></td>'
+										+ '<td class="rb"></td>'
+										+ '</tr>'
+										+ '<tr><td></td></tr>'
+										+ '</tbody>'
+										+ '</table>'
+										+ '</div>'; 
+
+							}else{
+                                    var tempstr = '<div class="customer_lists clearfix">'
+										+ '<div class="header_img jimi3 icon iconfont icon-gerenkehuguanli">'
+										+ '</div>'
+										+ '<table class="msg" cellspacing="0" cellpadding="0">'
+										+ '<tbody>'
+										+ '<tr>'
+										+ '<td></td>'
+										+ '<td></td>'
+										+ '</tr>'
+										+ '<tr>'
+										+ '<td class="lt"></td>'
+										+ '<td class="tt"></td>'
+										+ '<td class="rt"></td>'
+										+ '</tr>'
+
+										+ '<tr>'
+										+ '<td class="lm"></td>'
+										+ '<td class="mm">'+tempbills.message+'</td>'									
+										+ '<td class="rm"><span></span></td>'
+										+ '</tr>'
+										+ '<tr>'
+										+ '<td class="lb"></td>'
+										+ '<td class="bm"></td>'
+										+ '<td class="rb"></td>'
+										+ '</tr>'
+
+										+ '</tbody>'
+										+ '</table>'
+										+ '</div>';
+
+										if((tempbills.status == 1) && tempbills.hit_keyword){
+                                          tempstr += '<div class="customer_lists clearfix">'
+											  + '<div class="session-item-left">'
+													 + '<div class="ant-popover-placement ant-popover-placement-left">'
+															 + '<div class="popover-content">【'+tempbills.hit_keyword+'】<br></div>'
+													 + '</div>'
+											  + '</div>'
+										     + '</div>';
+										}
+
+							}
+
+                          $("#msglist").append(tempstr);
+							
+
+						}
+
+
+
+					}else{
+							console.log(data);
+					}
+
+				}else{
+
+					console.log(data);
+				  //	window.location.href=window.location.href;
+				}
+		 }); 	
+
+	  $("#thisId").val(uid);  
+
+	  $('#call-detail').modal('show');
+
+	}	
+
+
+	$('.item').click(function(){	
+
+		var level = $(this).attr('data-v');
+		var uid = $("#thisId").val();  
+
+		$.post("{:url('changeLevel')}/id/"+uid,{'level':level},function(res){
+			if (res.code == 0){	
+
+			}
+			alert(res.msg);
+		});
+		$(".greenactive").removeClass("greenactive");
+		$(this).addClass("greenactive");
+	});
+
+</script>
+
+</div>

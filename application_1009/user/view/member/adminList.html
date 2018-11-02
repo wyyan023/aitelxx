@@ -1,0 +1,287 @@
+{extend name="public/base"/}
+{block name="body"}
+<style type="text/css">
+.table tbody>tr>td {
+padding: 6px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">
+	    <header class="main-box-header clearfix">
+		  <div class="pull-left">
+			  <h1>管理员管理</h1>
+			 <a class="btn btn-primary" href="{:url('addAdmin')}">
+			    <i class="fa fa-plus-circle fa-lg"></i> 新 增
+			 </a> 
+		  </div>
+		</header>
+	 <div class="main-box-body clearfix">
+	       <section class="navbar navbar-default main-box-header clearfix">
+	           
+		         <div class="pull-right form-inline">
+				   <form class="form-inline" method="get" role="form">
+					  <div class="form-group">
+					    <label>用户名：</label>
+					    <input type="text" class="form-control" style="width:200px;" id="username" name="username" placeholder="请输入用户名">
+					  </div>&nbsp;&nbsp;&nbsp;
+					  <div class="form-group">
+					    <label>手机号码：</label>
+					    <input type="text" class="form-control" style="width:200px;" id="mobile" name="mobile" placeholder="请输入手机号码">
+					  </div>&nbsp;&nbsp;
+				     <button class="btn btn-primary" type="submit">搜索</button>&nbsp;
+				     <span class="btn btn-primary" onclick="loadexcel(1);">从用户导入管理员</span>
+				  </form>
+				  
+				 </div>
+		    </section>
+			<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>
+		     
+			  <div class="table-responsive">			  
+				  <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					        <th></th>
+					        <th class="text-center">ID</th>
+					        <th class="text-center">用户名</th>
+					        <th class="text-center">头像</th>
+					        <th class="text-center">昵称</th>
+					        <th class="text-center">邮箱</th>
+					        <th class="text-center">手机号</th>
+					        <th class="text-center">部门</th>
+					        <th class="text-center">职称</th>
+					        <th class="text-center">注册时间</th>
+					        <th class="text-center">状态</th>
+					        <th class="text-center">操作</th> 
+					    </tr>
+				    </thead>
+				   <tbody>
+				      {volist name="list" id="vo"}
+					    <tr class="imgclass">
+					      <td class="text-center">
+					        <input type="checkbox" name="userids" class="usercheck" value="{$vo.uid}"/>
+					      </td>
+						  <td class="text-center">{$vo.uid}</td>
+						  <td class="text-center">{$vo.username}</td>
+						   <td class="text-center">
+						   <img src="{$vo.user_logo}" style="width:30px;" />
+						  </td>
+						  <td class="text-center">{$vo.nickname}</td>
+						  <td class="text-center">{$vo.email}</td>	
+						  <td class="text-center">{$vo.mobile}</td>
+						  <td class="text-center"></td>
+						  <td class="text-center"></td>
+						  <td class="text-center">{$vo.reg_time}</td>
+						  <td class="text-center">
+						    {switch name="$vo.status" }
+							    {case value="1"}
+                                  <a href="javascript:void(0);" onclick="changestatus('{$vo.uid}',0);">启用</a>
+							    {/case}
+							    {default /}
+                                  <a href="javascript:void(0);" onclick="changestatus('{$vo.uid}',1);">禁用</a>
+							   {/switch}
+					      </td>		
+						 
+						 
+						   <td class="text-center">
+						   	  <a href="{:url('user/Member/editAdmin',array('id'=>$vo.uid))}" >编辑</a>
+						   	  <a href="javascript:void(0);" onclick="del({$vo.uid});">删除</a>
+							  <a href="javascript:void(0);" onclick="copydata({$vo.uid});">复制数据</a>
+						   </td>
+						</tr>
+                      {/volist}
+				    </tbody>
+				  </table> 
+		           <div class="row">
+                        <div class="col-sm-4 text-left">
+                           <div class="pull-left">
+						    	<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+								<button class="btn btn-primary" onclick="del(0);" target-form="ids">删 除</button>
+							    <button class="btn btn-primary" onclick="changestatus(0,1);" target-form="ids">启用</button>
+							    <button class="btn btn-primary" onclick="changestatus(0,0);" target-form="ids">停用</button>
+						   </div>	
+                        	
+                        </div>
+                        <div class="col-sm-8 text-right">{$page}</div>
+                    </div>
+			  </div>
+			
+	   </div>
+  </div>
+</div>
+	
+<script type="text/javascript">	
+
+//修改状态
+function changestatus(id,status){
+
+     var ids=[];
+
+  	if(id){
+ 		ids.push(id);
+ 	}else{
+ 		
+     	 var roleids = document.getElementsByName("userids");
+ 		 for ( var j = 0; j < roleids.length; j++) {
+ 		    if (roleids.item(j).checked == true) {
+ 		    	ids.push(roleids.item(j).value);
+ 		    }
+ 		 }
+ 	}
+ 
+ 	if(!ids.length){
+ 		alert("至少选择一条。");
+ 		 return false; 
+ 	}
+
+	$.post("{:url('adminStatus')}",{'mem_id':ids,'status':status},function(data){
+		if(data){
+			alert(data);
+		}else{
+			window.location.href=window.location.href;
+		}
+	}); 
+}
+
+
+ 
+$(function(){
+  var username = "{$_GET['username']|default=''}";
+  $('#username').val(username);
+  var mobile = "{$_GET['mobile']|default=''}";
+  $('#mobile').val(mobile);
+}) 
+
+
+//全选
+ function allcheck(){			
+ 	if ($('.check-all').is(":checked")) {	
+ 		$('.usercheck').prop("checked","checked");
+ 	}else{
+ 		$('.usercheck').prop("checked",false);
+ 	}
+ }
+ 
+ //删除
+ function del(id){
+ 
+ 	 var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+
+     	 var ids=[];
+    	if(id){
+    		ids.push(id);
+    	}else{
+    		
+        	 var roleids = document.getElementsByName("userids");
+    		 for ( var j = 0; j < roleids.length; j++) {
+    		    if (roleids.item(j).checked == true) {
+    		    	ids.push(roleids.item(j).value);
+    		    }
+    		 }
+    	}
+		
+    	if(!ids.length){
+    		alert("至少选择一条。");
+    		 return false; 
+    	}
+  		 $.post("{:url('delAdmin')}",{'id':ids},function(data){
+				if(data){
+					alert(data);
+				}else{
+					window.location.href=window.location.href;
+				}
+		}); 
+ }
+
+
+ </script>
+</div>
+
+<!-- Large modal -->
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">选择要添加的用户</h4>
+       </div>
+       <div class="modal-body" id="modalBody">
+           
+       </div>
+       <div style="clear:both;"></div>
+      <div class="modal-footer">
+      
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" onclick="Savechange();" class="btn btn-primary">保存</button>
+      </div>
+    </div>
+           
+    </div>
+   
+    <script type="text/javascript">
+
+	     //导入管理员
+		 function loadexcel(page){	
+	    	
+			 var musername = $('#musername').val();
+			 var mmobile = $('#mmobile').val();
+			 $.ajax({
+         	     type: "POST",
+                 data:{'page':page,'username':musername,'mobile':mmobile}, 
+                 dataType:'json',
+                 url:"{:url('getUser')}",
+                 success:function(data){      
+                 	
+                 	   $("#modalBody").html('')
+	                   $("#modalBody").append(data);
+                 	   
+                 	  $('#musername').val(musername);
+                 	  $('#mmobile').val(mmobile);
+                 }
+              });		
+	    	 
+			 $('#exampleModal').modal('show');
+
+		  }	
+
+	       //保存页面
+		  function Savechange(){	
+			     var ids=[];
+		     	 var memberids = document.getElementsByName("memberids");
+		 		 for ( var j = 0; j < memberids.length; j++) {
+		 		    if (memberids.item(j).checked == true) {
+		 		    	ids.push(memberids.item(j).value);
+		 		    }
+		 		 }
+			 
+			 	if(!ids.length){
+			 		alert("至少选择一条。");
+			 		 return false; 
+			 	}
+
+				$.post("{:url('importAdmin')}",{'user_id':ids},function(data){
+					if(data){
+						alert(data);
+					}else{
+						window.location.href=window.location.href;
+					}
+					 $('#exampleModal').modal('hide');
+				}); 
+	        
+		  }	
+  
+      </script>
+      
+   
+  </div>
+
+{/block}

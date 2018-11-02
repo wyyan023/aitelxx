@@ -1,0 +1,601 @@
+{extend name="public/base" /}
+{block name="body"}
+
+
+<link href="/public/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="/public/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="/public/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<style type="text/css">
+.input-group-addon {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+}
+
+.statusSelect {
+	line-height: 30px;
+	float: left;
+}
+.component-page-empty > .empty-tip.line {
+    text-align: center;
+}
+.formgroup{
+    float: left;
+    margin-left:16px;
+	margin-bottom: -1px;
+ }
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header clearfix">
+		  <div class="pull-left">
+		  	<div class="pull-left">
+						<span class="n_panel_title"><i class="icon iconfont icon-boda"></i>呼叫记录</span>
+					</div>
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+			
+			<div class="form-inline" style="padding-bottom:10px;">
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon1">联系电话</span>
+						<input type="text" class="form-control" name="contactNumber" id="contactNumber" placeholder="请输入联系电话" style="height:34px;">
+						<span class="input-group-btn">
+						   <button class="btn btn-primary" type="button" onclick="searchdata(1);">搜索</button>
+						</span>
+					</div>
+					
+					<!-- <div class="form-inline pull-right">
+						<span class="btn btn-primary" onclick="outexcel();">导出记录</span>
+					</div>	 -->
+					
+				</div>
+			
+	        <section class="navbar clearfix">
+						
+				<div class="pull-left">
+					<form class="form-inline" method="get" role="form">
+							
+						<div class="form-group"> 
+					
+							<select name="scenarios" onchange="searchdata();" id="scenarios" class="form-control">
+								<option value=" " selected="">选择话术</option>
+								{volist name="scenarioslist" id="item"}
+									<option value="{$item['id']}">
+										{$item['name']}
+									</option>
+								{/volist}	
+							</select>
+						</div>&nbsp;	
+							
+						<div class="form-group"> 
+						
+							 <select name="task" onchange="searchdata();" id="task" class="form-control">
+								<option value=" " selected="">选择外呼任务</option>
+								{volist name="list" id="item"}
+									<option value="{$item['task_id']}">
+										{$item['task_name']}
+									</option>
+								{/volist}	
+							 </select>
+						</div>&nbsp;
+						
+		
+						<div class="form-group">
+								<!-- <label class="statusSelect">拨打时间:</label> -->
+								<div class="formgroup">
+									
+									<input type="text" style="width:110px;" placeholder="选择拨打日期" class="form-control" onchange="searchdata(1);" id="startDate" name="startDate" value="" readonly="" />
+										
+									<script>
+											$('#startDate').fdatepicker({
+												format: 'yyyy-mm-dd',
+												pickTime: false
+											});
+									</script>	
+												
+								</div>
+						</div>
+						<span style="margin-left: 16px;">至</span>
+						<div class="form-group">
+									
+							<div class="formgroup">
+								
+									<input type="text" style="width:110px;" class="form-control" onchange="searchdata(1);" placeholder="选择拨打日期" id="endTime" name="endTime" value="" readonly="" />
+								
+									<script>
+										$('#endTime').fdatepicker({
+											format: 'yyyy-mm-dd',
+											pickTime: false
+										});
+									</script>	
+													
+							</div>
+						
+						</div>
+						<!-- <div class="form-group">
+						
+							<input type="text" style="width:110px;" class="form-control" onchange="searchdata();" placeholder="选择拨打日期" id="startDate" name="startDate" value="" readonly="" />
+						
+							<script>
+								$('#startDate').fdatepicker({
+									format: 'yyyy-mm-dd',
+									pickTime: false
+								});
+							</script>				
+							
+						</div> -->
+						
+						
+						<div class="form-group"> 
+							<select name="status" onchange="searchdata();" id="status" class="form-control">
+								<option value=" " selected="">选择通话状态</option>
+								<option value="2">已接通</option>
+								<option value="3">无人接听</option>	
+								<option value="4">停机</option>
+								<option value="5">空号</option>
+								<option value="6">正在通话中</option>
+								<option value="7">关机</option>
+								<option value="8">用户拒接</option>
+								<option value="9">网络忙</option>
+								<option value="10">来电提醒</option>
+								<option value="11">呼叫转移失败</option>
+							</select>
+						</div>&nbsp;
+						
+						<div class="form-group"> 
+							<select name="timelong" onchange="searchdata();" id="timelong" class="form-control">
+								<option value=" " selected="">选择时长</option>
+								<option value="10">小于10秒</option>
+								<option value="10-30">9秒-30秒</option>
+								<option value="30-60">30秒-1分钟</option>	
+								<option value="60-119">1分钟-1分59秒</option>
+								<option value="120">大于等于2分钟</option>
+							</select>
+						</div>&nbsp;		
+							
+						<div class="form-group"> 
+							<select name="level" onchange="searchdata();" id="level" class="form-control">
+								<option value=" " selected="">选择意向等级</option>
+								<option value="6">A级(有明确意向)</option>
+								<option value="5">B级(可能有意向)</option>
+								<option value="4">C级(明确拒绝)</option>	
+								<option value="3">D级(用户忙)</option>
+								<option value="2">E级(拨打失败)</option>
+								<option value="1">F级(无效客户)</option>	
+							</select>
+						</div>&nbsp;		
+
+						<div class="form-group"> 
+							<!-- <label class="statusSelect">状态：</label> -->
+							<select name="ready" onchange="searchdata();" id="ready" class="form-control">
+								<option value=" " selected="">选择是否已查看</option>
+								<option value="1">已查看</option>
+								<option value="0">未查看</option>
+							</select>
+						</div>&nbsp;
+						
+						<!-- 
+						<button class="btn btn-primary" type="submit">搜索</button>
+						 -->
+				
+					</form>		
+				</div>  
+				
+			</section>
+							   
+		    <table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						  <th class="text-center">任务名称</th>
+						  <th class="text-center">话术名称</th>
+							<th class="text-center">姓名</th>
+							<th class="text-center">手机号</th>
+							<th class="text-center">状态</th>
+							<th class="text-center">拨打时间</th>
+							<th class="text-center" style="width: 139px;">通话时长</th>
+							<th class="text-center">意向等级</th>
+							<th class="text-center">操作</th> 
+						</tr>
+					</thead>
+					<tbody id="tablepagelist">
+						
+					</tbody>
+				</table>
+				
+			  <div id="modalpagebody"></div>
+
+		
+             <div class="component-page-empty" id="pegeempty">
+             	<div class="empty-tip line">暂无数据</div>
+             </div>
+
+		</div>
+					
+	</div>					
+    
+</div>
+
+
+<script type="text/javascript">
+
+	$(function(){
+		
+        searchdata(1);
+
+	}) 
+
+	var callpage = 1;
+	var taskId = 1;
+	
+	function searchdata(callpage){
+		
+		if(!callpage){
+			var callpage = 1;	
+		}
+		
+    var contactNumber = $("#contactNumber").val();
+		var scenarios = $("#scenarios").val();
+		var task = $("#task").val();
+		var startDate = $("#startDate").val();
+		var endTime = $("#endTime").val();
+		
+		var status = $("#status").val();
+		
+		var timelong = $("#timelong").val();
+		var level = $("#level").val();
+		var ready = $("#ready").val();
+		
+		
+		var url = "{:url('callLog')}";	
+		//return false;
+		
+		$.ajax({
+				url : url,
+				dataType : "json", 
+				type : "post",
+				data : {
+					'page':callpage,
+					'mobile':contactNumber,
+					'scenarios':scenarios,
+					'task':task,
+					'startDate':startDate,
+					'endTime':endTime,
+					'status':status,
+					'timelong':timelong,
+					'level':level,
+					'ready':ready,
+				},
+			
+				success: function(data){
+					var total = data.data.total;
+					var Nowpage = data.data.Nowpage;
+					var page = data.data.page;
+					var Nowpage = parseInt(Nowpage);
+					var data = data.data.list;
+					 if(data.length > 0){
+					 
+							$("#pegeempty").css("display","none");
+					 
+							$("#tablepagelist").find("tr").remove();
+							
+							for(var i=0;i<data.length;i++){
+				
+								var id = data[i].id;
+								var mobile = data[i].mobile;
+								var username = data[i].username;
+								var status = data[i].status;
+								var duration = data[i].duration;
+								var last_dial_time = data[i].last_dial_time;
+								var level = data[i].level;
+								var review = data[i].review;
+								var task_id = data[i].task_id;
+								var scenename = data[i].scenename;
+								var task_name = data[i].task_name;
+								var reviewstr = '<a href="javascript:void(0);" onclick="gotoDetail('+mobile+','+task_id+','+id+');">未查看</a>';
+								if(review == 1){
+									reviewstr = '<a href="javascript:void(0);" style="color: #5b5d5f;" onclick="gotoDetail('+mobile+','+task_id+','+id+');">已查看</a>';
+								}
+
+								var originating_call = data[i].originating_call;
+								if(originating_call == null){
+									 originating_call = "";
+								}
+
+								var strstatus = "未拨打";
+
+								switch (status) {
+									case 2:
+										strstatus = "已接通";
+										break;
+									case 3:
+										strstatus = "无人接听";
+										break;
+									case 4:
+										strstatus = "停机";
+										break;
+									case 5:
+										strstatus = "空号";
+										break;
+									case 6:
+										strstatus = "正在通话中";
+										break;
+									case 7:
+										strstatus = "关机";
+										break;
+									case 8:
+										strstatus = "用户拒接";
+										break;
+									case 9:
+										strstatus = "网络忙";
+										break;
+									case 10:
+										strstatus = "来电提醒";
+										break;
+									case 11:
+										strstatus = "呼叫转移失败";
+										break;
+									default:
+										strstatus = "--";
+								}
+								
+								var strlevel = "";
+								switch (level) {
+									case 6:
+										strlevel = "A级(有明确意向)";
+										break;
+									case 5:
+										strlevel = "B级(可能有意向)";
+										break;
+									case 4:
+										strlevel = "C级(明确拒绝)";
+										break;
+									case 3:
+										strlevel = "D级(用户忙)";
+										break;
+									case 2:
+										strlevel = "E级(拨打失败)";
+										break;
+									case 1:
+										strlevel = "F级(无效客户)";
+										break;
+									default:
+										strlevel = "--";
+								}
+							
+								var string = '<tr class="itemId'+id+'" alt="'+id+'">'
+								+'<td class="text-center">'+task_name+'</td>'
+								+'<td class="text-center">'+scenename+'</td>'
+								+'<td class="text-center">'+username+'</td>'
+								+'<td class="text-center">'+mobile+'</td>'
+								+'<td class="text-center">'+strstatus+'</td>'
+								+'<td class="text-center">'+last_dial_time+'</td>'  
+								+'<td class="text-center">'+duration+'</td>'
+								+'<td class="text-center">'+strlevel+'</td>'
+								+'<td class="text-center">'+reviewstr+'</td>';
+								string += '</tr>';
+								$("#tablepagelist").append(string); 
+
+							}
+							
+							var prepage = Nowpage-1;
+							var nextpage = Nowpage+1;
+						 
+							var str = '<div class="row">'
+							+'<div class="col-sm-3 text-left">'
+										
+							+'<table class="table table-bordered table-hover" style="margin-bottom: 0px; ">'
+							+'<tbody><tr>'
+							+'<td class="text-center">总人数：'
+							+'</td>'
+							+'<td class="text-center">'+total+'&nbsp;'
+							+'</td>'
+													 
+							+'</tr> '
+							+'</tbody></table>'                                     
+
+							+'</div>'
+							+'<div class="col-sm-9 text-right">'
+							+'<ul class="pagination">';
+						 
+							if(Nowpage == 1){
+								str += '<li id="prevbtn" class="disabled"><span>«</span></li> ';
+							}else{
+								str += '<li><a href="javascript:void(0);" onclick="searchdata('+prepage+');"><span>«</span></a></li> ';
+							}
+							
+							if(page > 10){
+							
+								if(Nowpage < 7){
+									for(var i=0;i<page;i++){
+										var nownum = i+1;
+										if(nownum < 9){
+											 if(nownum == Nowpage){
+												 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+											 }else{
+												 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+											 }
+										}
+										
+										if(nownum == 9 && nownum != Nowpage){
+											 str += '<li class="disabled"><span>...</span></li>';  
+										}else if(nownum == 9){
+											str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li> ';  
+										}
+									
+											if(nownum > (page-2)){
+												 if(nownum == Nowpage){
+													 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+												 }else{
+													 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+												 }
+											}
+
+									 }
+								}else if(Nowpage > 6 && Nowpage < (page-6)){
+									for(var i=0;i<page;i++){
+										var nownum = i+1;
+										var Nowpage = parseInt(Nowpage);
+										if(nownum < 3){
+											str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> '; 
+										}
+										
+										if((nownum > Nowpage-5) && (nownum < Nowpage+5)){
+									
+														 if(nownum == (Nowpage-4)){
+																str += '<li class="disabled"><span>...</span></li>';
+														 }   
+														
+															 if(nownum > (Nowpage-4) && nownum < Nowpage){
+																 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>'; 
+															 }  
+														 
+															 if(nownum == Nowpage){
+															 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>';  
+															 } 
+														 
+															 if(nownum < (Nowpage + 4) && nownum > Nowpage){
+																str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>'; 
+															 }  
+													
+															 if(nownum == (Nowpage + 4)){
+															
+															 str += '<li class="disabled"><span>...</span></li>';
+															 }   
+										 }
+										 
+									 if(nownum > (page-2)){
+										 var Nowpage = parseInt(Nowpage);
+										 if(nownum == Nowpage){
+													 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>';
+											 }else{
+													str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li> ';
+											 }   
+									 
+										 }     
+
+									 }
+								}else{
+									
+									for(var i=0;i<page;i++){
+										var nownum = i+1;
+										if(nownum<3){
+											str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li>';  
+										}
+									
+										if(nownum == (page-10) && nownum != Nowpage){
+											str += '<li class="disabled"><span>...</span></li>';   
+										}else if(nownum == (page-10) && nownum == Nowpage){
+											str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>';   
+										}
+										
+										if(nownum > (page-10)){
+											if(nownum == Nowpage){
+												str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li> ';   
+											}else{
+												str += '<li ><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>';   
+											}
+										}
+										
+										
+									}
+						 
+										
+								}
+							}else{
+								 for(var i=0;i<page;i++){
+									 var nownum = i+1;
+									 if(nownum == Nowpage){
+										 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+									 }else{
+										 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+									 }
+								 }
+							}
+							
+		
+					 
+							if(Nowpage == page){
+								str += '<li id="prevbtn" class="disabled"><span>»</span></li> ';
+							}else{
+								str += '<li><a href="javascript:void(0);" onclick="searchdata('+nextpage+');"><span>»</span></a></li>';
+							}
+						
+							str += '</ul>'
+							+'</div>'
+							+'</div>'
+						 
+							$("#modalpagebody").find("div").remove();
+							$("#modalpagebody").append(str); 
+							
+					 }
+					 else{
+						 
+						$("#pegeempty").css("display","block");
+
+						$("#tablepagelist").find("tr").remove();
+						$("#modalpagebody").find("div").remove();
+					
+					 }
+					 
+
+				},
+				error : function() {
+					alert('获取列表失败。');
+				}
+		});
+		
+  }	
+
+		//已经拨打的全选
+	function checkall(){			
+	   	if ($('.check-all').is(":checked")) {	 
+	   		$('.Alreadycheck').prop("checked","checked");
+	   	}else{
+	   		$('.Alreadycheck').prop("checked",false);
+	   	}
+	}
+
+  //到出记录
+	function outexcel(){
+		
+		var typestr = $('#typelevel').val();
+		var mobile = $('#keyword').val();
+		var status = $('#status').val();
+
+		$.post("{:url('exportExcel')}",{'type':typestr,'mobile':mobile,'status':status},function(data){
+				 // if(data){
+				// console.log(data);
+       // }else{
+ 					window.location.href = data;
+      // }
+		}); 
+		
+	}
+
+	 //重拨
+	 function redial(task,mobile){
+		
+		 $.post("{:url('redial')}",{'task':task,'mobile':mobile},function(res){
+					if(res.code == 0){
+						alert(res.msg);
+					}else{
+						alert(res.msg);
+					}
+	   }); 
+			
+	 }
+
+ </script>
+ 
+{include file="member/calldetail" /} 
+
+
+ 
+</div>
+
+{/block}
+

@@ -1,0 +1,117 @@
+ 
+<div class="modal fade" id="myLargepage" tabindex="1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  
+	  <div class="modal-dialog">
+			
+			<div class="modal-content">
+				
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								 <span aria-hidden="true">×</span>
+							</button>
+							<h4 class="modal-title">话术审核</h4>
+				  </div>
+					
+				 <div class="modal-body pagelists">
+					 
+							
+						<form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+					
+					  <div class="form-group" id="breakContent" style="display: block;">
+								<label class="col-lg-4 control-label">备注：</label>
+								<div class="col-lg-8 col-sm-8">
+								<textarea id="remarks" style="width: 250px;height:auto">null</textarea>
+
+								</div>
+							</div>
+					 
+							
+								<div class="form-group">
+										<input type="hidden" name="scenariosId" id="scenariosId" value="">
+										<button class="btn btn-primary submit-btn" onclick="auditing(0);" type="button">通 过</button>
+										<button class="btn btn-primary submit-btn" onclick="auditing(3);" type="button">不通过</button>
+
+										<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+							 </div>
+			
+				
+					 </form>
+					 
+						
+				 </div>
+				 <div style="clear:both"></div>
+				
+		 </div>
+						 
+	</div>
+ 
+		<script type="text/javascript">
+				
+			function showExamine(id){
+
+				
+					$("#scenariosId").val(id);
+				
+
+					var url = "{:url('user/Scenarios/getmessage')}";	
+					$.ajax({
+							url : url,
+							dataType : "json", 
+							type : "post",
+							data : {'id':id},
+							success: function(data){	
+								
+									$("#remarks").val(data.remark);
+								
+									$('#myLargepage').modal('show');
+
+							},
+							error : function() {
+								alert('审核信息失败。');
+							}
+						});
+				
+
+ 
+			}
+		 
+		 
+		 //检查表单的必填项
+			function auditing(status){
+				
+	
+				var scenariosId = $("#scenariosId").val();
+				var remarks = $("#remarks").val();
+
+
+				var url = "{:url('user/Scenarios/auditing')}";	
+					 $.ajax({
+									url : url,
+									type : "post",
+									data : {'scenariosId':scenariosId,'remarks':remarks,'status':status},
+									success: function(data){	
+										
+										$('#myLargepage').modal('hide');
+
+										if(data){
+											alert(data);
+										}else{
+											location.reload();
+										}
+									
+									},
+									error : function() {
+										alert(data);
+									}
+						});
+				
+
+				 
+			}
+
+
+		
+		</script>
+		
+   
+  </div>

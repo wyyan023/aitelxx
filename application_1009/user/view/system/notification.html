@@ -1,0 +1,146 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+.table tbody>tr>td {
+padding: 6px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+
+h1 {
+    clear: both;
+    color: #03a9f4;
+    margin: 0 0 20px 0;
+    padding-left: 14px;
+    font-size: 2em;
+}
+
+
+.textwidth{
+width:250px;
+}
+
+</style>
+
+
+<div class="row">
+<div class="col-lg-12">
+   <div class="main-box clearfix">
+   
+       <header class="main-box-header clearfix">
+		      <div class="pull-left">
+		        <h1>短信通知</h1>
+		      </div>
+		    </header>
+   
+       <div class="main-box-body clearfix">
+
+        <div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>
+          <div class="table-responsive">        
+          <table class="table table-bordered table-hover">
+	           <thead>
+	              <tr>
+	                  <th class="text-center">通知类型</th>
+	                  <th class="text-center">状态</th>
+	                  <th class="text-center">操作</th> 
+	              </tr>
+	            </thead>
+	           <tbody>
+		       
+		            <tr class="imgclass">
+		           
+		              <td class="text-center">{$res.title}</td>
+<!-- 
+		              <td class="text-center"><img src="/uploads/picture/20170309/ec953f1dc66833a06d2375d2659e763d.jpg" style="width:30px;"></td>
+		              --> 
+		    
+		              <td class="text-center">
+		                   {switch name="$res.status" }
+						              {case value="0"}
+						                 <a href="javascript:void(0);" onclick="setstatus({$res.group},1);">关闭</a>
+						              {/case}
+						              {default /}
+						                 <a href="javascript:void(0);" onclick="setstatus({$res.group},0);">开启</a>
+						          {/switch}
+                    
+                  </td>
+                  
+		               <td class="text-center">
+		                                                       
+		                   <a href="{:url('smsConfigure',['id'=>$res.group])}"> 配置 </a>                                                      
+		                <!--    <a href="/index.php/user/forum/edit/id/2">模板 </a>                
+		                   <a href="{:url('businessNotice')}">用户通知</a>      -->                                
+		                   <a href="javascript:void(0);" onclick="setstatus(id,0);"></a>
+    
+		                 <!--  
+		                 
+		                 
+		                  <a href="javascript:void(0);" onclick="del(2);">删除</a> -->
+		               </td>
+		            </tr>
+		          
+		         
+            </tbody>
+          </table> 
+       
+        </div>
+     </div> 
+   </div>
+  </div>
+</div>
+  
+<script type="text/javascript"> 
+
+//设置状态
+function setstatus(id,status){     
+ 
+  var ids;
+  if(id){
+    var Ids=[];
+    Ids.push(id);
+    ids = Ids;
+  }else{
+     var IdsVal = [];
+       var roleids = document.getElementsByName("adminids");
+     for ( var j = 0; j < roleids.length; j++) {
+        if (roleids.item(j).checked == true) {
+          IdsVal.push(roleids.item(j).value);
+        }
+     }
+     ids = IdsVal;
+  }
+
+  if(!ids.length){
+	  alert("至少选择一条。");
+	   return false; 
+	}
+ 
+ var url = "{:url('setstatus')}"; 
+ $.ajax({
+        url : url,
+        dataType : "json", 
+        type : "post",
+        data : {'arrayIds':ids,'status':status},
+        success: function(data){
+          if (data.code) {
+           alert(data.msg);
+        }else{
+           location.reload();
+        }
+        },
+        error : function() {
+          alert('修改失败。');
+        }
+  });
+}
+
+
+
+ </script>
+
+  
+
+{/block}

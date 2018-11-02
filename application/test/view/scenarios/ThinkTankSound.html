@@ -1,0 +1,279 @@
+	 
+	<style type="text/css">
+		.mybtn{
+			position:fixed; 
+			right:10px; 
+			bottom:20px; 
+			display:block; 
+			width:50px; 
+			height:50px;
+			border-radius:50px; 
+			padding:0px; 
+			text-align:center; 
+			line-height:50px;
+		}
+		
+		.modal.left .modal-dialog,
+		.modal.right .modal-dialog {
+			position: fixed;
+			margin: auto;
+			/* width: 320px; */
+			height: 100%;
+			-webkit-transform: translate3d(0%, 0, 0);
+				-ms-transform: translate3d(0%, 0, 0);
+				 -o-transform: translate3d(0%, 0, 0);
+					transform: translate3d(0%, 0, 0);
+		}
+	
+		.modal.left .modal-content,
+		.modal.right .modal-content {
+			height: 100%;
+			overflow-y: auto;
+		}
+		
+		.modal.left .modal-body,
+		.modal.right .modal-body {
+			padding: 15px 15px 80px;
+		}
+	
+		/*Left*/
+		.modal.left.fade .modal-dialog{
+			left: -320px;
+			-webkit-transition: opacity 0.3s linear, left 0.3s ease-out;
+				 -moz-transition: opacity 0.3s linear, left 0.3s ease-out;
+				 -o-transition: opacity 0.3s linear, left 0.3s ease-out;
+					transition: opacity 0.3s linear, left 0.3s ease-out;
+		}
+		
+		.modal.left.fade.in .modal-dialog{
+			left: 0;
+		}
+			
+		/*Right*/
+		.modal.right.fade .modal-dialog {
+			right: -320px;
+			-webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+				 -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+				 -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+					transition: opacity 0.3s linear, right 0.3s ease-out;
+		}
+		
+		.modal.right.fade.in .modal-dialog {
+			right: 0;
+		}
+	
+		/* ----- MODAL STYLE ----- 
+		.modal-content {
+			border-radius: 0;
+			border: none;
+		}
+	
+		.modal-header {
+			border-bottom-color: #EEEEEE;
+			background-color: #FAFAFA;
+		}*/
+		.text-right{
+					text-align: right;
+		}
+		.mgb10{
+			margin-bottom: 10px;
+			overflow: hidden;
+		}
+	</style>
+	
+
+	<div class="modal right fade" id="ThinkTankSound" tabindex="1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+	  
+		<div class="modal-dialog">
+			
+			<div class="modal-content">
+			
+				 <div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							 <span aria-hidden="true">×</span>
+						</button>
+						<h4 class="modal-title">编辑语音</h4> 
+				 </div>
+				
+				 <div class="modal-body">
+
+						  <div class="form-group mgb10">
+								<label class="col-lg-3 text-right">标题：</label>
+								<div class="col-lg-9 col-sm-9">
+									<input id="Soundname" readonly="readonly" class="form-control ttfw" placeholder="请输入节点名称" type="text" />
+								</div>
+							</div>
+							
+							<div class="form-group mgb10">
+								<label class="col-lg-3 text-right">关键字：</label>
+								<div class="col-lg-9 col-sm-9">
+									<textarea id="Soundkeyword" readonly="readonly" class="form-control" style="width: 250px;height:auto;resize: vertical;"></textarea>
+								</div>
+							</div>
+							
+							<div id="soundlist">
+									
+								<form method="post" class="form-horizontal margintop sform" enctype="multipart/form-data">	
+								  <div class="form-group mgb10">
+								  	<label class="col-lg-3 text-right">问题回复：</label>
+								  	<div class="col-lg-9 col-sm-9">
+								  	  <div class="word">好的，那我稍后让我们资深客户经理联系您，我这边就先不打扰您了，祝您生活愉快，再见！</div>
+											
+													<div>
+														<audio src="" preload="preload" controls="controls"></audio>
+													</div>
+													
+													<div>
+														<input type="hidden" name="sid" value="1" />
+														<input type="file" class="form-control" onchange="formSound(this);" accept="audio/*" name="update-audio-file" />
+													</div>
+										
+								  	</div>
+								  </div>
+								
+								</form>
+								
+								<form method="post" dta="2" action="" class="form-horizontal margintop sform" enctype="multipart/form-data">	
+									<div class="form-group mgb10">
+										<label class="col-lg-3 text-right">问题回复：</label>
+										<div class="col-lg-9 col-sm-9">
+											<div class="word">好的，那我稍后让我们资深客户经理联系您，我这边就先不打扰您了，祝您生活愉快，再见！</div>
+											
+												  <div>
+												  	<audio src="" preload="preload" controls="controls"></audio>
+												  </div>
+													
+													<div>
+														<input type="hidden" name="sid" value="2" />
+														<input type="file" class="form-control" onchange="formSound(this);" accept="audio/*" name="update-audio-file" />
+													<!-- 	<button class="btn btn-success submit-btn" onclick="" type="button">确 定</button> -->
+													</div>
+										
+										</div>
+									</div>
+								
+								</form>
+								
+							</div>
+				
+						
+				 </div>
+				 <div style="clear:both"></div>
+				 <input type="hidden" name="flowSoundId" id="flowSoundId" value="" />
+
+		 </div>
+						 
+		</div>
+	 
+
+			<script type="text/javascript">
+				
+			
+				
+				function formSound(obj){
+				 
+					var audioFile = $(obj).val(); 
+					if(!audioFile){
+						alert("话术语音不可为空！");
+						return ;
+					}
+				    // 2.绑定ajaxSubmit()
+				   var sform = $(obj).parents(".sform").attr("dta");
+				   //console.log(sform);
+					 
+					  // 1.基本参数设置 
+					     var options = { 
+					         type: 'POST',     // 设置表单提交方式
+					         url: "{:url('user/Scenarios/addSound')}",    // 设置表单提交URL,默认为表单Form上action的路径
+					         dataType: 'json',    // 返回数据类型
+					         beforeSubmit: function(formData, jqForm, option){    // 表单提交之前的回调函数，一般用户表单验证
+					             return true;  
+					         },
+					         success: function(responseText, statusText, xhr, $form){    // 成功后的回调函数(返回数据由responseText获得),,
+					             console.log(responseText);
+					             if (responseText.code == '0') {
+					 						
+												$(obj).parent().prev().find("audio").attr("src",responseText.data);
+					             } else {
+					 							console.log(responseText);
+					                // alert("操作失败!" + responseText.msg);    // 成功访问地址，并成功返回数据，由于不符合业务逻辑的失败
+					             }
+					         },  
+					         error: function(xhr, status, err) {            
+					             alert("操作失败!");    // 访问地址失败，或发生异常没有正常返回
+					         },
+					         clearForm: true,    // 成功提交后，清除表单填写内容
+					         resetForm: true    // 成功提交后，重置表单填写内容
+					     }; 
+					     
+
+				   $(obj).parents(".sform").submit(function(){     // 提交表单的id
+					         $(this).ajaxSubmit(options); 
+					         return false;   //防止表单自动提交
+					  });
+					 
+					 $(obj).parents(".sform").submit();
+					 
+				}
+				
+				
+						
+				function showSound(id){
+					
+						  $("#flowSoundId").val(id);
+
+							var url = "{:url('user/Scenarios/getKnowledgeInfo')}";	
+							$.ajax({
+								url : url,
+								dataType : "json", 
+								type : "post",
+								data : {'id':id},
+								success: function(data){	
+									
+									var data = data.data;
+									$("#Soundname").val(data.name);
+									$("#Soundkeyword").val(data.keyword);
+								
+									$('#soundlist').find("form").remove();
+									
+									var content = data.content;
+									var leng = content.length;
+									for(var i=0;i<leng;i++){
+											var str = '<form method="post" class="form-horizontal margintop sform" enctype="multipart/form-data">'	
+															  +'<div class="form-group mgb10">'
+																+'<label class="col-lg-3 text-right">问题回复：</label>'
+																+'<div class="col-lg-9 col-sm-9">'
+																+'<div class="word">'+content[i]["content"]+'</div>'
+																+'<div><audio src="'+content[i]["audio"]+'" preload="preload" controls="controls"></audio></div>'
+																+'<div>'
+																+'<input type="hidden" name="sid" value="'+content[i]["id"]+'" />'
+																+'<input type="file" class="form-control" onchange="formSound(this);" accept="audio/*" name="update-audio-file" />'
+																+'</div>'
+																+'</div>'
+																+'</div>'
+																+'</form>';
+																
+										 $('#soundlist').append(str);
+									}
+
+								
+									
+									$('#ThinkTankSound').modal('show');
+
+
+								},
+								error : function() {
+									alert('获取信息失败。');
+								}
+							});
+
+					//$('#ThinkTankSound').modal('show');
+
+				}
+							 
+			
+			</script>
+			
+	 
+	</div>
+

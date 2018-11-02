@@ -1,0 +1,181 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+.textwidth{
+width:250px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.nav-tabs {
+border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+color: #555;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+background-color: #FFFFFF;
+border-color: #FFFFFF;
+color: #FFFFFF;
+border-radius: 0;
+background-clip: padding-box;
+}
+.margintop{
+margin-top:5px;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+  
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+       <header class="main-box-header clearfix">
+          <div class="pull-left">
+            <h1>编辑设置</h1>
+          </div>
+       </header>
+    </div>
+
+        <div class="main-box-body clearfix">
+        
+             <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" method="post">
+     
+                  <div class="form-group">
+				             <label class="col-lg-2 control-label">是否开启：</label>
+				             <div class="col-lg-10 col-sm-10 margintop">
+				                <input id="comment_review" name="status" 
+				                    {eq name="$extra.status|default='0'" value="0" }
+				                        checked
+				                    {/eq} value="0" alt="关闭" type="radio">否  &nbsp; &nbsp;
+				                <input name="status" 
+				                    {eq name="$extra.status|default='0'" value="1" }
+				                        checked
+				                    {/eq} value="1" alt="开启" type="radio">是 
+				                    
+				                  <div class="help-block">当前使用阿里大于短信配置 </div> 
+				              </div>
+				          </div>
+      
+		              <div class="form-group">
+					          <label class="col-lg-2 control-label">APP_KEY：</label>
+					          <div class="col-lg-10 col-sm-10">
+					            <input type="text" class="form-control textwidth" name="accessKeyId" id="accessKeyId" value="{$extra.accessKeyId|default=""}" />
+					          </div>
+				          </div>
+				          
+				           <div class="form-group">
+		                <label class="col-lg-2 control-label">SECRET_KEY：</label>
+		                <div class="col-lg-10 col-sm-10">
+		                  <input type="text" class="form-control textwidth" name="accessKeySecret" id="accessKeySecret" value="{$extra.accessKeySecret|default=""}" />
+		                </div>
+		              </div>
+		              
+		               <div class="form-group">
+		                <label class="col-lg-2 control-label">短信内容签名：</label>
+		                <div class="col-lg-10 col-sm-10">
+		                  <input type="text" class="form-control textwidth" name="signName" id="signName" value="{$extra.signName|default=""}" />
+		                </div>
+		              </div>
+		   
+				          <div class="form-group">
+					          <label class="col-lg-2 control-label">短信模板：</label>
+					           <div class="col-lg-10 col-sm-10">
+		                  <input type="text" class="form-control textwidth" name="templateCode" id="templateCode" value="{$extra.templateCode|default=""}" />
+		                </div>
+				          </div>
+		 
+					         <div class="form-group">
+					         
+					          <div class="col-lg-offset-2 col-lg-10"> 
+					            
+					             <input type="hidden" name="configId" id="configId" value="{$res.id|default=''}" />    
+					             <span class="btn btn-success submit-btn" onclick="checkform();" type="submit">确 定</span>
+					             <button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+					            
+					          </div>
+					         </div>
+		     
+    
+             </form>
+          </div>
+    
+    
+</div>  
+
+
+<script type="text/javascript">
+//检查表单的必填项
+function checkform(){
+  /* 
+     
+      var discount = $("#discount").val();
+      if (!discount) { 
+         alert("购买折扣不能为空"); 
+         return false; 
+      }
+      var regfloat = /^\d+(\.\d+)?$/;　
+      if (!regfloat.test(discount)){ 
+          alert("购买折扣必须是数字");
+          return false; 
+      }
+      
+      if (Number(discount) > 10) { 
+          alert("购买折扣不能大于10"); 
+          return false; 
+       }
+      
+      
+      var cash_fee = $("#cash_fee").val();
+      if (cash_fee == '') { 
+        alert("提现手续费不能为空"); 
+        return false; 
+      }
+      
+      if (Number(cash_fee) > 100) { 
+          alert("提现手续费不能大于100"); 
+          return false; 
+      }
+     */
+     
+     
+
+    var href = window.location.href;
+    
+    $.ajax({
+        type: "POST",
+        dataType:'json',
+        url: href,
+        cache: false,
+        data: $("#form").serialize(),
+        success: function(data) {
+          if (data.code) {
+            alert(data.msg);
+           // location.reload();
+         }else{
+            alert(data.msg + ' 页面即将自动跳转~');
+         } 
+          location.href = "{:url('User/System/notification')}";
+        },
+        error: function(data) {
+          alert("提交失败");
+        }
+    }) 
+
+
+}  
+
+</script>
+
+</div>
+
+</div>
+
+{/block}
+

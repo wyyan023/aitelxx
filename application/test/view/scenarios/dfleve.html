@@ -1,0 +1,104 @@
+ 
+<div class="modal fade" id="checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  
+	  <div class="modal-dialog">
+			
+			<div class="modal-content">
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								 <span aria-hidden="true">×</span>
+							</button>
+							<h4 class="modal-title"> 编辑默认规则</h4>
+				 </div>
+				 <div class="modal-body">
+					 
+						<div class="create-modal-body">
+							<div class="add-modal-wrap">
+								
+								<div class="form-group">
+									以上规则均不满足时，将客户意向标签设置为
+								</div>
+							
+								<div class="form-group">
+									
+										<select class="form-control textwidth" id="dftradeType" name="dftradeType">
+											<option value=" "> 选择意向等级 </option>
+											<option value="6">A级(有明确意向)</option>
+											<option value="5">B级(可能有意向)</option>
+											<option value="4">C级(明确拒绝)</option>
+											<option value="3">D级(用户忙)</option>
+											<option value="2">E级(拨打失败)</option>
+											<option value="1">F级(无效客户)</option>
+										</select>
+									
+								
+								</div>
+             </div>
+	         </div>
+				
+
+				 </div>
+				 <div style="clear:both"></div>
+				 <div class="modal-footer">
+             <div class="form-group" style="text-align: center;">
+             		<input type="hidden" name="scenariosId" id="scenariosId" value="">
+             		<button class="btn btn-primary submit-btn" onclick="confirmSure();" type="button">确 定</button>
+             		<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+             </div>
+				 </div>
+
+		  </div>
+						 
+    </div>
+ 
+		<script type="text/javascript">
+				
+			function showdefault(){
+        
+        $('#dftradeType').val($('#dflevelNum').val());
+				$('#checkpage').modal('show');
+
+			}
+		 
+		 
+		 //检查表单的必填项
+			function confirmSure(){
+				//	$('#checkpage').modal('hide');
+				//	return false; 
+			
+				 var dftradeType = $('#dftradeType').val();
+				 var nowsceneID = $("#nowsceneID").val();
+				 
+				 var href = "{:url('user/Scenarios/updateDftype')}";
+
+				 $.ajax({
+						 type: "POST",
+						 dataType:'json',
+						 url: href,
+						 cache: false,
+						 data: {"sceneId":nowsceneID,"level":dftradeType},
+						 success: function(data) {
+							if (data.code == 0) {
+							
+									$('#checkpage').modal('hide');
+									 getLabelList(0);
+								
+							}else{
+								 alert(data.msg);
+
+							}
+					
+						 },
+						 error: function(data) {
+							 alert("提交失败");
+						 }
+				 })  
+			}
+
+
+		
+		</script>
+		
+   
+</div>
+	

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{$allcinfig.websitename|default=''} AI智能机器人-专业的智能语音客服系统服务商</title>
+	<meta name="keywords" content="{$allcinfig.websitename|default=''} AI智能机器人-专业的智能语音客服系统服务商" />
+  <meta name="description" content="{$allcinfig.websitename|default=''} AI智能机器人-专业的智能语音客服系统服务商" />
+  <meta name="renderer" content="webkit">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<meta name="Author" content="ruikesoft" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+	<meta name="apple-mobile-web-app-capable" content="yes">	
+	<meta name="format-detection" content="telephone=no">	
+	<link rel="Shortcut Icon" href="../favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="__CSS__/animate.css" media="all">
+	<link rel="stylesheet" type="text/css" href="__CSS__/login.css?w3" media="all">
+
+</head>
+<body >
+<div id="bg-body"></div>
+<div class="l_maindata layui-layout  shake larry-delay2" id="larry_login">
+	<!--<div class="title">{$allcinfig.websitename|default='顶顶-智能电话营销'}</div>-->
+	<p class="l_datatitle">
+    <img src="__IMG__/title.png" alt="">
+    <span>管理中心</span>
+  </p>
+	<!--<img src="__IMG__/title.png" alt="">-->
+	<!--<p class="info">管理中心</p>-->
+	<div class="user-info">
+		<!--<div class="avatar">-->
+		<!--  <img src="__IMG__/admin.png" alt="">-->
+		<!--</div>-->
+		<form class="layui-form l_datashow" id="larry_form" >
+			 <div class="layui-form-item">
+			 	  <label class="layui-form-label"><img src="__IMG__/name.png" alt=""></label>
+			 	  <input type="text" name="username"  class="layui-input larry-input" placeholder="请输入您的用户名"  autocomplete="off">
+			 </div>
+			 <div class="layui-form-item" id="password">
+			 	  <label class="layui-form-label"><img src="__IMG__/keys.png" alt=""></label>
+			 	  <input type="password" name="password"  class="layui-input larry-input" placeholder="请输入您的登录密码" autocomplete="off" >
+			 </div>
+			 
+			 <div class="layui-form-item larry-verfiy-code" id="larry_code">
+			    <label class="layui-form-label"><img src="__IMG__/yanzhengma.png" alt=""></label>
+			 	   <input type="text" name="verify" class="layui-input larry-input" placeholder="请输入验证码"  autocomplete="off">
+			 	   <div class="code">
+			 	   	   <div class="arrow"></div>
+			 	   	   <div class="code-img">
+			 	   	   	<img src="{:url('user/index/verify')}" alt="" id="verifyimg" >
+			 	   	   </div>
+			 	   </div>
+			 </div>
+			 
+			 <div class="layui-form-item setmargin">
+			 	 <button class="layui-btn larry-btn" lay-filter="submit" lay-submit>立即登录</button>
+			 </div>
+		</form>
+	</div>
+	<!--<div class="copy-right">© 2016-2017 RK 版权所有 </div>-->
+</div>
+<script type="text/javascript" src="__PUBLIC__/plugs/jquery/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/jquery.bcat.bgswitcher.js"></script>
+<script src="__PUBLIC__/js/messager.js"></script>
+
+<script type="text/javascript">
+// var srcBgArray = ["__IMG__/3.png","__IMG__/2.jpg"];
+var srcBgArray = ["__IMG__/balckground.jpg"];
+$(function(){	
+  var currHeight = ($(document).height()-$('#larry_login').height())/2.5;
+ // $('#larry_login').css("margin-top", currHeight);
+  
+
+  $("#bg-body").bcatBGSwitcher({
+    urls: srcBgArray,
+    alt: 'Full screen background image'
+  });
+  
+  var verifyimg = $("#verifyimg").attr("src");
+	$("#verifyimg").click(function(){
+		if(verifyimg.indexOf('?')>0){
+			$("#verifyimg").attr("src", verifyimg+'&random='+Math.random());
+		}else{
+			$("#verifyimg").attr("src", verifyimg.replace(/\?.*$/,'')+'?'+Math.random());
+		}
+	});
+	
+	$("form").submit(function(){
+		var self = $(this);
+		$.post(self.attr("action"), self.serialize(), success, "json");
+		return false;
+
+		function success(data){
+			if(data.code){
+				//$.messager.show(data.msg, {placement: 'center',type:'success'});
+				setTimeout(function(){
+					window.location.href = data.url;
+				},500);
+			} else {
+				$.messager.show(data.msg, {placement: 'center',type:'warning'});
+				//刷新验证码
+			 
+				$("#verifyimg").click();
+			}
+		}
+	});
+})
+
+
+
+
+</script>
+
+</body>
+</html>
+	

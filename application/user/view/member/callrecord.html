@@ -1,0 +1,1253 @@
+{extend name="public/base" /}
+{block name="body"}
+
+
+<link href="/public/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="/public/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="/public/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<style type="text/css">
+
+.l-btn{
+	margin-bottom: 8px;	
+}
+
+.input-group-addon {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+}
+
+.statusSelect {
+	line-height: 20px;
+	float: left;
+}
+.component-page-empty > .empty-tip.line {
+    text-align: center;
+}
+.formgroup{
+    float: left;
+    margin-left:16px;
+	margin-bottom: -1px;
+	max-width: 90%;
+ }
+ .form-inline {
+ 	margin-bottom: 8px;
+ }
+ .form-group label {
+ 	margin-right: 5px;
+ }
+	.l-width {
+		width: 100%;
+	}
+	.n_inputwidth {
+		width: 80px !important;
+	}
+	.main-box .main-box-header {
+		padding: 20px;
+	}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header n_head_box_b clearfix">
+		  <div class="pull-left">
+		  	<div class="pull-left">
+						<span class="n_panel_title"><i class="icon iconfont icon-boda"></i>呼叫记录</span>
+					</div>
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+			<div class="form-inline" style="padding-bottom:10px;">
+				 <div class="input-group">
+				 
+				 <span class="input-group-addon" id="basic-addon1">联系电话</span>
+				  <input type="text" class="form-control" name="contactNumber" id="contactNumber" placeholder="请输入联系电话" style="height:34px;">
+				  <span class="input-group-btn">
+					<button class="btn btn-primary" type="button" onclick="searchdata(1,1);">搜索</button>
+				  </span>
+				</div>
+				<div class="form-inline pull-right">
+						 
+					<!-- <a class="btn btn-primary" href="javascript:void(0);" onclick="addNew(0);">  -->
+					<!--		<i class="fa fa-plus-circle fa-lg"></i> 新 增-->
+					<!-- </a> -->
+					<!-- <span class="btn btn-primary" onclick="addNewPlan();">新建任务</span>-->
+					<!-- <button type="button" class="btn btn-primary" onclick="joinSelect('join');">-->
+					<!--	 加入拨打任务-->
+					<!-- </button>-->
+					 
+					<!--<span class="btn btn-primary" onclick="loadexcel();">导入</span>-->
+					
+						<!--<div class="col-sm-6 text-left">-->
+						<!--<div class="pull-left l-btn">-->
+							<span class="btn btn-primary" data-toggle="modal" data-target="#number-export">导出</span>
+							<button class="btn btn-primary" data-toggle="modal" data-target="#datadel"  target-form="ids">删 除</button>
+							<button class="btn btn-primary" onclick="searchdata(1)" >刷 新</button>
+				<!--		</div>	-->
+				<!--</div> -->
+					
+					
+				</div>	
+			</div>
+			
+			<!--呼叫记录导出提示-->
+			<div class="modal fade" id="number-export" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content modal-contenttips">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+							<h4 class="modal-title" id="myModalLabel">
+								操作提示
+							</h4>
+						</div>
+						<div class="modal-body">
+							确认要导出号码？
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary"  onclick="outexcel();">
+								确认
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal -->
+			</div>
+			
+			
+			
+			<section class="navbar navbar-default main-box-header clearfix">
+				<div class="pull-left">
+					 <form method="get" role="form">
+					 		<div class="form-inline bottomfour">
+								<div class="form-group form-inline" >
+											<select name="calltask" id="calltask" onchange="searchdata(1,1);" class="form-control textwidth">
+												<option value="">请选择呼叫任务</option>
+												{volist name="tasklist" id="item"}
+													<option value="{$item['task_id']}">
+														{$item['task_name']}
+													</option>
+												{/volist}
+											</select>
+											
+											<!--场景话术-->
+											<select name="scenarios" id="scenarios" onchange="getLable(1);" class="form-control textwidth">
+											<option value="">请选择场景话术</option>
+											{volist name="scenarioslist" id="item"}
+												<option value="{$item['id']}">
+													{$item['name']}
+												</option>
+											{/volist}
+										</select>
+										
+										<!--<div class="formgroup">-->
+										<!--<div class="formgroup">-->
+											<input type="text" class="form-control" style="width:150px;" placeholder="开始时间"  onchange="searchdata(1,1);" id="startDate" name="startDate" value="" readonly="" />
+											<script>
+													$('#startDate').fdatepicker({
+														format: 'yyyy-mm-dd hh:ii',
+														pickTime: true
+													});
+											</script>	
+										<!--</div>-->
+										<span style="margin-left: 16px;">至</span>
+										<div class="form-group">
+											<div class="formgroup">
+													<input type="text" class="form-control"  placeholder="结束时间" onchange="searchdata(1,1);" id="endTime" name="endTime" value="" readonly="" style="width:150px;"/>
+												<script>
+													$('#endTime').fdatepicker({
+														format: 'yyyy-mm-dd hh:ii',
+														pickTime: true
+													});
+												</script>	
+											</div>
+									  </div>
+								<!--</div>-->
+								<!--通话时长-->
+								<!--<div class="form-inline ">-->
+							<div class="form-group " style="margin-right: 16px;margin-left:-10px;">
+									<!--<label class="statusSelect">通话时长:</label>-->
+									<div class="formgroup">
+											<input type="number" name="startNum" id="startNum" onchange="searchdata(1,1);" min="0" placeholder="通话时长" class="form-control numwidth" style="width:125px;" />
+										<!-- 	<span class="suffix">秒</span> -->
+									</div>
+							</div>
+								至
+							<div class="form-group">
+								<div class="formgroup">
+										<input type="number" name="endNum" id="endNum" onchange="searchdata(1,1);" min="0" placeholder="通话时长" class="form-control numwidth" style="width:125px;"/>
+								</div>
+								
+							</div>
+	 						<span class="suffix">秒</span>
+						 </div>
+						 
+						 <div class="form-inline bottomfour">
+							  <div class="form-group l-width" style="margin-top:10px;">
+							  		<label class="levelSelect statusSelect">意向等级:</label>
+							  		<div class="formgroup statusSelect">
+							  			<label class="checkbox-wrapper">
+							  					<input class="check-all-level levelcheck" onclick="alllevel();" type="checkbox" />
+							  				  <span class="word">全选</span>
+							  			</label>
+							  			
+										<label class="checkbox-wrapper">
+											 <input type="checkbox" name="levelcheck" class="levelcheck" value="6" />
+											 <span class="word">A级(有明确意向)</span>
+										</label>
+									
+										<label class="checkbox-wrapper">
+											<input type="checkbox" name="levelcheck" class="levelcheck" value="5" />	
+											<span class="word">B级(可能有意向)</span>
+										</label>
+									
+										<label class="checkbox-wrapper">
+											<input type="checkbox" name="levelcheck" class="levelcheck" value="4" />
+											<span class="word">C级(明确拒绝)</span>
+										</label>
+										
+										<label class="checkbox-wrapper">
+											<input type="checkbox" name="levelcheck" class="levelcheck" value="3" />
+											<span class="word">D级(用户忙)</span>
+										</label>
+										
+										<label class="checkbox-wrapper">
+											<input type="checkbox" name="levelcheck" class="levelcheck" value="2" />
+											<span class="word">E级(拨打失败)</span>
+										</label>
+										<label class="checkbox-wrapper">
+											<input type="checkbox" name="levelcheck" class="levelcheck" value="1" />
+											<span class="word">F级(无效客户)</span>
+										</label>
+							  		</div>
+							  </div>
+					   </div>
+
+						 <div class="form-inline bottomfour">
+								<div class="form-group l-width">
+										<label class="levelSelect statusSelect">通话状态:</label>
+										<div class="formgroup statusSelect">
+											<label class="checkbox-wrapper">
+													<input type="checkbox" class="check-all-status statuscheck" onclick="allstatus();" />
+													<span class="word">全选</span>
+											</label>
+											
+											<label class="checkbox-wrapper">
+												<input type="checkbox" name="statuscheck" class="statuscheck" value="2" />
+												<span class="word">已接通</span>
+											</label>
+											
+											<!--<label class="checkbox-wrapper">-->
+											<!--	<input type="checkbox" name="statuscheck" class="statuscheck" value="0" />-->
+											<!--	<span class="word">未拨打</span>-->
+											<!--</label>-->
+											
+											<label class="checkbox-wrapper">
+												<input type="checkbox" name="statuscheck" class="statuscheck" value="3" />	
+												<span class="word">无人接听</span>
+											</label>
+										
+											<label class="checkbox-wrapper">
+												<input type="checkbox" name="statuscheck" class="statuscheck" value="4" />
+												<span class="word">停机</span>
+											</label>
+											
+											<label class="checkbox-wrapper">
+												<input type="checkbox" name="statuscheck" class="statuscheck" value="5" />
+												<span class="word">空号</span>
+											</label>
+											
+											<label class="checkbox-wrapper">
+												<input type="checkbox" name="statuscheck" class="statuscheck" value="6" />
+												<span class="word">正在通话中</span>
+											</label>
+										
+											<label class="checkbox-wrapper">
+												<input type="checkbox" name="statuscheck" class="statuscheck" value="7" />	
+												<span class="word">关机</span>
+											</label>
+										
+											<label class="checkbox-wrapper">
+												<input type="checkbox" name="statuscheck" class="statuscheck" value="8" />
+												<span class="word">用户拒接</span>
+											</label>
+											
+											<label class="checkbox-wrapper">
+												<input type="checkbox" name="statuscheck" class="statuscheck" value="9" />
+												<span class="word">网络忙</span>
+											</label>
+											
+											<label class="checkbox-wrapper">
+												<input type="checkbox" name="statuscheck" class="statuscheck" value="10" />
+												<span class="word">来电提醒</span>
+											</label>
+											
+											<label class="checkbox-wrapper">
+												<input type="checkbox" name="statuscheck" class="statuscheck" value="11" />
+												<span class="word">呼叫转移失败</span>
+											</label>
+										</div>
+								</div>
+						 </div>
+						
+						<!--<div class="form-inline bottomfour">-->
+						<!--	<div class="form-group">-->
+									<!--<label class="statusSelect">场景话术:</label>-->
+						<!--			<div class="formgroup">-->
+						<!--				<select name="scenarios" id="scenarios" onchange="getLable(1);" class="form-control textwidth">-->
+						<!--					<option value="">请选择场景话术</option>-->
+						<!--					{volist name="scenarioslist" id="item"}-->
+						<!--						<option value="{$item['id']}">-->
+						<!--							{$item['name']}-->
+						<!--						</option>-->
+						<!--					{/volist}-->
+						<!--				</select>-->
+						<!--			</div>-->
+						<!--	</div>-->
+						<!--</div>	-->
+
+						 <!--<div class="form-inline">-->
+							<!--	<div class="form-group">-->
+										<!--<label class="statusSelect">拨打时间:</label>-->
+							<!--			<div class="formgroup">-->
+							<!--				<input type="text" class="form-control" style="width:160px;" placeholder="开始时间"  onchange="searchdata(1,1);" id="startDate" name="startDate" value="" readonly="" />-->
+							<!--				<script>-->
+							<!--						$('#startDate').fdatepicker({-->
+							<!--							format: 'yyyy-mm-dd hh:mm',-->
+							<!--							pickTime: true-->
+							<!--						});-->
+							<!--				</script>	-->
+							<!--			</div>-->
+							<!--	</div>-->
+							<!--	 <span style="margin-left: 16px;">至</span>-->
+							<!--	<div class="form-group">-->
+							<!--		<div class="formgroup">-->
+							<!--				<input type="text" class="form-control"  placeholder="结束时间" onchange="searchdata(1,1);" id="endTime" name="endTime" value="" readonly="" style="width:160px;"/>-->
+							<!--			<script>-->
+							<!--				$('#endTime').fdatepicker({-->
+							<!--					format: 'yyyy-mm-dd hh:mm',-->
+							<!--					pickTime: true-->
+							<!--				});-->
+							<!--			</script>	-->
+							<!--	</div>-->
+							<!--  </div>-->
+						 <!--</div>-->
+        
+						<!--<div class="form-inline">-->
+						<!--		<div class="form-group l-width">-->
+						<!--				<label class="statusSelect" style="line-height: 30px;">客户语气:</label>-->
+						<!--				<div class="formgroup l-width" >-->
+											
+						<!--					<label class="checkbox-wrapper cqlabel">-->
+						<!--						 <span class="word">客户说话次数</span>-->
+						<!--						 <input type="number" min="0" id="call_times" class="form-control cqwidth n_inputwidth" />-->
+						<!--					</label>-->
+											
+						<!--					<label class="checkbox-wrapper cqlabel">-->
+						<!--						<span class="word">肯定次数</span>-->
+						<!--						<input type="number" min="0" id="affirm_times" class="form-control cqwidth n_inputwidth" />-->
+						<!--					</label>-->
+										
+						<!--					<label class="checkbox-wrapper cqlabel">-->
+						<!--						<span class="word">否定次数</span>-->
+						<!--						<input type="number" min="0" id="negative_times" class="form-control cqwidth n_inputwidth" />-->
+						<!--					</label>-->
+										
+						<!--					<label class="checkbox-wrapper cqlabel">-->
+						<!--						<span class="word">中性次数</span>-->
+						<!--						<input type="number" min="0" id="neutral_times" class="form-control cqwidth n_inputwidth" />-->
+						<!--					</label>-->
+											
+						<!--					<label class="checkbox-wrapper cqlabel">-->
+						<!--						<span class="word">有效对话次数</span>-->
+						<!--						<input type="number" min="0" id="effective_times" class="form-control cqwidth n_inputwidth" />-->
+						<!--					</label>-->
+											
+						<!--					<label class="checkbox-wrapper cqlabel">-->
+						<!--						<span class="word">触发问题次数</span> -->
+						<!--						<input type="number" min="0" id="hit_times" class="form-control cqwidth n_inputwidth" />-->
+						<!--					</label>-->
+											
+
+						<!--				</div>-->
+						<!--		</div>-->
+						<!-- </div>-->
+						
+						<div class="form-inline bottomfour clearfix">
+							<label class="levelSelect statusSelect">流程标签:</label>
+							<div class="form-group formgroup statusSelect">
+									<div style="display: block;" id="flabellist">
+									</div>
+							</div>
+						</div>
+						
+							 
+						<div class="form-inline bottomfour">
+							<div class="form-group">
+									<label class="levelSelect statusSelect">语义标签:</label>
+									<div class="formgroup statusSelect">
+									 {volist name="semanticLabels" id="vo" key="k"}
+										<label class="checkbox-wrapper">
+											<input type="checkbox" name="semantic-label" class="semantic-label" value="{$vo.label}" />
+											<span class="word">{$vo.label}</span>
+										</label>
+								 	 {/volist}
+									</div>
+							</div>
+						</div>
+						
+						<div class="form-inline bottomfour clearfix">
+							<label class="levelSelect statusSelect">问答标签:</label>
+							<div class="form-group formgroup statusSelect">
+									<div style="display: block;" id="knowledge_labes">
+									</div>
+							</div>
+						</div>				 
+			</div>
+		</form>
+	</div>
+				
+				<!--删除弹框提示-->
+				<div class="modal fade" id="datadel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content modal-contenttips">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+							<h4 class="modal-title" id="myModalLabel">
+								操作提示
+							</h4>
+						</div>
+						<div class="modal-body">
+							确认要删除所选中的数据？
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							</button>
+							<button type="button" class="btn btn-primary" onclick="del(0);">
+								确认
+							</button>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal -->
+			</div>
+		</section>
+				
+				
+								
+				
+		    <table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>
+								<label>
+									<!--<input type='checkbox' name='all_checked' onclick="all_check()" class='flow-label' />-->
+									选择
+								</label>
+							</th>
+						  <th class="text-center">任务名称</th>
+						  <th class="text-center">话术名称</th>
+							<th class="text-center">姓名</th>
+							<th class="text-center">手机号</th>
+							<th class="text-center">状态</th>
+							<th class="text-center">拨打时间</th>
+							<th class="text-center" style="width: 139px;">通话时长</th>
+							<th class="text-center">意向等级</th>
+							<th class="text-center">操作</th> 
+						</tr>
+					</thead>
+					<tbody id="tablepagelist">
+						
+					</tbody>
+				</table>
+				
+			  <div id="modalpagebody"></div>
+        <div class="component-page-empty" id="pegeempty">
+        	<div class="empty-tip line">暂无数据</div>
+        </div>
+        
+        
+<script type="text/javascript">	
+	
+	//全选 
+	function all_check()
+	{
+		if($('input[name="all_checked"]').prop('checked') === true){
+			var state = true;
+		}else{
+			var state = false;
+		}
+		$.each($('input[name="checkids"]'), function(index, object){
+			$(object).prop("checked", state);
+		});
+	}
+	
+  //获取话术场景流程标签
+	function getLable(type){
+		
+		var val = $("#scenarios").val();
+		
+		var url = "{:url('getLable')}";	
+		$.ajax({
+					url : url,
+					dataType : "json", 
+					type : "post",
+					data : {'sceneId':val},
+					success: function(data){
+					
+					 $("#flabellist").find("label").remove();
+					 $("#knowledge_labes").find("label").remove();
+ 
+					 var data = data.data;
+					 var leng = data.length;
+					 if(leng > 0){
+
+						var flow_label_htmls = "";
+						var knowledge_labes_htmls = "";
+						 for(var i=0;i<leng;i++){
+							if (data[i].type == 1){
+								 flow_label_htmls += '<label class="checkbox-wrapper" style="margin-right: 10px;">'
+									+'<input type="checkbox" name="flow-label" onclick="checklabel(this);" class="flow-label" value="'+data[i].label+'" />'
+									+'<span class="word">'+data[i].label+'</span>'
+								 +'</label>';
+							}
+							 else{
+								
+								 knowledge_labes_htmls += '<label class="checkbox-wrapper" style="margin-right: 10px;">'
+									+'<input type="checkbox" name="knowledge-label" onclick="checklabel(this);" class="flow-label" value="'+data[i].label+'" />'
+									+'<span class="word">'+data[i].label+'</span>'
+								 +'</label>';
+							 }
+						 }
+						 
+						 $("#flabellist").append(flow_label_htmls); 
+						 $("#knowledge_labes").append(knowledge_labes_htmls); 
+
+					 }else{
+						// alert("暂时没有流程标签。");
+					 }
+						
+					},
+					error : function() {
+						alert('暂时没有流程标签');
+					}
+		});
+		
+		//获取列表
+		// searchdata(1,type);
+	}
+
+  //用户选择流程标签时触发
+	function checklabel(obj){
+		//if ($(obj).is(":checked")) {	
+			searchdata(1,1);
+		//}
+	}
+   
+	window.onpageshow = function(event) {
+		 var a=event||window.event;
+	};
+	
+	var despage = 1;
+	
+	$(function(){
+		
+		// getLable(0);
+
+		//searchdata(despage,0);
+   
+		$(".levelcheck").on("click",function(){
+			searchdata(1,1);
+		});
+		$(".statuscheck").on("click",function(){
+			searchdata(1,1);
+		});
+		
+		$(".semantic-label").on("click",function(){
+			searchdata(1,1);
+		});
+		
+// 		$(".flow-label").on("click",function(){
+// 		
+// 		});
+		
+		$(".cqwidth").change(function(){
+			searchdata(1,1);
+		});
+		
+				 
+     // 1.基本参数设置 
+     var options = { 
+         type: 'POST',     // 设置表单提交方式
+         url: "{:url('user/member/importExcel')}",    // 设置表单提交URL,默认为表单Form上action的路径
+         dataType: 'json',    // 返回数据类型
+         beforeSubmit: function(formData, jqForm, option){    // 表单提交之前的回调函数，一般用户表单验证
+					/* 表单提交前的操作 */
+					return true;  // 只要不返回false,表单都会提交  
+         },
+         success: function(responseText, statusText, xhr, $form){    // 成功后的回调函数(返回数据由responseText获得),
+					 if (responseText.code == 0) {
+						 window.location.href=window.location.href;
+					 }else{
+						alert(responseText.msg);
+						//$('#exampleModal').modal('show');
+					 }
+
+         },  
+         error: function(xhr, status, err) {            
+             alert("操作失败!");    // 访问地址失败，或发生异常没有正常返回
+         },
+         clearForm: true,    // 成功提交后，清除表单填写内容
+         resetForm: true    // 成功提交后，重置表单填写内容
+     }; 
+     
+     // 2.绑定ajaxSubmit()
+     $("#fileform").submit(function(){     // 提交表单的id
+         $(this).ajaxSubmit(options); 
+         return false;   //防止表单自动提交
+     });
+ 
+		
+	}) 
+  
+	
+	  //导出记录
+	// function outexcel(){
+	// 	$.post("{:url('exportmemberExcel')}",
+	// 	{
+	// 		'mobile':mobile,
+	// 		'startNum':startNum,
+	// 		'endNum':endNum,
+	// 		'startDate':startDate,
+	// 		'endTime':endTime,
+	// 		'calltask':calltask,
+	// 		'levelids':levelids,
+	// 		'statusids':statusids
+	// 	},
+	// 	function(data){
+				 
+	// 				window.location.href = data;
+	 
+	// 	});
+	// }
+		
+    
+  //全选用户
+   function allcheck(obj){
+   	if ($(obj).is(":checked")) {	
+   		$('.usercheck').prop("checked","checked");
+   		$('.check-all').prop("checked","checked");
+   		$('.check-all-th').prop("checked","checked");
+   	}else{
+   		$('.usercheck').prop("checked",false);
+   		$('.check-all').prop("checked",false);
+   		$('.check-all-th').prop("checked",false);
+   	}
+   	var len = $(".usercheck:checkbox:checked").length; 
+   	$('#selectNum').text(len);
+   }
+   
+ //全选等级
+   function alllevel(){			
+   	if ($('.check-all-level').is(":checked")) {	
+   		$('.levelcheck').prop("checked","checked");
+   	}else{
+   		$('.levelcheck').prop("checked",false);
+   	}
+ 
+   }
+	 
+	 //全选状态
+	 function allstatus(){			
+	 	if ($('.check-all-status').is(":checked")) {	
+	 		$('.statuscheck').prop("checked","checked");
+	 	}else{
+	 		$('.statuscheck').prop("checked",false);
+	 	}
+	 }
+   
+   //删除
+  function del(id){
+   	// var r=confirm('确认删除?');
+   	// if (!r) 
+    //     return; 
+
+ 	 var ids=[];
+  	if(id){
+  		ids.push(id);
+  	}else{
+  		$.each($('input[name="checkids"]:checked'), function(index, object){
+  			// push
+  			ids.push($(object).val());
+  		})
+  	}
+  	
+		
+  	if(!ids.length){
+  		alert("至少选择一条。");
+  		 return false; 
+  	}
+  	var url = "{:url('delelte_tel_bills')}";
+  	$.ajax({
+  		type:'POST',
+  		data:{
+  			ids:ids
+  		},
+  		dataType:'json',
+  		url:url,
+  		success:function(result){
+  			if(result.code === 0){
+  				alert('删除成功');
+  				window.location.href = '';
+  			}else{
+  				alert('删除失败');
+  			}
+  		},
+  		error:function(){
+  			alert('删除失败');
+  		}
+  		
+  	})
+    	// 	 $.post("{:url('delelte_tel_bills')}",{'id':ids},function(data){
+	  		// 		if(data){
+	  		// 			alert(data);
+	  		// 		}else{
+	  		// 			window.location.href=window.location.href;
+	  		// 		}
+	  		// }); 
+  }
+    
+  function getzf(num){
+      if(parseInt(num) < 10){  
+          num = '0'+num;  
+      }  
+      return num;  
+  }
+	
+	function getMyDate(str){
+	
+	    var oDate = new Date(str),  
+	    oYear = oDate.getFullYear(),  
+	    oMonth = oDate.getMonth()+1,  
+	    oDay = oDate.getDate(),  
+	    oHour = oDate.getHours(),  
+	    oMin = oDate.getMinutes(),  
+	    oSen = oDate.getSeconds(),  
+	    oTime = oYear +'-'+ getzf(oMonth) +'-'+ getzf(oDay) +' '+ getzf(oHour) +':'+ getzf(oMin) +':'+getzf(oSen);//最后拼接时间  
+	            return oTime;  
+	        }
+	  
+  
+</script>
+
+<script type="text/javascript">
+
+	$(function(){
+		
+    searchdata(1);
+
+	}) 
+
+	var mobile,startNum,endNum,startDate,endTime,calltask,scenarios,call_times,affirm_times,negative_times,neutral_times,effective_times,hit_times;
+	var levelids=[],statusids=[],semanticLabels=[],flowLabels=[],knlgLabels=[];
+	
+	function show_datas(page){
+		$('input[name="all_checked"]').prop("checked", false);
+		if(!page){
+			var page = 1;	
+		}
+		
+    var contactNumber = $("#contactNumber").val();
+		var scenarios = $("#scenarios").val();
+		var task = $("#task").val();
+		var startDate = $("#startDate").val();
+		var endTime = $("#endTime").val();
+		
+		var status = $("#status").val();
+		
+		var timelong = $("#timelong").val();
+		var level = $("#level").val();
+		var ready = $("#ready").val();
+		
+		
+		var url = "{:url('callLog')}";	
+		//return false;
+		
+		$.ajax({
+				url : url,
+				dataType : "json", 
+				type : "post",
+				data : {
+					'page':page,
+					'mobile':mobile,
+ 					'startNum':startNum,
+					'endNum':endNum,
+					'startDate':startDate,
+ 					'endTime':endTime,
+ 					'calltask':calltask,
+					'levelids':levelids,
+					'statusids':statusids,
+					'scenarios':scenarios,
+					'call_times':call_times,
+					'affirm_times':affirm_times,
+					'negative_times':negative_times,
+					'neutral_times':neutral_times,
+					'effective_times':effective_times,
+					'hit_times':hit_times,
+					'semanticLabels':semanticLabels,
+					'flowLabels':flowLabels,
+					'knlgLabels':knlgLabels
+				},
+				success: function(data){
+					console.log(data);
+					var total = data.data.total;
+					var Nowpage = data.data.Nowpage;
+					var page = data.data.page;
+					var Nowpage = parseInt(Nowpage);
+					var data = data.data.list;
+					 if(data.length > 0){
+					 
+							$("#pegeempty").css("display","none");
+					 
+							$("#tablepagelist").find("tr").remove();
+							
+							for(var i=0;i<data.length;i++){
+				
+								var id = data[i].id;
+								var mobile = data[i].mobile;
+								var username = data[i].username;
+								var status = data[i].status;
+								var duration = data[i].duration;
+								var last_dial_time = data[i].last_dial_time;
+								var level = data[i].level;
+								var review = data[i].review;
+								var task_id = data[i].task_id;
+								var scenename = data[i].scenename;
+								var task_name = data[i].task_name;
+								var reviewstr = '<a href="javascript:void(0);" class="show_record" data-id="'+id+'" onclick="gotoDetail('+mobile+','+task_id+','+id+', \'record\');">未查看</a>';
+								if(review == 1){
+									reviewstr = '<a href="javascript:void(0);" class="show_record" data-id="'+id+'" style="color: #5b5d5f;" onclick="gotoDetail('+mobile+','+task_id+','+id+', \'record\');">已查看</a>';
+								}
+
+								var originating_call = data[i].originating_call;
+								if(originating_call == null){
+									 originating_call = "";
+								}
+
+								var strstatus = "未拨打";
+
+								switch (status) {
+									case 2:
+										strstatus = "已接通";
+										break;
+									case 3:
+										strstatus = "无人接听";
+										break;
+									case 4:
+										strstatus = "停机";
+										break;
+									case 5:
+										strstatus = "空号";
+										break;
+									case 6:
+										strstatus = "正在通话中";
+										break;
+									case 7:
+										strstatus = "关机";
+										break;
+									case 8:
+										strstatus = "用户拒接";
+										break;
+									case 9:
+										strstatus = "网络忙";
+										break;
+									case 10:
+										strstatus = "来电提醒";
+										break;
+									case 11:
+										strstatus = "呼叫转移失败";
+										break;
+									default:
+										strstatus = "--";
+								}
+								
+								var strlevel = "";
+								switch (level) {
+									case 6:
+										strlevel = "A级(有明确意向)";
+										break;
+									case 5:
+										strlevel = "B级(可能有意向)";
+										break;
+									case 4:
+										strlevel = "C级(明确拒绝)";
+										break;
+									case 3:
+										strlevel = "D级(用户忙)";
+										break;
+									case 2:
+										strlevel = "E级(拨打失败)";
+										break;
+									case 1:
+										strlevel = "F级(无效客户)";
+										break;
+									default:
+										strlevel = "--";
+								}
+							
+								var string = '<tr class="itemId'+id+'" alt="'+id+'">'
+								+'<td class="text-center"><input type="checkbox" class="flow-label" value="'+id+'" name="checkids" /></td>'
+								+'<td class="text-center">'+task_name+'</td>'
+								+'<td class="text-center">'+scenename+'</td>'
+								+'<td class="text-center">'+username+'</td>'
+								+'<td class="text-center">'+mobile+'</td>'
+								+'<td class="text-center">'+strstatus+'</td>'
+								+'<td class="text-center">'+last_dial_time+'</td>'  
+								+'<td class="text-center">'+duration+'</td>'
+								+'<td class="text-center">'+strlevel+'</td>'
+								+'<td class="text-center">'+reviewstr+'</td>';
+								string += '</tr>';
+								$("#tablepagelist").append(string); 
+
+							}
+							
+							var prepage = Nowpage-1;
+							var nextpage = Nowpage+1;
+						 
+							var str = '<div class="row">'
+							+'<div class="col-sm-3 text-left">'
+										
+							+'<table class="table table-bordered table-hover" style="margin-bottom: 0px; ">'
+							+'<tbody><tr>'
+							+'<td class="text-center">总人数：'
+							+'</td>'
+							+'<td class="text-center">'+total+'&nbsp;'
+							+'</td>'
+													 
+							+'</tr> '
+							+'</tbody></table>'                                     
+
+							+'</div>'
+							+'<div class="col-sm-9 text-right">'
+							+'<ul class="pagination">';
+						 
+							if(Nowpage == 1){
+								str += '<li id="prevbtn" class="disabled"><span>«</span></li> ';
+							}else{
+								str += '<li><a href="javascript:void(0);" onclick="searchdata('+prepage+');"><span>«</span></a></li> ';
+							}
+							
+							if(page > 10){
+							
+								if(Nowpage < 7){
+									for(var i=0;i<page;i++){
+										var nownum = i+1;
+										if(nownum < 9){
+											 if(nownum == Nowpage){
+												 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+											 }else{
+												 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+											 }
+										}
+										
+										if(nownum == 9 && nownum != Nowpage){
+											 str += '<li class="disabled"><span>...</span></li>';  
+										}else if(nownum == 9){
+											str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li> ';  
+										}
+									
+											if(nownum > (page-2)){
+												 if(nownum == Nowpage){
+													 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+												 }else{
+													 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+												 }
+											}
+
+									 }
+								}else if(Nowpage > 6 && Nowpage < (page-6)){
+									for(var i=0;i<page;i++){
+										var nownum = i+1;
+										var Nowpage = parseInt(Nowpage);
+										if(nownum < 3){
+											str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> '; 
+										}
+										
+										if((nownum > Nowpage-5) && (nownum < Nowpage+5)){
+									
+														 if(nownum == (Nowpage-4)){
+																str += '<li class="disabled"><span>...</span></li>';
+														 }   
+														
+															 if(nownum > (Nowpage-4) && nownum < Nowpage){
+																 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>'; 
+															 }  
+														 
+															 if(nownum == Nowpage){
+															 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>';  
+															 } 
+														 
+															 if(nownum < (Nowpage + 4) && nownum > Nowpage){
+																str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>'; 
+															 }  
+													
+															 if(nownum == (Nowpage + 4)){
+															
+															 str += '<li class="disabled"><span>...</span></li>';
+															 }   
+										 }
+										 
+									 if(nownum > (page-2)){
+										 var Nowpage = parseInt(Nowpage);
+										 if(nownum == Nowpage){
+													 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>';
+											 }else{
+													str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li> ';
+											 }   
+									 
+										 }     
+
+									 }
+								}else{
+									
+									for(var i=0;i<page;i++){
+										var nownum = i+1;
+										if(nownum<3){
+											str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li>';  
+										}
+									
+										if(nownum == (page-10) && nownum != Nowpage){
+											str += '<li class="disabled"><span>...</span></li>';   
+										}else if(nownum == (page-10) && nownum == Nowpage){
+											str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>';   
+										}
+										
+										if(nownum > (page-10)){
+											if(nownum == Nowpage){
+												str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li> ';   
+											}else{
+												str += '<li ><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+'</a></li>';   
+											}
+										}
+										
+										
+									}
+						 
+										
+								}
+							}else{
+								 for(var i=0;i<page;i++){
+									 var nownum = i+1;
+									 if(nownum == Nowpage){
+										 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+									 }else{
+										 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+');">'+nownum+' </a></li> ';  
+									 }
+								 }
+							}
+							
+		
+					 
+							if(Nowpage == page){
+								str += '<li id="prevbtn" class="disabled"><span>»</span></li> ';
+							}else{
+								str += '<li><a href="javascript:void(0);" onclick="searchdata('+nextpage+');"><span>»</span></a></li>';
+							}
+						
+							str += '</ul>'
+							+'</div>'
+							+'</div>'
+						 
+							$("#modalpagebody").find("div").remove();
+							$("#modalpagebody").append(str); 
+							
+					 }
+					 else{
+						 
+						$("#pegeempty").css("display","block");
+
+						$("#tablepagelist").find("tr").remove();
+						$("#modalpagebody").find("div").remove();
+					
+					 }
+					 
+
+				},
+				error : function() {
+					alert('获取列表失败。');
+				}
+		});
+		
+  }	
+	function searchdata(page,type){	
+		if(type == 1){
+			mobile = $("#contactNumber").val();
+			startNum = $("#startNum").val();
+			endNum = $("#endNum").val();
+	
+			startDate = $("#startDate").val();
+			endTime = $("#endTime").val();
+			calltask = $("#calltask").val();
+			scenarios = $("#scenarios").val();
+		
+			call_times = $("#call_times").val();
+			affirm_times = $("#affirm_times").val();
+			negative_times = $("#negative_times").val();
+			neutral_times = $("#neutral_times").val();
+			effective_times = $("#effective_times").val();
+			hit_times = $("#hit_times").val();
+		
+			levelids.splice(0,levelids.length);//清空数组 
+			var levelcheckids = document.getElementsByName("levelcheck");
+			for ( var j = 0; j < levelcheckids.length; j++) {
+				if (levelcheckids.item(j).checked == true) {
+					levelids.push(levelcheckids.item(j).value);
+				}
+			}
+			
+			statusids.splice(0,statusids.length);//清空数组 
+			var statuscheckids = document.getElementsByName("statuscheck");
+			for ( var j = 0; j < statuscheckids.length; j++) {
+				if (statuscheckids.item(j).checked == true) {
+					statusids.push(statuscheckids.item(j).value);
+				}
+			}
+			
+			semanticLabels.splice(0,semanticLabels.length);//清空数组 
+			var semanticLabelObj = document.getElementsByName("semantic-label");
+			for ( var j = 0; j < semanticLabelObj.length; j++) {
+				if (semanticLabelObj.item(j).checked == true) {
+					semanticLabels.push(semanticLabelObj.item(j).value);
+				}
+			}
+			console.log(semanticLabels);
+			
+			flowLabels.splice(0,flowLabels.length);//清空数组 
+			var flowLabelObj = document.getElementsByName("flow-label");
+			for ( var j = 0; j < flowLabelObj.length; j++) {
+				if (flowLabelObj.item(j).checked == true) {
+					flowLabels.push(flowLabelObj.item(j).value);
+				}
+			}
+			
+			knlgLabels.splice(0,knlgLabels.length);//清空数组 
+			var knlgLabelObj = document.getElementsByName("knowledge-label");
+			for ( var j = 0; j < knlgLabelObj.length; j++) {
+				if (knlgLabelObj.item(j).checked == true) {
+					knlgLabels.push(knlgLabelObj.item(j).value);
+				}
+			}
+		}
+	  show_datas(page);	
+	}	
+	
+		//已经拨打的全选
+	function checkall(){			
+	   	if ($('.check-all').is(":checked")) {	 
+	   		$('.Alreadycheck').prop("checked","checked");
+	   	}else{
+	   		$('.Alreadycheck').prop("checked",false);
+	   	}
+	}
+	var excel_state = true;
+  //到出记录
+	function outexcel(){
+		if(excel_state === true){
+			excel_state = false;
+			//获取搜索的号码
+			var mobile = $('#contactNumber').val();
+			//获取选中的意向标签
+			var levelids = [];
+			$.each($('input[name="levelcheck"]:checked'), function(index, object){
+				levelids.push($(object).val());
+			});
+			//获取选中的通话状态
+			var statusids = [];
+			$.each($('input[name="statuscheck"]:checked'), function(index, object){
+				statusids.push($(object).val());
+			});
+			//获取选中的手机号码
+			var usercheck = [];
+			$.each($('input[name="checkids"]:checked'), function(index, object){
+				usercheck.push($(object).val());
+			});
+			$.post("{:url('exportExcel')}",
+			{
+				'mobile':mobile,
+				'statusids':statusids,
+				'levelids':levelids,
+				'usercheck':usercheck
+			},
+			function(data){
+				if(data.code === 0){
+					window.location.href = data.data;
+					alert('导出成功');
+				}else{
+					alert('导出失败');
+				}
+				excel_state = true;
+				$('#number-export').modal('hide');
+			});
+		}
+		// $.post("{:url('exportExcel')}",
+		// {
+		// 	'mobile':mobile,
+		// 	'startNum':startNum,
+		// 	'endNum':endNum,
+		// 	'startDate':startDate,
+		// 	'endTime':endTime,
+		// 	'calltask':calltask,
+		// 	'levelids':levelids,
+		// 	'statusids':statusids
+		// },
+		// function(data){
+		// 	console.log(data);
+		// 	if(data.code === 0){
+		// 		alert('导出成功');
+		// 		window.location.href = data.msg;
+		// 	}
+		// 	// window.location.href = data;
+	 
+		// });
+		// var typestr = $('#typelevel').val();
+		// var mobile = $('#keyword').val();
+		// var status = $('#status').val();
+
+		// $.post("{:url('exportExcel')}",{'type':typestr,'mobile':mobile,'status':status},function(data){
+		// 		 // if(data){
+		// 		// console.log(data);
+  //     // }else{
+ 	// 				window.location.href = data;
+  //     // }
+		// }); 
+		
+	}
+
+	 //重拨
+	 function redial(task,mobile){
+		
+		 $.post("{:url('redial')}",{'task':task,'mobile':mobile},function(res){
+					if(res.code == 0){
+						alert(res.msg);
+					}else{
+						alert(res.msg);
+					}
+	   }); 
+			
+	 }
+
+ </script>
+ 
+{include file="member/calldetail" /} 
+
+
+ 
+</div>
+
+{/block}
+

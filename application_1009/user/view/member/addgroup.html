@@ -1,0 +1,143 @@
+{extend name="public/base" /}
+{block name="body"}
+
+
+<style type="text/css">
+.textwidth{
+width:250px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.nav-tabs {
+border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+color: #555;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+background-color: #FFFFFF;
+border-color: #FFFFFF;
+color: #FFFFFF;
+border-radius: 0;
+background-clip: padding-box;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="panel panel-default">
+      <div class="panel-heading">
+        <header class="main-box-header clearfix">
+		   <div class="pull-left">
+			  <h1><span>{$current|default=''}</span>分组</h1>
+		   </div>
+		</header>
+      </div>
+	  <div class="panel-body">
+	
+	       <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" method="post">		
+	
+		      <div class="main-box-body clearfix">
+
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">分组名称：</label>
+					<div class="col-lg-10 col-sm-10">
+					   <input type="text" class="form-control textwidth" name="name" id="groupName" value="{$grouplist.name|default=''}" />
+					</div>
+					
+			    </div>
+			    
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">分组状态：</label>
+					<div class="col-lg-10 col-sm-10">
+						 <input type="radio" name="status" id="status" {eq name="$grouplist.status|default='1'" value="1" }checked{/eq} value="1" /> 开启
+					     <input type="radio" name="status" id="statusRadio" value="0" {eq name="$grouplist.status|default='1'" value="0" }checked{/eq} >  关闭
+					</div>
+			    </div>
+			    
+			     <div class="form-group">
+					<label class="col-lg-2 control-label">备注：</label>
+					<div class="col-lg-10 col-sm-10">
+						<textarea class="form-control textwidth" name="remark" id="remark">{$grouplist.remark|default=''}</textarea>
+					     <div class="help-block">扩展的字段</div>
+					</div>
+			    </div>
+			   
+			    
+			   
+			  <div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">	<!--   target-form="form-horizontal" -->	
+				    <input type="hidden" name="groupId" id="groupId" value="{$grouplist.id|default=''}" />			  
+					<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+				</div>
+			 </div>
+		 
+		
+		      </div>
+
+		     </form>
+		
+		
+	  </div>
+</div>	
+					
+
+
+<script type="text/javascript">
+//检查表单的必填项
+function checkform(){
+
+	  var groupName = $("#groupName").val();
+	  if(!groupName){
+		  alert("名称不能为空"); 
+		  return false; 
+	  }
+	  if(groupName.length>200){
+		  alert("名称限200个字"); 
+		  return false; 
+	  } 
+
+      updata();
+
+}
+
+   function updata(){
+   	   var href = window.location.href;
+   		 $.ajax({
+   		     type: "POST",
+   		     dataType:'json',
+   		     url: href,
+   		     cache: false,
+   		     data: $("#form").serialize(),
+   		     success: function(data) {
+   		    	 if (data.code == 1) {
+   		    	     alert(data.msg + ' 页面即将自动跳转~');
+   		    	     location.href = data.url;
+   		    	}else{
+   		    		 alert(data.msg);
+   		    		 location.href = data.url;
+   		    	} 
+   		     },
+   		     error: function(data) {
+   		    	 alert("提交失败");
+   		     }
+   		 }) 
+   }
+
+</script>
+
+
+</div>
+
+</div>
+
+{/block}
+

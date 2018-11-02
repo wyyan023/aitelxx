@@ -1,0 +1,150 @@
+<style>
+.nav.nav-tabs {
+    margin-bottom: 20px;
+    z-index: 999999999;
+    position: absolute;
+    background-color: #fff;
+    width:100%;
+}
+.map{
+	position:absolute;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+}
+.BMapLabel{
+	border:none !important;
+	background-color: rgba(255, 255, 255, 0) !important;
+}
+.BMapLabel .avatar{
+	width:30px;
+	height:30px;
+	border-radius:25px;
+}
+
+</style>
+{extend name="public/base" /}
+{block name="body"}
+
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header clearfix">
+		  <div class="pull-left">
+			  <h1>用户分布</h1>
+		  </div>
+		</header>
+		  <!-- 
+		   <div class="pull-right form-inline" style="margin-right:100px">
+		           城市： <select style="width:auto;" name="city" id="city" onchange="search(1,1);" class="form-control">
+					  <option value="郑州">郑州</option>
+					  <option value="广州">广州</option>
+					  <option value="深圳">深圳</option>
+					  <option value="上海">上海</option>
+					  <option value="济南">济南</option>
+				   </select>&nbsp;
+	                              用户名：<input id="username" class="form-control" name="username" type="text" />
+	          <input  class="btn btn-primary" type="button" onclick="search(1,0);" value="搜索" />
+	       </div>
+	       <div style="height:2px;margin-top:5px;clear:both;"></div>
+	        -->
+	       
+	   <div class="main-box-body clearfix">
+	      <div class="table-responsive" style="margin-top:5px;">
+            <div id="container" style="width:1000px;height:550px"></div> 
+	      </div>					
+       </div>		
+	</div>					
+  
+</div>
+ 
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=EE9FeSzFBZhKyBGXoweC0vOW"></script> 
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+
+
+<script type="text/javascript">
+
+//最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
+var sContent =
+"<h4 style='margin:0 0 5px 0;padding:0.2em 0'>天安门</h4>" + 
+"<img style='float:right;margin:4px' id='imgDemo' src='http://app.baidu.com/map/images/tiananmen.jpg' width='139' height='104' title='天安门'/>" + 
+"<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>天安门坐落在中国北京市中心,故宫的南侧,与天安门广场隔长安街相望,是清朝皇城的大门...</p>" + 
+"</div>";
+
+	// 百度地图API功能	
+	map = new BMap.Map("container");
+	map.enableScrollWheelZoom();
+	map.enableDragging();
+	map.enableContinuousZoom();
+	map.addControl(new BMap.NavigationControl());
+	map.centerAndZoom(new BMap.Point(116.417854,39.921988), 15);
+	/* var data_info = [[116.417854,39.921988,"地址：北京市东城区王府井大街88号乐天银泰百货八层"],
+					 [116.406605,39.921585,"地址：北京市东城区东华门大街"],
+					 [116.412222,39.912345,"地址：北京市东城区正义路甲5号"]
+					]; */
+	
+	var opts = {
+				width : 330,     // 信息窗口宽度
+				height: 165,     // 信息窗口高度
+				title : "<h4 style='margin:0 0 5px 0;padding:0.2em 0;border-bottom:1px solid gray;'>天安门</h4>" , // 信息窗口标题
+				enableMessage:true//设置允许信息窗发送短息
+			   };
+	
+	var markersss = [];
+
+ 	
+ 		
+ 		function getOrder(e){    
+ 			var p = e.target;      //获取marker的位置
+ 		
+ 			 $.ajax({
+ 	   		     type: "POST",
+ 	   		     dataType:'json',
+ 	   		     url: "{:url('user/Member/distribution')}",
+ 	   		     cache: false,
+ 	   		     data: {"lng":p.getPosition().lng,"lat":p.getPosition().lat},
+ 	   		     success: function(data) {
+ 	   		       
+ 	   		        if (data.code == 1) {
+ 	   		    	   if(data.data.length > 1){
+ 	   		    		p.openInfoWindow(new BMap.InfoWindow("<img style='float:left;margin:4px' class='img-circle' id='imgDemo' src='"+data.data[0].user_logo+"' width='120' height='120' title='天安门'/>" + 
+ 	 							"<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'><a href='###'>"+data.data[0].goods_name+"</a></p>" + 
+ 	 							"<p style='margin:0;line-height:1.5;font-size:13px;'>获得者：<a href='###'>"+data.data[0].nickname+"</a></p>" + 
+ 	 							"<p style='margin:0;line-height:1.5;font-size:13px;'>此位置已确认地址"+data.data[0].count+"个，>><a href='###' style='color:#000000;'>查看更多>></a></p>" + 
+ 	 							"</div>",opts)); 
+ 	   		    	   }else{
+ 	   		    		p.openInfoWindow(new BMap.InfoWindow("<img style='float:left;margin:4px' class='img-circle' id='imgDemo' src='"+data.data[0].user_logo+"' width='120' height='120' title='天安门'/>" + 
+ 	 							"<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'><a href='###'>"+data.data[0].goods_name+"</a></p>" + 
+ 	 							"<p style='margin:0;line-height:1.5;font-size:13px;'>获得者：<a href='###'>"+data.data[0].nickname+"</a></p>" + 
+ 	 							"</div>",opts)); 
+ 	   		    	   }
+ 	   		    	   
+ 	   		    	}else{
+ 	   		    		// alert(data.msg);
+ 	   		    		// location.href = data.url;
+ 	   		    	}  
+ 	   		     },
+ 	   		     error: function(data) {
+ 	   		       
+ 	   		      p.openInfoWindow(new BMap.InfoWindow("<img style='float:left;margin:4px' class='img-circle' id='imgDemo' src='http://ruikecmssvn.test.com/uploads/picture/20170220/514de07dea725cf39ec545dd9a7b7177.jpg' width='120' height='120' title='天安门'/>" + 
+ 							"<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>天安门坐落在中国北京市中心,故宫的南侧,与天安门广场隔长安街相望,是清朝皇城的大门...</p>" + 
+ 							"</div>",opts));  
+ 	   		    	// alert("提交失败");
+ 	   		     }
+ 	   		 }) 
+ 			
+ 			
+ 		}
+  	   var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markersss});
+
+
+
+</script>
+
+
+</div>
+
+{/block}
+

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<title>{$allcinfig.websitename|default='微信平台'}</title>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/bootstrap/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/font-awesome.css"/>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/nanoscroller.css"/>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/common.css"/>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/iconfonts/iconfont.css?v"/>
+<link rel="stylesheet" type="text/css" href="__CSS__/style.css?v=1"/>
+
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/iconfont/iconfont.css"/>
+<script src="__PUBLIC__/js/jquery.js"></script>
+<script type="text/javascript">
+	var BASE_URL = "{:config('base_url')}"; //根目录地址
+</script>
+<!--[if lt IE 9]>
+<script src="__PUBLIC__/js/html5shiv.js"></script>
+<script src="__PUBLIC__/js/respond.min.js"></script>
+<![endif]-->
+{block name="style"}{/block}
+</head>
+<style>
+  #sidebar-nav .nav>li>a>span {
+      margin-left: 29px;
+      font-size: 15px;
+      font-weight: 400;
+      color: #8393a8;
+  }
+  .imgstyle{
+  	
+  	border-radius: 50%;width: 100px;margin-top: 15px;height: 100px;
+  }
+  #sidebar-nav .nav>li>a>span {
+      margin-left: 29px;
+      font-size: 15px;
+      font-weight: 400;
+      color: #ced2e2;
+  }
+  .message{
+  	background-color: red;
+      width: 16px;
+      height: auto;
+      border-radius: 32px;
+      font-size: 10px;
+      color: white;
+      position: absolute;
+      text-align: center;
+      line-height: 1.5;
+      padding: 1px;
+  }
+</style>
+<body>
+<div id="theme-wrapper">
+	<header class="navbar" id="header-navbar">
+		<div class="container">
+			<div class="navbar-header" style="text-align:center;">
+				<a href='/user/index/index' id="logo" class="navbar-brand">
+					{empty name="$allcinfig.logo"}
+					  AI智能机器人
+					{else /}
+					  <img src="{$allcinfig.logo|default='__PUBLIC__/images/logo.png'}" alt="" class="normal-logo logo-white" />
+					{/empty}
+				</a>
+				<!--
+				<a class="navbar-brand navbar-small-nav" id="make-small-nav"> 
+					<i class="fa fa-bars"></i>
+				</a>
+			-->
+		
+			</div>
+
+			<div class="collapse navbar-collapse" id="header-nav">
+			  <ul class="nav navbar-nav pull-left" style="border:none;">
+			    <li>
+			      <a href='/user/index/index'>AI智能机器人</a> <span style="position: absolute;top: 20px;right: -8px;font-size: 12px;z-index: 99;">>></span>
+			    </li>
+			    <li class="pz_nav_on">
+		        {if condition="$request->controller() == 'Index'"}
+		          <a href='/user/index/index'>控制台</a>
+		        {/if}
+		        {if condition="$request->controller() == 'Plan'"}
+		          <a href='/user/plan/newindex'>任务管理</a>
+		        {/if}
+		        {if condition="$request->controller() == 'Label'"}
+		          <a href='/user/label/index'>标签管理</a>
+		        {/if}
+		        {if condition="$request->controller() == 'Scenarios'"}
+		          <a href='/user/scenarios/index'>话术管理</a>
+		        {/if}
+		        {if condition="$request->controller() == 'Device'"}
+		          <a href='/user/device/voip'>通信管理</a>
+		        {/if}
+		        {if condition="$request->controller() == 'Member'"}
+		          <a href='/user/member/memberlist'>客户管理</a>
+		        {/if}
+		        {if condition="$request->controller() == 'Tsr'"}
+		          <a href='/user/tsr/index'>座席管理</a>
+		        {/if}
+		        {if condition="$request->controller() == 'Manager'"}
+		          <a href='/user/manager/index'>招商管理</a>
+		        {/if}
+		        {if condition="$request->controller() == 'Message' OR $request->controller() == 'System' OR $request->controller() == 'Enterprise'"}
+		          <a href='/user/message/index'>系统管理</a>
+		        {/if}
+			    </li>
+			  </ul>
+				<ul class="nav navbar-nav pull-right">
+					<li class="notice-bar">
+						<a href="{:url('Message/my',array('status'=>0))}" style="padding-right:0px;" class="notice-icon" data-toggle="tooltip" data-placement="bottom" title="" 
+						data-original-title="消息中心">
+						{if condition="$msgNum > 0 "}
+							<span class="message">{$msgNum}</span>
+						{/if}
+						</a>	
+					</li>
+					<li class="dropdown profile-dropdown hidden-sm hidden-xs pz_dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<img src="{if condition="session('user_auth.logo') eq ''"}
+								__PUBLIC__/images/samples/default-img.png
+							{else /}
+								{:session('user_auth.logo')}
+							{/if}" alt=""/>
+							<span class="hidden-xs">{:session('user_auth.username')}</span>
+							 <b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-right" >
+							<li>
+								<a href="{:url('Manager/editAdmin',array('id'=>session('user_auth.uid')))}">
+									<i class="fa fa-user"></i>
+									修改资料
+								</a>
+							</li>
+							<li>
+								<a href="{:url('Manager/editpwd')}">
+									<i class="fa fa-cog"></i>
+									修改密码
+								</a>
+							</li>				
+							<li>
+								<a href="{:url('index/logout')}">
+									<i class="fa fa-power-off"></i>
+									退出
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</header>
+
+	<div id="page-wrapper" class="container">
+		<div class="row">
+			<div id="nav-col">
+				<section id="col-left" class="col-left-nano">
+					<div id="col-left-inner" class="col-left-nano-content">
+						<!-- 
+						<div style="height: 180px;text-align: center;">
+							<img class="imgstyle" src="
+							{if condition="session('user_auth.logo') eq ''"}
+								__PUBLIC__/images/samples/default-img.png
+							{else /}
+								{:session('user_auth.logo')}
+							{/if}
+						
+							" />
+							<p style="color: white;padding: 8px 5px;font-size: 16px;font-weight: 600;">{:session('user_auth.username')}</p>
+						</div>
+						 -->
+						<div id="sidebar-nav">
+							<ul class="nav nav-pills nav-stacked" style="margin-bottom: 80px;margin-top:24px;">
+  							<li class="nav-header hidden-sm hidden-xs  open" style="border-left: 3px solid #32dadc;">
+  							  <a href="/user/index/index">
+  								 <!--<i class="icon iconfont icon-gongzuotai1"></i>-->
+  									<span style="padding-left:0px;margin-left: -1px;color:#32dadc;">机器人控制台</span>
+  								</a>
+  							</li>
+							  {if isset($extend_menu)}
+							  <li class="nav-header hidden-sm hidden-xs {eq name="extend_menu['expand']" value="1"}open{/eq}">
+									<a href="#" class="dropdown-toggle">
+										<i class=""></i>
+										<span class="pz_letitle">{$extend_menu['title']}</span>
+										<i class="fa {if $extend_menu['expand'] == 1}fa-angle-down{else/}fa-angle-right{/if} drop-icon"></i>
+									</a>
+									{if isset($extend_menu['child'])}
+									<ul class="submenu" {eq name="extend_menu['expand']" value="1"}style="display:block;"{/eq}>
+									{volist name="extend_menu['child']" id="item"}
+  										<li class="">
+  											<a href="{$item['url']|url}">
+  											 
+  												<span style="padding-left:9px;font-size:14px;{eq name="item['style']" value="active"}color:#fff;{/eq}">{$item['title']}</span>
+  											</a>
+  										</li>
+										{/volist}
+									</ul>
+									{/if}
+								</li>
+							  {/if}
+							  
+								{volist name="__menu__" id="menu"}	
+								<li class="nav-header hidden-sm hidden-xs {eq name="menu['expand']" value="1"}open{/eq}">
+									<a href="#" class="dropdown-toggle">
+										<i class="icon iconfont {$menu['icon']}"></i>
+										<span class="pz_letitle">{$menu['title']}</span>
+										<i class="fa {if $menu['expand'] == 1}fa-angle-right add1{else/}fa-angle-right{/if} drop-icon"></i>
+									</a>
+									{if isset($menu['child'])}
+									<ul class="submenu" {eq name="menu['expand']" value="1"}style="display:block;"{/eq}>
+									{volist name="menu['child']" id="item"}
+									  
+  										<li class="">
+  											<a href="{$item['url']|url}">
+  												<span style="padding-left:9px;font-size:14px;{if isset($item['style'])} color:#fff;{/if}">{$item['title']}</span>
+  											</a>
+  										</li>
+										
+										{/volist}
+									</ul>
+									{/if}
+								</li>
+								{/volist}
+							</ul>
+						</div>
+					</div>
+				</section>
+				<div id="nav-col-submenu"></div>
+			</div>
+
+			<div id="content-wrapper">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row">
+							<div class="col-lg-12">
+								{block name="body"}{/block}
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- <footer id="footer-bar" class="row"> -->
+					<!-- <p id="footer-copyright" class="col-xs-12">Powered by  -->
+						<!-- <a href="http://www.ruikesoft.cn" target="_blank">RuiKeSoft,Inc.</a></p> -->
+				<!-- </footer> -->
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__PUBLIC__/js/bootstrap.js"></script>
+<script src="__PUBLIC__/js/jquery.nanoscroller.min.js"></script>
+<script src="__PUBLIC__/js/pace.min.js"></script>
+
+<script src="__PUBLIC__/js/hopscotch.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/libs/hopscotch.css">
+
+<script src="__PUBLIC__/js/messager.js"></script>
+<script src="__JS__/app.js?{php}echo time();{/php}"></script>
+<script type="text/javascript">
+(function(){
+	var RuiKeCMS = window.Sent = {
+		"ROOT"   : "__ROOT__", //当前网站地址
+		"APP"    : "__APP__", //当前项目地址
+		"PUBLIC" : "__PUBLIC__", //项目公共目录地址
+		"DEEP"   : "{:config('URL_PATHINFO_DEPR')}", //PATHINFO分割符
+		"MODEL"  : ["{:config('URL_MODEL')}", "{:config('URL_CASE_INSENSITIVE')}", "{:config('URL_HTML_SUFFIX')}"],
+		"VAR"    : ["{:config('VAR_MODULE')}", "{:config('VAR_CONTROLLER')}", "{:config('VAR_ACTION')}"]
+	}
+})();
+</script>
+<script src="__PUBLIC__/js/core.js"></script>
+{block name="script"}{/block}
+</body>
+</html>

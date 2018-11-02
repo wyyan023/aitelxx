@@ -1,0 +1,219 @@
+{extend name="public/base" /}
+{block name="body"}
+<style type="text/css">
+.table tbody>tr>td {
+padding: 6px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header clearfix">
+		  <div class="pull-left">
+			  <h1>视频列表</h1>
+			  <a class="btn btn-primary" href="{:url('addDocument',array('type'=>2))}">新 增</a>
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+             <section class="navbar navbar-default main-box-header clearfix">
+		         <div class="pull-right">
+				   <form class="form-inline" method="get" role="form">
+					  <div class="form-group">
+					    <label>关键字 ：</label>
+					    <input type="text" class="form-control" style="width:200px;" id="keyword" name="keyword" placeholder="请输入关键字">
+					  </div>&nbsp;&nbsp;&nbsp;
+					  <div class="form-group">
+					    <label>请选择栏目 ：</label>
+					   {if isset($cate_list)}
+						<div class="col-sm-12 col-md-5">
+							<select name="category" style="width:200px;" id="category" class="form-control">
+								<option value="">请选择栏目</option>
+								{volist name="cate_list" id="item"}
+								<option value="{$item['id']}">{$item['title_show']}</option>
+								{/volist}
+							</select>
+						</div>
+						{/if}
+					  </div>
+				    <button class="btn btn-primary" type="submit">搜索</button>
+				  </form>
+				 </div>
+		   </section>
+		     <div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>
+		     
+			  <div class="table-responsive">			  
+				  <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					        <th></th>
+					        <th class="text-center">ID</th>
+					        <th class="text-center">标题</th>
+					        <th class="text-center">发布人</th>
+					        <th class="text-center">创建时间</th>
+					        <th class="text-center">更新时间</th>
+					        <th class="text-center">状态</th>
+					        <th class="text-center">操作</th> 
+					    </tr>
+				    </thead>
+				   <tbody>
+				       {volist name="list" id="vo"}
+					    <tr class="imgclass">
+					      <td class="text-center">
+					        <input type="checkbox" name="contentids" class="contentcheck" value="{$vo.id}"/>
+					      </td>
+						  <td class="text-center">{$vo.id}</td>
+						  <td>{$vo.title}</td>
+						  <td class="text-center">{$vo.author}</td>
+						  <td class="text-center">{$vo.createTime}</td>	
+						  <td class="text-center">{$vo.updateTime}</td>	
+						  <td class="text-center">
+						    {switch name="$vo.status" }
+							    {case value="1"}
+                                   <span class="label label-primary">正常</span>
+							    {/case}
+							    {default /}
+                                    <span class="label label-info">待审核</span>
+							{/switch}
+						  </td>
+						 
+						  <td class="text-center">
+                              {switch name="$vo.is_top" }
+							    {case value="0"}
+                                  <a href="javascript:void(0);" onclick="settop('{$vo.id}',1);">置顶</a>
+							    {/case}
+							    {default /}
+                                 <a href="javascript:void(0);" onclick="settop('{$vo.id}',0);">取消置顶</a>
+							  {/switch}
+							   {switch name="$vo.status" }
+							    {case value="0"}
+                                  <a href="javascript:void(0);" onclick="setstatus('{$vo.id}',1);">审核通过</a>
+							    {/case}
+							    {default /}
+                                  <a href="javascript:void(0);" onclick="setstatus('{$vo.id}',0);">取消审核</a>
+							   {/switch}
+                                <a href="{:url('user/Content/editDocument',array('id'=>$vo.id))}" >编辑</a>
+								<a href="javascript:void(0);" onclick="delcontent({$vo.id});">删除</a>
+								<a href="{:url('user/Content/comments',array('id'=>$vo.id))}" >查看评论</a>
+							</td>
+						</tr>
+                      {/volist}
+				    </tbody>
+				  </table> 
+		           <div class="row">
+                        <div class="col-sm-4 text-left"></div>
+                        <div class="col-sm-8 text-right">{$page}</div>
+                    </div>
+			  </div>
+	          <footer class="main-box-footer clearfix">
+				<div class="pull-left">
+			    	<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+					<button class="btn btn-primary" onclick="delcontent(0);" target-form="ids">删 除</button>
+				</div>
+			</footer>
+		</div>
+					
+	</div>					
+    
+</div>
+
+ <script type="text/javascript">
+ $(function(){
+  var keyword = "{$_GET['keyword']|default=''}";
+  $('#keyword').val(keyword);
+  var category = "{$_GET['category']|default=''}";
+  $('#category').val(category);
+}) 
+
+//删除
+ function delcontent(id){
+    var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+
+     	 var ids=[];
+    	if(id){
+    		ids.push(id);
+    	}else{
+    		
+        	 var roleids = document.getElementsByName("contentids");
+    		 for ( var j = 0; j < roleids.length; j++) {
+    		    if (roleids.item(j).checked == true) {
+    		    	ids.push(roleids.item(j).value);
+    		    }
+    		 }
+    	}
+		
+    	if(!ids.length){
+    		alert("至少选择一条。");
+    		 return false; 
+    	}
+  		 $.post("{:url('del')}",{'id':ids},function(data){
+				if(data){
+					alert(data);
+				}else{
+					window.location.href=window.location.href;
+				}
+			}); 
+ }
+//全选
+ function allcheck(){			
+ 	if ($('.check-all').is(":checked")) {	
+ 		$('.contentcheck').prop("checked","checked");
+ 	}else{
+ 		$('.contentcheck').prop("checked",false);
+ 	}
+
+ }
+ //置顶
+ function settop(id,status){			
+ 	 var url = "{:url('settop')}";	
+ 	 $.ajax({
+ 	        url : url,
+ 	        dataType : "json", 
+ 	        type : "post",
+ 	        data : {'id':id,'is_top':status},
+ 	        success: function(msg){
+ 	        	if(msg.key > 0){
+ 		        	alert(msg.msg);
+ 	            }else{
+ 	            	location.reload();
+ 	            }  
+ 	        },
+ 	        error : function() {
+ 	        	alert('失败。');
+ 	        }
+ 	  });
+ }
+ 
+ //设置审核状态
+   function setstatus(id,status){			
+   	 var url = "{:url('setstatus')}";	
+   	 $.ajax({
+   	        url : url,
+   	        dataType : "json", 
+   	        type : "post",
+   	        data : {'id':id,'status':status},
+   	        success: function(msg){
+   	        	if(msg.key > 0){
+   		        	alert(msg.msg);
+   	            }else{
+   	            	location.reload();
+   	            }  
+   	        },
+   	        error : function() {
+   	        	alert('获取页面列表失败。');
+   	        }
+   	  });
+   }
+ </script>
+  
+</div>
+
+{/block}
+

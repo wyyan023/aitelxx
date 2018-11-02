@@ -1,0 +1,202 @@
+{
+	"intention_rule": [{
+			"name": "是否邀约成功?",
+			"key": "invite_succ",
+			"type": "bool",
+			"unit": "",
+			"defaultValue": true,
+			"ops": [{
+				"name": "=",
+				"value": "="
+			}],
+			"selectMulti": false,
+			"list": [{
+					"name": "是",
+					"value": true
+				},
+				{
+					"name": "否",
+					"value": false
+				}
+			]
+		},
+		{
+			"name": "客户最后是否拒绝?",
+			"key": "final_refusal",
+			"type": "bool",
+			"unit": "",
+			"defaultValue": true,
+			"ops": [{
+				"name": "=",
+				"value": "="
+			}],
+			"selectMulti": false,
+			"list": [{
+					"name": "是",
+					"value": true
+				},
+				{
+					"name": "否",
+					"value": false
+				}
+			]
+		},
+		{
+			"name": "命中问题",
+			"key": "hit_problem_times",
+			"type": "int",
+			"unit": "次",
+			"defaultValue": 1,
+			"ops": [{
+					"name": ">=",
+					"value": ">="
+				},
+				{
+					"name": "<=",
+					"value": "<="
+				}
+			],
+			"selectMulti": false,
+			"list": null
+		},
+		{
+			"name": "肯定次数",
+			"key": "affirm_times",
+			"type": "int",
+			"unit": "次",
+			"defaultValue": 1,
+			"ops": [{
+					"name": ">=",
+					"value": ">="
+				},
+				{
+					"name": "<=",
+					"value": "<="
+				}
+			],
+			"selectMulti": false,
+			"list": null
+		},
+		{
+			"name": "拒绝次数",
+			"key": "reject_times",
+			"type": "int",
+			"unit": "次",
+			"defaultValue": 1,
+			"ops": [{
+					"name": ">=",
+					"value": ">="
+				},
+				{
+					"name": "<=",
+					"value": "<="
+				}
+			],
+			"selectMulti": false,
+			"list": null
+		},
+		{
+			"name": "客户讲话次数",
+			"key": "speak_count",
+			"type": "int",
+			"unit": "次",
+			"defaultValue": 1,
+			"ops": [{
+					"name": ">=",
+					"value": ">="
+				},
+				{
+					"name": "<=",
+					"value": "<="
+				}
+			],
+			"selectMulti": false,
+			"list": null
+		},
+		{
+			"name": "通话时长",
+			"key": "call_duration",
+			"type": "int",
+			"unit": "秒",
+			"defaultValue": 1,
+			"ops": [{
+					"name": ">=",
+					"value": ">="
+				},
+				{
+					"name": "<=",
+					"value": "<="
+				}
+			],
+			"selectMulti": false,
+			"list": null
+		},
+		{
+			"name": "客户通话内容",
+			"key": "say_keyword",
+			"type": "array",
+			"unit": "多个用英文\",\"分隔",
+			"defaultValue": null,
+			"ops": [{
+					"name": "包含任一",
+					"value": "in"
+				},
+				{
+					"name": "包含全部",
+					"value": "all"
+				}
+			],
+			"selectMulti": false,
+			"list": null
+		},
+		{
+			"name": "通话状态",
+			"key": "call_status",
+			"type": "array",
+			"unit": "",
+			"defaultValue": null,
+			"ops": [{
+				"name": "=",
+				"value": "="
+			}],
+			"selectMulti": true,
+			"list": [{
+					"name": "无人接听",
+					"value": "3"
+				},
+				{
+					"name": "停机",
+					"value": "4"
+				},
+				{
+					"name": "空号",
+					"value": "5"
+				},
+				{
+					"name": "正在通话中",
+					"value": "6"
+				},
+				{
+					"name": "关机",
+					"value": "7"
+				},
+				{
+					"name": "用户拒接",
+					"value": "8"
+				},
+				{
+					"name": "网络忙",
+					"value": "9"
+				},
+				{
+					"name": "来电提醒",
+					"value": "10"
+				},
+				{
+					"name": "呼叫转移失败",
+					"value": "11"
+				}
+			]
+		}
+	]
+}

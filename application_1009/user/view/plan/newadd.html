@@ -1,0 +1,943 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<!-- datepicker statr -->
+<!-- 
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+ -->
+<link href="__PUBLIC__/plugs/bsdatepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/bsdatepicker/js/bootstrap-datepicker.js"></script>
+
+<link href="__PUBLIC__/plugs/timepicker/bootstrap-timepicker.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/timepicker/bootstrap-timepicker.js"></script>
+<!-- <script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script> -->
+
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+
+<script type="text/javascript" src="__PUBLIC__/plugs/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/bootstrap-select/dist/css/bootstrap-select.min.css" />
+
+
+<style type="text/css">
+.textwidth{
+	width:250px;
+}
+.nav-tabs {
+    background: #ffffff;
+}
+.nav-tabs {
+   border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+	color: #555;
+	cursor: default;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+	background-color: #FFFFFF;
+	border-color: #FFFFFF;
+	color: #FFFFFF;
+	border-radius: 0;
+	background-clip: padding-box;
+}
+.statusSelect {
+		line-height: 30px;
+		float: left;
+}
+.ivu-form-item-content {
+    position: relative;
+    line-height: 32px;
+    font-size: 12px;
+}
+.mr15 {
+    margin-right: 15px;
+}
+.itemtime {
+    position: relative;
+    line-height: 32px;
+    font-size: 12px;
+}
+.ivu-tag-checked {
+    background: #f1f1f1;
+}
+.mt15 {
+    margin-top: 15px;
+}
+.mb15 {
+    margin-bottom: 15px;
+}
+.ivu-tag {
+    display: inline-block;
+    height: 22px;
+    line-height: 22px;
+    margin: 2px 4px 2px 0;
+    padding: 0 8px;
+    border: 1px solid #e9eaec;
+    border-radius: 3px;
+    background: #f7f7f7;
+    font-size: 12px;
+    vertical-align: middle;
+    opacity: 1;
+    overflow: hidden;
+    cursor: pointer;
+}
+:root .ivu-tag .ivu-icon-ios-close-empty {
+    font-size: 14px;
+}
+.ivu-tag .ivu-icon-ios-close-empty {
+    display: inline-block;
+    font-size: 14px;
+    font-size: 20px\9;
+    transform: scale(1.42857143) rotate(0deg);
+    cursor: pointer;
+    margin-left: 8px;
+    color: #666;
+    opacity: .66;
+    position: relative;
+    top: -1px;
+		width: 7px;
+    height: 14px;
+}
+
+.ivu-icon {
+    display: inline-block;
+    font-family: Ionicons;
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: auto;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.ivu-tag-text {
+    color: #495060;
+}
+
+.dropdown-menu>li>a>span{
+    color: #000;
+}
+
+.btn-group > .btn-default{
+    background-color: #fff;
+    border: 1px solid #ccc;
+    color: #555;
+}
+
+
+ .dropup > .btn-default{
+   background-color: #fff;
+   border: 1px solid #ccc;
+   color: #555;
+}
+
+.dropup > .btn-default:hover, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+ background-color: #fff;
+ border: 1px solid #ccc;
+}
+.bootstrap-select>.dropdown-toggle.bs-placeholder, .bootstrap-select>.dropdown-toggle.bs-placeholder:active, .bootstrap-select>.dropdown-toggle.bs-placeholder:focus, .bootstrap-select>.dropdown-toggle.bs-placeholder:hover {
+    color: #555;
+}
+.dropup > .btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+.bootstrap-select.btn-group .dropdown-toggle .filter-option {
+  color: #555;
+}
+ 
+.checkbox-wrapper{
+	 margin-right: 20px;
+}
+.word{
+	  line-height: 40px;
+    font-size: 14px;
+}
+.bootstrap-select.form-control:not([class*=col-]) {
+     width: 250px;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="panel panel-default">
+	
+    <div class="panel-heading">
+			<header class="main-box-header clearfix">
+				 <div class="pull-left">
+					<h1><span>{$current|default=''}</span>页面</h1>
+				 </div>
+			</header>
+		</div>
+		
+	  <div class="panel-body">
+		  
+	 <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" method="post">	
+	    
+	    <div class="tab-content">
+		  <div role="tabpanel" class="tab-pane active" id="home">
+	
+		      <div class="main-box-body clearfix">
+		      
+						<div class="form-group" style="margin-top:20px;">
+							<label class="col-lg-2 control-label">任务名称:</label>
+							<div class="col-lg-10 col-sm-10">
+								 <input type="text" class="form-control textwidth" placeholder="任务名称" name="name" id="name" value="{$list.name|default=''}" />
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-lg-2 control-label">场景话术:</label>
+							<div class="col-lg-10 col-sm-10">
+								
+								<select name="scenarios_id" id="scenarios_id" class="form-control textwidth">
+									<option value="">请选择话术</option>
+									{volist name="scenarioslist" id="item"}
+										<option
+										 {eq name="$list.config.scenarios_id|default=''" value="$item.id" }
+										 			selected 
+										 {/eq}
+										 value="{$item['id']}">
+											{$item['name']}
+										</option>
+									{/volist}
+								</select>
+								<!--
+									<input type="text" class="form-control textwidth" name="destination_extension" id="destination_extension" autocomplete="false" value="{$list.destination_extension|default=''}">
+									<div class="help-block">越高排序越靠前</div>-->
+							</div>
+						</div>
+						
+		
+						<div class="form-group">
+								<label class="col-lg-2 control-label"><!-- 拨打计划： --></label>
+								<div class="col-lg-10 col-sm-10">
+									
+										<div class="form-group" style="margin-left:10px;" >
+											<label class="statusSelect">上午:</label>
+											<div class="col-lg-9 col-sm-9">
+													 <input type="hidden" name="morning" id="morning" value="{$list.timerange.0.uuid|default=''}" />	
+														<div class="col-lg-4 col-sm-4">
+															<input type="text" class="form-control" id="startDate" name="startDate" value="{$list.timerange.0.begin_datetime|default=''}" readonly="" />
+														</div>
+														<script>
+															$('#startDate').timepicker({  //fdatepicker
+																format: 'hh:ii:ss',
+																//pickTime: true,
+																defaultTime:'8:00',
+																showMeridian:false,
+															});
+													</script>	
+													
+												    <div style="text-align:center; line-height: 30px;" class="col-lg-1 col-sm-1"> 至 </div>
+													
+														<div class="col-lg-4 col-sm-4">
+															<input type="text" class="form-control" id="endTime" name="endTime" value="{$list.timerange.0.end_datetime|default=''}" readonly="" />
+														</div>
+													
+														<script>
+															$('#endTime').timepicker({
+																format: 'hh:ii:ss',
+																//pickTime: true,
+																defaultTime:'12:00',
+																showMeridian:false,
+															});
+														</script>	
+																												
+											</div>
+										</div>
+										
+									
+										<div class="form-group" style="margin-left:10px;" >
+											<label class="statusSelect">下午:</label>
+											<div class="col-lg-9 col-sm-9">
+													<input type="hidden" name="afternoon" id="afternoon" value="{$list.timerange.1.uuid|default=''}" />	
+													<input type="hidden" name="evening" id="evening" value="{$list.timerange.2.uuid|default=''}" />	
+												
+														<div class="col-lg-4 col-sm-4">
+															<input type="text" class="form-control" id="pmstartDate" name="pmstartDate" value="{$list.timerange.1.begin_datetime|default=''}" readonly="" />
+														</div>
+														<script>
+															$('#pmstartDate').timepicker({
+																format: 'hh:ii:ss',
+																//pickTime: true
+																defaultTime:'14:00',
+																showMeridian:false,
+															});
+													</script>	
+													
+														<div style="text-align:center; line-height: 30px;" class="col-lg-1 col-sm-1"> 至 </div>
+													
+														<div class="col-lg-4 col-sm-4">
+															<input type="text" class="form-control" id="pmendTime" name="pmendTime" value="{$list.timerange.1.end_datetime|default=''}" readonly="" />
+														</div>
+													
+														<script>
+															$('#pmendTime').timepicker({
+																format: 'hh:ii',
+																//pickTime: true
+																defaultTime:'20:00',
+																showMeridian:false,
+																maxHours: 21,
+															});
+														</script>	
+																												
+											</div>
+										</div>
+										
+									
+									<div>推荐：为建立健康、友好的营销呼叫平台，建议呼叫时间段为 08:00 - 12:00 和 14:00 - 20:00 ！</div>
+								</div>
+						</div>
+						
+						
+						<div class="form-group">
+							<label class="col-lg-2 control-label">排除时间：</label>
+							<div class="col-lg-10 col-sm-10">
+								
+								 <input type="hidden" name="exclude" id="exclude" value="{$list.timer.id|default=''}" />	
+
+									<div class="form-group" style="margin-left:10px;">
+										<label class="statusSelect">按周：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <div class="ivu-form-item-content">
+												 <button type="button"
+													{if condition="isset($list.timer.week_list) && in_array('Monday', $list.timer.week_list)"}
+													class="mr15 btn btn-default"
+													{else/}
+													class="mr15 btn btn-primary"
+													{/if}
+													onclick="changes(this)">
+													 <input type="hidden" name="Monday" id="Monday" 
+														{if condition="isset($list.timer.week_list) && in_array('Monday', $list.timer.week_list)"}
+														value="0"
+														{else/}
+														value="1"
+														{/if}
+														/>
+													 <span>周一</span>
+												 </button>
+												 <button type="button"
+													{if condition="isset($list.timer.week_list) && in_array('Tuesday', $list.timer.week_list)"}
+													class="mr15 btn btn-default"
+													{else/}
+													class="mr15 btn btn-primary"
+													{/if}
+													 onclick="changes(this)">
+													 <input type="hidden" name="Tuesday" id="Tuesday" 
+													 {if condition="isset($list.timer.week_list) && in_array('Tuesday', $list.timer.week_list)"}
+													 	value="0"
+													 {else/}
+													 	value="1"
+													 {/if}
+													 />
+													 <span>周二</span>
+												 </button>
+												 
+												 <button type="button"
+													{if condition="isset($list.timer.week_list) && in_array('Wednesday', $list.timer.week_list)"}
+													class="mr15 btn btn-default"
+													{else/}
+													class="mr15 btn btn-primary"
+													{/if}
+													 onclick="changes(this)">
+												   <input type="hidden" name="Wednesday" id="Wednesday" 
+														{if condition="isset($list.timer.week_list) && in_array('Wednesday', $list.timer.week_list)"}
+															value="0"
+														{else/}
+															value="1"
+														{/if}
+														/>
+													 <span>周三</span>
+												 </button>
+												 
+												 <button type="button" 
+												{if condition="isset($list.timer.week_list) && in_array('Thursday', $list.timer.week_list)"}
+												class="mr15 btn btn-default"
+												{else/}
+												class="mr15 btn btn-primary"
+												{/if}
+												 onclick="changes(this)">
+													 <input type="hidden" name="Thursday" id="Thursday" 
+														{if condition="isset($list.timer.week_list) && in_array('Thursday', $list.timer.week_list)"}
+															value="0"
+														{else/}
+															value="1"
+														{/if}
+														/>
+													 <span>周四</span>
+												 </button>
+												 
+												 <button type="button" 
+												 {if condition="isset($list.timer.week_list) && in_array('Friday', $list.timer.week_list)"}
+												 class="mr15 btn btn-default"
+												 {else/}
+												 class="mr15 btn btn-primary"
+												 {/if}
+												onclick="changes(this)">
+													 <input type="hidden" name="Friday" id="Friday" 
+														{if condition="isset($list.timer.week_list) && in_array('Friday', $list.timer.week_list)"}
+															value="0"
+														{else/}
+															value="1"
+														{/if}
+														/>
+													 <span>周五</span>
+												 </button>
+												 
+												 <button type="button" 
+												 {if condition="isset($list.timer.week_list) && in_array('Saturday', $list.timer.week_list)"}
+												 class="mr15 btn btn-default"
+												 {else/}
+												 class="mr15 btn btn-primary"
+												 {/if}
+												 onclick="changes(this)">
+													 <input type="hidden" name="Saturday" id="Saturday"
+														{if condition="isset($list.timer.week_list) && in_array('Saturday', $list.timer.week_list)"}
+															value="0"
+														{else/}
+															value="1"
+														{/if}
+														/>
+													 <span>周六</span>
+												 </button>
+												 <button type="button" 
+												 {if condition="isset($list.timer.week_list) && in_array('Sunday', $list.timer.week_list)"}
+											   	class="mr15 btn btn-default"
+												 {else/}
+												  class="mr15 btn btn-primary"
+												 {/if}
+													onclick="changes(this)">
+													 <input type="hidden" name="Sunday" id="Sunday" 
+													 {if condition="isset($list.timer.week_list) && in_array('Sunday', $list.timer.week_list)"}
+												     value="0"
+													 {else/}
+													   value="1"
+													 {/if}
+														/>
+													 <span>周日</span>
+												</button> 
+											</div>
+										</div>
+									</div>
+
+									
+									<div class="form-group" style="margin-left:10px;">
+										<label class="statusSelect">按天：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <!-- class="col-lg-4 col-sm-4" -->
+												<div>
+													<input type="text" class="form-control" id="daystartDate" name="daystartDate" value="{$list.timer.date_list|default=''}" readonly="" />
+												</div>
+												<script>
+													$('#daystartDate').datepicker({
+														language: 'zh-CN',
+													  format: 'yyyy-mm-dd',
+														multidate:true,
+														multidateSeparator:",",
+														// pickTime: true
+													});
+											</script>	
+											
+										<!-- 	
+											<div class="ivu-form-item-content">
+												<button type="button" class="mr15 btn btn-primary">
+													<span>选择时间</span>
+												</button>
+											  <span class="itemtime">已选择3天</span>
+											</div>
+											
+											<div class="mt15">
+													<div class="mb15 mr15 ivu-tag ivu-tag-default ivu-tag-closable ivu-tag-checked">
+														<span class="ivu-tag-text">2018-08-17</span> 
+														<i class="ivu-icon ivu-icon-ios-close-empty">&times;</i>
+													 </div>
+													 
+													 <div class="mb15 mr15 ivu-tag ivu-tag-default ivu-tag-closable ivu-tag-checked">
+														<span class="ivu-tag-text">2018-08-15</span> 
+														<i class="ivu-icon ivu-icon-ios-close-empty">&times;</i>
+													</div>
+													
+													<div class="mb15 mr15 ivu-tag ivu-tag-default ivu-tag-closable ivu-tag-checked">
+													 <span class="ivu-tag-text">2018-08-21</span> 
+													 <i class="ivu-icon ivu-icon-ios-close-empty">&times;</i>
+													</div>
+											</div>
+											
+											 -->
+										</div>
+									</div>
+									
+									
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-lg-2 control-label">呼叫方式：</label>
+							<div class="col-lg-10 col-sm-10">
+									<div class="btn-group">
+										<button type="button" class="btn 
+										 {if condition="!isset($list.config.call_type) || $list.config.call_type eq '0'"}
+											btn-primary  
+											
+										{else/}
+											btn-default 
+										 {/if}
+										call-type" data-v="0" >网关</button>
+										
+										<button type="button" class="btn  {if condition="isset($list.config.call_type) && $list.config.call_type eq 1"}
+											btn-primary  
+											
+										{else/}
+											btn-default 
+										 {/if} call-type" data-v="1" >线路</button>
+									</div>
+									 <input type="hidden" name="call_type" id="call-type" value=0 />
+									 
+									<select id="phone_id" class="form-control textwidth" name="phone_id">
+									
+									</select>
+								
+							</div>
+						</div>
+						
+						<script>
+							$(function(){ 
+								$(".call-type").click(function(){
+									$(".call-type").attr('class', 'btn btn-default call-type');
+									$(this).attr('class', 'btn btn-primary call-type');
+									$('#call-type').val($(this).attr('data-v'));
+									bindCallNums($(this).attr('data-v'));
+								});
+								var call_type = {$list.config.call_type|default=0};
+								var phone = "{$list.config.phone|default=''}";
+								bindCallNums(call_type);
+								function bindCallNums(type){
+									$.ajax({
+											 type: "POST",
+											 dataType:'json',
+											 url: "{:url('User/Plan/bindCallNum')}",
+											 cache: false,
+											 data: {"type":type,'phone':phone},
+											 success: function(res) {
+												if (res.code == 0) {
+														var optionstring = "";
+														var jsonObj = res.data;
+														for (var j = 0; j < jsonObj.length; j++) {
+															var isSelect = '';
+															if (jsonObj[j].phone.indexOf(phone)){
+																isSelect= 'selected';
+															}
+															optionstring += "<option value=\"" + jsonObj[j].id + "\"" +isSelect+ ">" + jsonObj[j].phone + "</option>";
+														}
+														if (type == '1'){
+															$("#phone_id").html("<option value=''>请选择中继线路</option> "+optionstring);
+														}
+														else{
+															$("#phone_id").html("<option value=''>请选择机器座席</option> "+optionstring);
+														}
+														phone = "";
+												}else{
+													 //alert(data.msg);
+												}
+											 },
+											 error: function(data) {
+												// alert("提交失败");
+											 }
+									});
+								
+								}
+							}); 
+						</script>
+						
+						<div class="form-group">
+							<label class="col-lg-2 control-label">人工座席：</label>
+							<div class="col-lg-10 col-sm-10">
+									
+									<select id="lunch" class="form-control textwidth" name="bridge">
+										<option value=" ">请选择人工座席</option>
+										 {volist name="tsrlist" id="vo"}
+										 	<option 
+												{eq name="$list.config.bridge|default=''" value="$vo.phone" }
+															selected 
+												{/eq}
+											 value="{$vo.id}">{$vo.phone}</option>
+										 {/volist}
+									</select>
+								
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-lg-2 control-label">微信推送：</label>
+							<div class="col-lg-10 col-sm-10">
+								
+								  <input type="hidden" name="configId" id="configId" value="{$list.config.id|default=''}" />	
+
+								  <div class="ivu-checkbox-group">
+											
+									  <label class="checkbox-wrapper">
+												<input type="checkbox" name="level[]"
+												 {if condition="isset($list.config.level) && in_array('5', $list.config.level)"}
+												 	checked 
+												 {/if}
+												 value="5">
+										    <span class="word">A</span>
+										</label>
+										
+										<label class="checkbox-wrapper">
+												<input type="checkbox" name="level[]" 
+												 {if condition="isset($list.config.level) && in_array('4', $list.config.level)"}
+												  checked 
+												 {/if}
+												 value="4">
+												<span class="word">B</span>
+										</label>
+										
+										<label class="checkbox-wrapper">
+												<input type="checkbox" name="level[]"
+												 {if condition="isset($list.config.level) && in_array('3', $list.config.level)"}
+												  checked 
+												 {/if}
+												 value="3">
+												<span class="word">C</span>
+										</label>
+										
+										<label class="checkbox-wrapper">
+												<input type="checkbox" name="level[]"
+												 {if condition="isset($list.config.level) && in_array('2', $list.config.level)"}
+												   checked 
+												 {/if}
+												 value="2">
+												<span class="word">D</span>
+										</label>
+										
+										<label class="checkbox-wrapper">
+												<input type="checkbox" name="level[]"
+												 {if condition="isset($list.config.level) && in_array('1', $list.config.level)"}
+												 	checked 
+												 {/if}
+												 value="1">
+												<span class="word">E</span>
+										</label>
+									
+
+									</div>
+												
+								  <select id="first-disabled2" name="sale_ids[]" class="selectpicker form-control textwidth" multiple data-hide-disabled="true" title="请选择推送销售人员">
+										{volist name="adminlist" id="vo"}
+										<option 
+										
+												{if condition="isset($list.config.sale_ids) && in_array($vo.id, $list.config.sale_ids)"}
+											   	selected 
+												{/if}
+
+											 value="{$vo.id}">{$vo.username}</option>
+										{/volist}
+								
+									</select>
+						
+							</div>
+						</div>
+						
+					
+					<div class="form-group">
+						<label class="col-lg-2 control-label">呼叫频率：</label>
+						<div class="col-lg-10 col-sm-10">
+							<input type="text" class="form-control textwidth" placeholder="呼叫频率" name="frequency" id="frequency" value="{$list.call_pause_second|default='0'}" />
+						</div>
+					</div>
+				
+
+					<div class="form-group">
+						<label class="col-lg-2 control-label">是否立即启动：</label>
+						<div class="col-lg-10 col-sm-10">
+							<input type="checkbox" style="float: left;margin-top: 10px;" name="startup" 
+							 {eq name="$list.start|default='0'" value="1" }
+							 	checked
+							 {/eq}
+							 id="startup" value="1" />
+						</div>
+			    </div>
+					
+					<div class="form-group">
+						<label class="col-lg-2 control-label">备注：</label>
+						<div class="col-lg-10 col-sm-10">
+							<textarea name="remark" id="remark" style="width: 70%;">{$list.remark|default=''}</textarea>
+						</div>
+					</div>
+			
+			 
+			  <div class="form-group">
+					<div class="col-lg-offset-2 col-lg-10">	<!--   target-form="form-horizontal" -->	
+						<input type="hidden" name="taskId" id="taskId" value="{$list.uuid|default=''}" />	
+						<input type="hidden" name="groupId" id="groupId" value="{$list.disable_dial_timegroup|default=''}" />	
+						
+						<input type="hidden" name="onetime" id="onetime" value="{$list.timerange.0.begin_datetime|default='08:00'}" />	
+						<input type="hidden" name="twotime" id="twotime" value="{$list.timerange.0.end_datetime|default='12:00'}" />	
+						<input type="hidden" name="threetime" id="threetime" value="{$list.timerange.1.begin_datetime|default='14:00'}" />	
+						<input type="hidden" name="fourtime" id="fourtime" value="{$list.timerange.1.end_datetime|default='20:00'}" />	
+						
+						<span class="btn btn-success submit-btn" onclick="checkform();">确 定</span>
+						<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+					</div>
+				</div>
+		 
+		
+		      </div>
+		  </div>
+
+		</div>
+		
+		 </form>
+
+	  </div>
+</div>	
+					
+	
+		
+
+<script type="text/javascript">
+	
+function changes(obj){
+	
+	var val = $(obj).find('input[type="hidden"]').val();
+
+	if(val == 1){
+		
+		$(obj).find('input[type="hidden"]').val('0');
+		$(obj).removeClass("btn-primary");
+		$(obj).addClass("btn-default");
+
+	}else{
+		$(obj).find('input[type="hidden"]').val('1');
+		$(obj).removeClass("btn-default");
+		$(obj).addClass("btn-primary");
+	}
+	
+}	
+
+//检查表单的必填项
+function checkform(){
+ 	
+		var name = $("#name").val();
+		var taskId = $("#taskId").val();
+
+		if(!name){
+			alert("任务名称不能为空"); 
+			return false; 
+		}
+		
+		var scenarios_id = $("#scenarios_id").val();
+		if(!scenarios_id){
+			alert("话术不能为空"); 
+			return false; 
+		}
+
+		var startDate = $("#startDate").val();
+		var endTime = $("#endTime").val();
+		
+		var pmstartDate = $("#pmstartDate").val();
+		var pmendTime = $("#pmendTime").val();
+		
+		var start = startDate.split(":");
+		if(start[0] < 8){
+			alert("上午的开始时间不能小于8点。");
+			return false;
+		}
+
+		
+    //时间的判断
+	  var oneStatus = judge(startDate,endTime);
+		if(!oneStatus){
+			alert("上午的开始时间不能大于结束时间");
+			return false;
+		}
+		
+		var twoStatus = judge(endTime,pmstartDate);
+		if(!twoStatus){
+			alert("上午的结束时间不能大于下午的开始时间");
+			return false;
+		}
+		
+		var threeStatus = judge(pmstartDate,pmendTime);
+		if(!threeStatus){
+			alert("下午的开始时间不能大于下午的结束时间");
+			return false;
+		}
+
+		var startDatestr = backDate(startDate,0);
+		var endTimestr = backDate(endTime,1);
+		var pmstartDate = backDate(pmstartDate,0);
+		var pmendTime = backDate(pmendTime,1);
+
+		$("#onetime").val(startDatestr);
+    $("#twotime").val(endTimestr);
+
+		$("#threetime").val(pmstartDate);
+		$("#fourtime").val(pmendTime);
+		
+
+		var phone_id = $("#phone_id").val();
+		if(!phone_id){
+			alert("呼叫方式不能为空。"); 
+			return false; 
+		}
+	
+		
+		var frequency = $("#frequency").val();
+		if(!frequency){
+			alert("呼叫频率不能为空"); 
+			return false; 
+		}
+		
+		
+		var href = "{:url('User/Plan/addplan')}";
+		
+		
+		if(taskId > 0){
+			 href = "{:url('User/Plan/editPlan')}";
+		 }
+
+
+		$.ajax({
+				 type: "POST",
+				 dataType:'json',
+				 url: href,
+				 cache: false,
+				 data: $("#form").serialize(),
+				 success: function(data) {
+ 
+					 //location.href = "{:url('User/member/whitelist')}";
+					if (data.code == 0) {
+							 alert(data.msg + ' 页面即将自动刷新~');
+							location.href = data.data.url;
+					}else{
+						 alert(data.msg);
+						
+					}
+					
+					//location.reload();
+					
+				 },
+				 error: function(data) {
+					 alert("提交失败");
+				 }
+		 }) 
+		 
+
+
+      
+}
+
+  //时间的判断
+ 
+  function judge(start,end){
+		
+		var date = new Date();
+		
+		var Y = date.getFullYear() + '-';
+		var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+		var D = date.getDate() + ' ';
+		var h = date.getHours() + ':';
+		var m = date.getMinutes() + ':';
+		var s = date.getSeconds();
+	
+		var startstr = Y + M + D + start;
+		var starttime = Date.parse(new Date(startstr));
+		
+		var endstr = Y + M + D + end;
+		var endtime = Date.parse(new Date(endstr));
+		
+// 		console.log(starttime);
+// 		console.log(endtime);
+		
+		if(starttime < endtime){
+			return true;
+		}else{
+			return false;
+		}
+	
+		
+	}
+ 
+  //格式化日期
+  function backDate(time,cate){
+     
+    var date = new Date();
+
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    var D = date.getDate() + ' ';
+    var h = date.getHours() + ':';
+    var m = date.getMinutes() + ':';
+    var s = date.getSeconds();
+  
+    var datastr = Y + M + D + time;
+    //没有时间的签到时间
+		if(cate > 0){
+			var preSign = Date.parse(new Date(datastr)) + 60000;
+		}else{
+			var preSign = Date.parse(new Date(datastr)) - 60000;
+		}
+
+
+	  var date = new Date(parseInt(preSign));
+		var Y = date.getFullYear() + '-';
+		var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+		var D = date.getDate() + ' ';
+		//var h = date.getHours() + ':';
+		var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+		//var m = date.getMinutes() + ':';
+		
+		var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+
+		var s = date.getSeconds();
+	
+		var datastr = Y + M + D + h + m + "00";
+		var preSign = Date.parse(new Date(datastr))
+		
+    var backdata = datastr.split(" ");
+		
+    return backdata[1];
+
+  }
+
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var mySelect = $('#first-disabled2');
+
+    $('#special').on('click', function () {
+      mySelect.find('option:selected').prop('disabled', true);
+      mySelect.selectpicker('refresh');
+    });
+
+    $('#special2').on('click', function () {
+      mySelect.find('option:disabled').prop('disabled', false);
+      mySelect.selectpicker('refresh');
+    });
+
+    
+  });
+</script>
+
+
+</div>
+
+</div>
+
+{/block}
+

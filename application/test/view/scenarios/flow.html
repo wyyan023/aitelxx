@@ -1,0 +1,1523 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+	
+.table tbody>tr>td {
+	padding: 6px 8px;
+}
+.table-responsive {
+	min-height: .01%;
+	overflow-x: hidden;
+}
+
+.messageinfo{
+ text-align:right;
+}
+.infotable tr td{
+	padding:5px;
+}
+.form-group {
+    margin-bottom: 7px;
+}
+
+.statusSelect {
+		line-height: 30px;
+		float: left;
+}
+
+.pull-left{
+	float: left;
+}
+
+.textleft{
+	text-align: left;
+}
+
+</style>
+
+
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header clearfix">
+		  <div class="pull-left">
+			  <h1>话术设置</h1>
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+			
+				 <ul id="myTab" class="nav nav-tabs">
+						<li class="active">
+								<a href="#main" data-toggle="tab" data-type="0">
+										主流程
+								</a>
+						</li>
+						<li>
+							<a href="#keyflow" data-toggle="tab" data-type="1">
+								 自定义流程
+							</a>
+						</li>
+						<li>
+							<a href="#Problemlearning" data-toggle="tab" data-type="2">
+								问题学习
+							</a> 
+						</li> 
+
+						 
+				</ul>
+					
+				<div id="myTabContent" class="tab-content">
+						
+						<div class="tab-pane fade in active" id="main">
+								<div class="row" style="padding: 10px 20px;">
+									  <button class="btn btn-primary" onclick="showModal(0,'technique');">添加</button>
+									  <button class="btn btn-primary" onclick="loadexcel();">导入话术</button>
+									  
+								</div>
+							
+								<div class="table-responsive">
+								
+									<table class="table table-bordered table-hover">
+										<thead>
+												<tr>
+														<th class="text-center"></th>
+														<th class="text-center">序号</th>
+														<th class="text-center col-lg-4">内容</th>
+														<th class="text-center">语音</th>
+														<th class="text-center col-lg-2">匹配关键字</th>
+														
+														<th class="text-center" style="width:67px;">是否转人工座席</th>
+														<th class="text-center" style="width:70px;">操作</th> 
+												</tr>
+											</thead>
+										<tbody>
+											{volist name="list" id="vo" key="k"}
+												<tr>
+													<td class="text-center">
+														<input type="checkbox" name="customerIds" class="customerIds" value="{$vo.id}"/>
+													</td>
+														<td class="text-center">
+															{$k}
+														</td>
+													<td class="text-center">{$vo.content}</td>
+													<td class="text-center">
+															<audio src="{$vo.path}" preload="preload" controls="controls"></audio>	
+													</td> 
+													<td class="text-center">
+														{switch name="$vo.keyword"}
+															{case value="''|null"}{/case}
+															{default /}{$vo.keyword|default=''}
+														{/switch}
+														
+													</td>
+													
+													<td class="text-center">
+														{switch name="$vo.bridge"}
+															{case value="0"}否{/case}
+															{default /}是
+														{/switch}
+													</td>	
+														
+													<td class="text-center">
+															
+														<a href="javascript:void(0);" onclick="showModal({$vo.id},'technique');">编辑</a>
+														<a href="javascript:void(0);" onclick="delScenarios('{$vo.id}');" >删除</a>
+													</td>
+												</tr>
+											{/volist}
+										</tbody>
+									</table>
+							  
+								</div>
+						</div>
+						
+						<div class="tab-pane fade" id="keyflow">
+							
+							<div class="row" style="padding: 10px 20px;">
+								  <div class="col-sm-12 col-md-1" style=" width: 10%;">
+									  <button class="btn btn-primary" onclick="showModal(0,'keyword');">添加</button>
+									</div>
+									<div class="col-sm-12 col-md-9">
+										<div class="input-group form-group">
+												<select class="form-control" id="filter-keys-type-status" onchange="getKeysFlowFilter(this)">
+														<option value=" "> 请选择关键字流程分类 </option>
+														<option value="1"> 挽回用户回复流程</option>
+														<option value="2 "> 用户提问时的回复</option>
+														<!-- <option value="3"> 用户说话听不懂时的回复</option> -->
+														<option value="4"> 用户说忙时的回复 </option>
+														<option value="5"> 用户拒绝时的回复 </option>
+														<option value="6"> 主动结束时的回复 </option>
+														<option value="7"> 用户未说话时的回复 </option>
+														<option value="8"> 回答不了时的回复 </option>
+												</select>
+										 </div>
+									</div>
+							
+						   </div>
+
+							<div class="table-responsive">
+									
+										<table class="table table-bordered table-hover">
+											<thead>
+													<tr>
+															<th class="text-center"></th>
+															<th class="text-center">序号</th>
+															<th class="text-center col-lg-4">内容</th>
+															<th class="text-center">语音</th>
+															<th class="text-center col-lg-2">匹配关键字</th>
+															<th class="text-center" style="width:67px;">是否转人工座席</th>
+															
+															<th class="text-center" style="width:70px;">操作</th> 
+													</tr>
+												</thead>
+											<tbody id="tablepagelist">
+											
+											</tbody>
+										</table>
+							
+										
+									</div>
+							
+				   	</div>
+						
+					
+						<div class="tab-pane fade" id="Problemlearning">
+											
+						   <div class="row" style="padding: 10px 20px;">
+									<div class="col-sm-12 col-md-1" style=" width: 10%;">
+										<!-- <button class="btn btn-primary" onclick="createKeysModal(0)">添加</button>    -->
+									</div>
+									<div class="col-sm-12 col-md-9">
+									</div>
+							
+							 </div> 
+						
+							
+							<div class="table-responsive">
+								
+								
+								<div class="main-box-body clearfix">
+											
+									<section class="navbar navbar-default main-box-header clearfix">
+								
+										
+											<div class="pull-right">
+													
+												<form class="form-inline" method="get" role="form">
+													
+											
+													<div class="form-group"> 
+															<label class="statusSelect">状态：</label>
+															<select onchange="getchange(this);" style="width:100px;" name="status" id="status" class="form-control">
+																<option value=" " selected="">全部</option>
+																<option value="0">待学习</option>
+																<option value="1">已学习</option>
+																<option value="2">忽略</option>
+															</select>
+													</div>&nbsp;
+												
+												</form>		
+												
+											</div>  
+									</section>
+								
+										<table class="table table-bordered table-hover">
+												<thead>
+														<tr>
+															<th class="text-center">待学习的内容</th>
+															<th class="text-center">来源</th>
+															<th class="text-center">学习状态</th>
+															<th class="text-center" style="width: 139px;">记录时间</th>
+															<th class="text-center">操作</th> 
+															
+														</tr>
+												</thead>
+											<tbody id="tablelearninglist">
+											
+											</tbody>
+										</table>
+									
+										<div class="row">
+												<div class="col-sm-4 text-left">
+												
+												</div>
+												<div class="col-sm-8 text-right"></div>
+										</div>
+										
+										<div id="modalbody"></div>
+								</div> 
+								
+								
+								
+							</div>
+							
+						</div>
+				
+	
+	
+				 </div>
+					
+	  </div>					
+    
+
+
+  </div>
+
+  
+</div>
+</div>
+
+<!--添加和编辑话术的-->
+<div class="modal fade" id="checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+			
+        <div class="modal-header">  
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">添加话术</h4>
+        </div>
+        <div class="modal-body pagelists">
+				   <form id="flowForm" action="{:url('user/Scenarios/addflow')}" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >
+							<div class="box-body">
+									<div class="form-group has-feedback" id="classifyContent">
+											<label for="sceneKeysInput" class="col-sm-3 control-label">场景关键字</label>
+											<div class="col-sm-8" style="margin-left: -10px">
+												<select class="form-control" id="classify" name="classify">
+														<option value=" "> 请选择关键字流程分类 </option>
+														<option value="1"> 挽回用户回复流程</option>
+														<option value="2"> 用户提问时的回复</option>
+														<!-- <option value="3"> 用户说话听不懂时的回复</option> -->
+														<option value="4"> 用户说忙时的回复 </option>
+														<option value="5"> 用户拒绝时的回复 </option>
+														<option value="6"> 主动结束时的回复 </option>
+														<option value="7"> 用户未说话时的回复 </option>
+														<option value="8"> 回答不了时的回复 </option>
+												</select>
+											
+											</div>
+									</div>
+									
+									<div class="form-group has-feedback" id="break" >
+											<label for="update-audio-file" class="col-sm-3 control-label">是否打断</label>
+											<div class="col-sm-8" style="margin-left: -10px">
+											<label class="radio-inline">
+											  <input type="radio" name="break" value="0" /> 不打断
+											</label>
+											<label class="radio-inline">
+											  <input type="radio" name="break" value="1" checked />打断
+											</label>
+										  	<span class="login-password-title help-block text-left"></span>
+											</div>
+											<div class="col-sm-1"></div>
+											
+										</div>
+									</div>
+									
+									<div class="form-group has-feedback">
+											<label for="words-content-textarea" class="col-sm-3 control-label">话术文字</label>
+											<div class="col-sm-8" style="margin-left: -10px">
+												<textarea id="words-content-textarea" name="words-content"  style="resize:none" class="form-control" rows="3" placeholder="请输入话术文字"></textarea>
+												<span class="login-password-title help-block text-left"></span>
+											</div>
+											<div class="col-sm-1"></div>
+									</div>
+									
+									<div class="form-group has-feedback">
+										<label for="hit-keys-input" class="col-sm-3 control-label">匹配关键字</label>
+										<div class="col-sm-8" style="margin-left: -10px">
+											<textarea id="hit-keys-input" name="hit-keys" style="resize:none" class="form-control" rows="3" placeholder="请输入匹配关键字"></textarea>
+											<span class="login-password-title help-block text-left"></span>
+										</div>
+									</div>
+									
+								<!-- 	<div class="form-group has-feedback">
+											<label for="sceneKeysInput" class="col-sm-3 control-label">场景关键字</label>
+											<div class="col-sm-8" style="margin-left: -10px">
+											<textarea id="scenarios-keys-input" name="scenarios-keys" style="resize:none" class="form-control" rows="3" placeholder="请输入场景关键字"></textarea>
+											<span class="login-password-title help-block text-left"></span>
+										</div>
+									</div> -->
+									
+									<div class="form-group has-feedback">
+											<label for="update-audio-file" class="col-sm-3 control-label">是否转人工座席</label>
+											<div class="col-sm-8" style="margin-left: -10px">
+											<label class="radio-inline">
+											  <input type="radio" name="bridge" id="bridge" value="0" checked> 否
+											</label>
+											<label class="radio-inline">
+											  <input type="radio" name="bridge" id="bridge" value="1"> 是
+											</label>
+										  	<span class="login-password-title help-block text-left"></span>
+											</div>
+											<div class="col-sm-1"></div>
+									</div>
+									<div class="form-group has-feedback">
+											<label for="update-audio-file" class="col-sm-3 control-label">优先级</label>
+											<div class="col-sm-8" style="margin-left: -10px">
+												 <input type="text" name="priority" id="priority" value="0" /> 
+												<span class="login-password-title help-block text-left">值越大优先级越高</span>
+											</div>
+											<div class="col-sm-1"></div>
+									</div>
+									<div class="form-group has-feedback">
+											<label for="update-audio-file" class="col-sm-3 control-label">上传话术音频</label>
+											<div class="col-sm-8" style="margin-left: -10px">
+											  <input type="file" class="form-control" name="update-audio-file" id="update-audio-file">
+										  	<span class="login-password-title help-block text-left"></span>
+											</div>
+											<div class="col-sm-1"></div>
+									</div>
+									
+							</div>
+													
+													
+						 <div class="form-group" style="text-align: center;">
+								  <input type="hidden" name="scenariosId" id="scenariosId" value="{$thisId|default=''}">
+									<input type="hidden" name="flowItemId" id="flowItemId" value="">
+									<input type="hidden" name="flowType" id="flow-type" value="0">
+									<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						 </div>
+		
+					</form>
+
+       </div>
+        <div style="clear:both"></div>
+      
+	 </div>        
+  </div>
+</div> 
+
+
+<!--添加和编辑关键字的-->
+<div class="modal fade" id="keywordModals" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">  
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title">关键字</h4>
+        </div>
+        <div class="modal-body pagelists">
+					 <form class="form-horizontal" id="addKeysDiv" method="post" action="{:url('user/Scenarios/addKeysWord')}" method="post" enctype="multipart/form-data">
+							<div class="box-body">
+								
+									<div class="form-group has-feedback">
+										
+											<label for="keystype" class="col-sm-3 control-label">关键字类型</label>
+											<div class="col-sm-8">
+													 <select class="form-control" id="keystype" name="keystype">
+														 <option value=""> 请选择关键字类型 </option>
+														 <option value="1"> 疑问词 </option>
+														 <option value="2"> 肯定词 </option>
+														 <option value="3"> 中性词 </option>
+														 <option value="4"> 重复词 </option>
+														 
+													</select>
+											    <span class="login-password-title help-block text-left"></span>
+											</div>
+											<div class="col-sm-1"></div>
+									</div>
+									
+									<div class="form-group has-feedback">
+								
+											<label for="keys"class="col-sm-3 control-label">关键字</label>
+											<div class="col-sm-8">
+													<textarea id="keys-textarea" name="keyword" style="resize:none" class="form-control" rows="3" placeholder="请输入关键字"></textarea>
+											<span class="login-password-title help-block text-left"></span>
+											</div>
+											
+									</div>
+								
+							</div>
+							
+							 <div class="form-group" style="text-align: center;">
+								  <input type="hidden" name="skwId" id="skwId" value="{$thisId|default=''}">
+									<input type="hidden" name="kwItemId" id="kwItemId" value="">
+									
+									<button class="btn btn-success submit-btn" onclick="keywordform();" type="button">确 定</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+							</div>
+		
+					</form>
+	
+
+       </div>
+        <div style="clear:both"></div>
+      
+	 </div>
+           
+  </div>
+  </div>
+ 
+<script type="text/javascript">
+
+ $(function () {
+	 
+   $('#myTab a').click(function (e) {
+	  e.preventDefault()
+	  var type = $(this).attr('data-type');
+	  
+	  $("#flow-type").val(type);
+	  if (type){
+		getKeysFlowFilter("");
+	  }
+	  $(this).tab('show')
+	})
+	
+	searchdata(page,0);
+
+});
+
+
+//全选
+ function allcheck(){			
+ 	if ($('.check-all').is(":checked")) {	
+ 		$('.customerIds').prop("checked","checked");
+ 	}else{
+ 		$('.customerIds').prop("checked",false);
+ 	}
+ }
+ 
+ 
+ //删除
+ function delScenarios(id){
+ 
+ 	 var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+
+     	 var ids=[];
+    	if(id){
+    		ids.push(id);
+    	}else{
+    		
+        	 var roleids = document.getElementsByName("customerIds");
+    		 for ( var j = 0; j < roleids.length; j++) {
+    		    if (roleids.item(j).checked == true) {
+    		    	ids.push(roleids.item(j).value);
+    		    }
+    		 }
+    	}
+		
+    	if(!ids.length){
+    		alert("至少选择一条。");
+    		 return false; 
+    	}
+		var scenariosId = $('#scenariosId').val();
+		 $.post("{:url('delFlow')}",{'id':ids,'scenariosId':scenariosId},function(data){
+				if(data){
+					alert(data);
+				}else{
+					window.location.href=window.location.href;
+				}
+		}); 
+ }
+
+	//获取选择的类型列表
+	function getKeysFlowFilter(obj){
+	    var flowType = $("#flow-type").val();
+		var scenariosId = $("#scenariosId").val();
+		var classify = 0;
+		if (obj){
+			classify = $(obj).val();
+		}
+
+		var url = "{:url('getSelectflow')}";	
+		$.ajax({
+			url : url,
+			dataType : "json", 
+			type : "post",
+			data : {'type':flowType,'classify':classify,'scenariosId':scenariosId},
+		
+			success: function(data){
+				
+				var data = data.data.list;
+				$("#tablepagelist").find("tr").remove();
+				
+				if(data.length > 0){
+							
+					for(var i=0;i<data.length;i++){
+						var id = data[i]["id"];
+						var content = data[i]["content"];
+						var path = data[i]["path"];
+						var keyword = data[i]["keyword"];
+						// var scenarios_keyword = data[i]["scenarios_keyword"];
+						var classify = data[i]["classify"];
+						var bridge = Number(data[i]["bridge"]);
+						if(bridge){
+							bridge = "是";
+						}else{
+							bridge = "否";
+						}
+						
+						if(keyword){
+							keyword = keyword;
+						}else{
+							keyword = "";
+						}
+
+						var string = '<tr><td class="text-center"><input type="checkbox"class="customerIds" value="'+id+'"/></td>'
+								+'<td class="text-center">'+(i+1)+'</td>'
+								+'<td class="text-center">'+content+'</td>'
+								+'<td class="text-center"><audio preload="preload" src="'+path+'" controls="controls"></audio></td>'
+								+'<td class="text-center">'+keyword+'</td>'
+							
+								+'<td class="text-center">'+bridge+'</td>'
+								
+								+'<td class="text-center">'
+									+'<a href="javascript:void(0);" onclick="showModal('+id+',\'keyword\');">编辑</a>&nbsp;';
+									 string += '<a href="javascript:void(0);" onclick="delScenarios('+id+');" >删除</a>';
+									string += '</td>'
+							+'</tr>';
+
+						$("#tablepagelist").append(string); 
+					}
+
+							 
+				}else{
+							 
+				}
+
+			},
+			error:function() {
+					alert('获取页面列表失败.');
+		  }
+		});
+	}
+ 
+    //添加和编辑话术 	
+		function showModal(id,flag){
+			if(id){
+				var url = "{:url('user/Scenarios/getflow')}";	
+				 $.ajax({
+					url : url,
+					dataType : "json", 
+					type : "post",
+					data : {'id':id},
+					success: function(data){	
+						
+							 $("#words-content-textarea").val(data.content);
+							 $("#hit-keys-input").val(data.keyword);
+							 //$("#scenarios-keys-input").val(data.scenarios_keyword);
+							 
+							 $("#flowItemId").val(data.id);
+							 $("#priority").val(data.priority);
+							 if(flag == "technique"){
+								$("#classify").val("");
+								$("#classifyContent").css("display","none");
+								$("#break").css("display","block");
+								$("#flow-type").val("0");
+								if (data.break == 0){
+									$("input:radio[name=break][value=0]").attr("checked",true);  
+								}
+								else{
+									$("input:radio[name=break][value=1]").attr("checked",true);  
+								}
+
+							 }else{
+								$("#classify").val(data.classify);
+								$("#break").css("display","none");
+								$("#classifyContent").css("display","block");
+								$("#flow-type").val("1");
+							 }
+							 if (data.bridge == 0){
+									$("input:radio[name=bridge][value=0]").attr("checked",true);  
+								}
+								else{
+									$("input:radio[name=bridge][value=1]").attr("checked",true);  
+								}			 
+							 $('#checkpage').modal('show')
+					},
+					error : function() {
+						alert('获取信息失败。');
+					}
+				});
+			}
+			else{
+				$("#classify").val(" ");
+				if(flag == "technique"){									 
+					$("#classifyContent").css("display","none");
+					$("#introduction").css("display","block");
+					$("#flow-type").val("0");
+				 }
+				 else{
+					$("#classifyContent").css("display","block");
+					$("#introduction").css("display","none");
+					$("#flow-type").val("1");
+				 }
+				 $("#words-content-textarea").val("");
+
+				 $("#hit-keys-input").val("");
+				 $("#scenarios-keys-input").val("");
+			
+				$("#flowItemId").val("");
+			  
+				$('#checkpage').modal('show');
+			} 
+		}
+	      
+			 
+			 //检查表单的必填项
+		function checkform(){
+			
+				var content = $("#words-content-textarea").val(); 
+				if(!content){
+					alert("话术文字不可为空！");
+					return ;
+				}
+				
+				var flowItemId = $("#flowItemId").val(); 
+				
+				var audioFile = $("#update-audio-file").val(); 
+				if(!flowItemId && !audioFile){
+					alert("话术语音不可为空！");
+					return ;
+				}
+				
+				//var intention = $("input[name='intention']:checked").val(); 
+				
+				$('#checkpage').modal('hide');
+				$("#flowForm").submit();
+			}
+
+			function createKeysModal(id){
+				if(id){
+					var url = "{:url('user/Scenarios/getKeywordItem')}";	
+					$.ajax({
+						url : url,
+						dataType : "json", 
+						type : "post",
+						data : {'id':id},
+						success: function(data){	
+							
+									$("#priority-select").val(data.priority);
+								  $("#keystype").val(data.type);
+								  $("#keys-textarea").val(data.keyword);
+								  $("#keysPY-textarea").val(data.pinyin);
+									$("#kwItemId").val(data.id);
+											 
+								$('#keywordModals').modal('show');
+						},
+						error : function() {
+							alert('获取信息失败。');
+						}
+					});
+				}
+				else{
+				 
+					$("#priority-select").val("");
+					 $("#keystype").val("");
+					 $("#keys-textarea").val("");
+					$("#keysPY-textarea").val("");
+					 
+					$('#keywordModals').modal('show');
+				} 
+	      }
+	      
+			 
+		//检查表单的必填项
+		function keywordform(){
+				$("#addKeysDiv").submit();
+				$('#keywordModals').modal('hide');
+		}
+
+		function delKeyword(ids){
+			 var r=confirm('确认删除?');
+				if (!r) 
+				   return; 
+		
+			if(!ids){
+				alert("至少选择一条。");
+				return false;  
+			}
+			$.post("{:url('delKeyword')}",{'id':ids},function(data){
+					if(data){
+						alert(data);
+					}else{
+						window.location.href=window.location.href;
+					}
+			}); 
+		}
+     
+		 
+		//获取列表
+		var page = 1;
+		var status = "";
+		function searchdata(page,level){	
+	 
+			var status = $("#status").val();
+			var keyword = $("#keyword").val();
+			var url = "{:url('learning')}";	
+			$.ajax({
+							url : url,
+							dataType : "json", 
+							type : "post",
+							data : {'page':page,'status':status},
+						
+							success: function(data){
+								
+								console.log(data);
+								//return false;
+								//$("#contentbody").css("display","block");
+									
+								var total = data.data.total;
+								var Nowpage = data.data.Nowpage;
+								var page = data.data.page;
+								var Nowpage = parseInt(Nowpage);
+								
+								var data = data.data.list;
+								 if(data.length > 0){
+									 
+										//	 var IdsVal = [];
+										
+// 										 var listss = document.getElementsByName("memberids");
+// 										 for (var j = 0; j < listss.length; j++) {
+// 											 
+// 											IdsVal.push(listss.item(j).value);
+// 											
+// 										 }
+									
+									
+											$("#tablelearninglist").find("tr").remove();
+											
+											for(var i=0;i<data.length;i++){
+												
+											
+												var id = data[i].id;
+												var uid = data[i].member_id;
+												var phone = data[i].phone;
+												var call_id = data[i].call_id;
+												var content = data[i].content;
+												var create_time = data[i].create_time;
+												var status = data[i].status;
+											 // var level=data[i].level;
+											
+// 												var levelStr = "未知";
+// 												if (status == "2"){
+// 													levelStr = data[i].level;
+// 												}
+										
+												var strstatus = "待学习";
+												if(status == "1"){
+														strstatus = "已学习";
+												}else if(status == "2"){
+														strstatus = "忽略";
+												}
+												
+// 												var flag = 1;
+// 												for(var k=0;k<IdsVal.length;k++){
+// 													if(IdsVal[k] == id){
+// 														var flag = 0;
+// 														break;
+// 													}
+// 												}
+
+												var string = '<tr class="active itemId'+id+'" alt="'+id+'">'
+												
+													
+												
+													+'<td class="text-center">'+content+'</td>'   
+													+'<td class="text-center">'+phone+'</td>'
+													+'<td class="text-center">'+strstatus+'</td>'
+													+'<td class="text-center">'+create_time+'</td>'
+													+'<td class="text-center">';
+												  string += '<a href="javascript:void(0);" onclick="gotoDetail('+uid+');">通话记录</a>&nbsp;&nbsp;'
+	
+													string += '<a href="javascript:void(0);" onclick="changeStatus('+id+',1);">学习</a>&nbsp;&nbsp;'
+													+'<a href="javascript:void(0);" onclick="changeStatus('+id+',2);">忽略</a>&nbsp;&nbsp;'
+													+'<a href="javascript:void(0);" onclick="del('+id+');">删除</a>'
+
+													+'</td>';
+												 
+											
+											 string += '</tr>';
+											 
+												$("#tablelearninglist").append(string); 
+	
+											}
+											
+											var prepage = Nowpage-1;
+											var nextpage = Nowpage+1;
+										 
+											var str = '<div class="row">'
+											+'<div class="col-sm-3 text-left">'
+														
+											+'<table class="table table-bordered table-hover" style="margin-bottom: 0px; ">'
+											+'<tbody><tr>'
+											+'<td class="text-center">总人数：'
+											+'</td>'
+											+'<td class="text-center">'+total+'&nbsp;'
+											+'</td>'
+																	 
+											+'</tr> '
+											+'</tbody></table>'                                     
+				
+											+'</div>'
+											+'<div class="col-sm-9 text-right">'
+											+'<ul class="pagination">';
+										 
+											if(Nowpage == 1){
+												str += '<li id="prevbtn" class="disabled"><span>«</span></li> ';
+											}else{
+												str += '<li><a href="javascript:void(0);" onclick="searchdata('+prepage+','+level+');"><span>«</span></a></li> ';
+											}
+											
+											if(page > 10){
+											
+												if(Nowpage < 7){
+													for(var i=0;i<page;i++){
+														var nownum = i+1;
+														if(nownum < 9){
+															 if(nownum == Nowpage){
+																 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+' </a></li> ';  
+															 }else{
+																 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+' </a></li> ';  
+															 }
+														}
+														
+														if(nownum == 9 && nownum != Nowpage){
+															 str += '<li class="disabled"><span>...</span></li>';  
+														}else if(nownum == 9){
+															str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+'</a></li> ';  
+														}
+													
+																	if(nownum > (page-2)){
+																		if(nownum == Nowpage){
+																 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+' </a></li> ';  
+															 }else{
+																 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+' </a></li> ';  
+															 }
+																	}
+	
+													 }
+												}else if(Nowpage > 6 && Nowpage < (page-6)){
+													for(var i=0;i<page;i++){
+														var nownum = i+1;
+														var Nowpage = parseInt(Nowpage);
+														if(nownum < 3){
+															str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+' </a></li> '; 
+														}
+														
+														if((nownum > Nowpage-5) && (nownum < Nowpage+5)){
+													
+																		 if(nownum == (Nowpage-4)){
+																				str += '<li class="disabled"><span>...</span></li>';
+																		 }   
+																		
+																			 if(nownum > (Nowpage-4) && nownum < Nowpage){
+																				 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+'</a></li>'; 
+																			 }  
+																		 
+																			 if(nownum == Nowpage){
+																			 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+'</a></li>';  
+																			 } 
+																		 
+																			 if(nownum < (Nowpage + 4) && nownum > Nowpage){
+																				str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+'</a></li>'; 
+																			 }  
+																	
+																			 if(nownum == (Nowpage + 4)){
+																			
+																			 str += '<li class="disabled"><span>...</span></li>';
+																			 }   
+														 }
+														 
+													 if(nownum > (page-2)){
+														 var Nowpage = parseInt(Nowpage);
+														 if(nownum == Nowpage){
+																			 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+'</a></li>';
+																	 }else{
+																			str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+'</a></li> ';
+																	 }   
+															 
+																	}     
+	
+													 }
+												}else{
+													
+													for(var i=0;i<page;i++){
+														var nownum = i+1;
+														if(nownum<3){
+															str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+' </a></li>';  
+														}
+													
+														if(nownum == (page-10) && nownum != Nowpage){
+															str += '<li class="disabled"><span>...</span></li>';   
+														}else if(nownum == (page-10) && nownum == Nowpage){
+															str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+'</a></li>';   
+														}
+														
+														if(nownum > (page-10)){
+															if(nownum == Nowpage){
+																str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+'</a></li> ';   
+															}else{
+																str += '<li ><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+'</a></li>';   
+															}
+														}
+														
+														
+													}
+										 
+														
+												}
+											}else{
+												 for(var i=0;i<page;i++){
+													 var nownum = i+1;
+													 if(nownum == Nowpage){
+														 str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+' </a></li> ';  
+													 }else{
+														 str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+','+level+');">'+nownum+' </a></li> ';  
+													 }
+												 }
+											}
+											
+						
+									 
+											if(Nowpage == page){
+												str += '<li id="prevbtn" class="disabled"><span>»</span></li> ';
+											}else{
+												str += '<li><a href="javascript:void(0);" onclick="searchdata('+nextpage+','+level+');"><span>»</span></a></li>';
+											}
+										
+											str += '</ul>'
+											+'</div>'
+											+'</div>'
+										 
+											$("#modalbody").find("div").remove();
+											$("#modalbody").append(str); 
+											
+										 } else{
+											 
+												 
+												$("#tablelearninglist").find("tr").remove();
+											// 	alert('没有数据。');
+										 }
+							},
+							error : function() {
+								//alert('获取页面列表失败。');
+							}
+				});
+			 
+	 }	
+	 
+		function changeStatus(id,status){
+			
+				var ids;
+				if(id){
+					var Ids=[];
+					Ids.push(id);
+					ids = Ids;
+				}else{
+						var IdsVal = [];
+							var roleids = document.getElementsByName("adminids");
+						for ( var j = 0; j < roleids.length; j++) {
+							if (roleids.item(j).checked == true) {
+								IdsVal.push(roleids.item(j).value);
+							}
+						}
+						ids = IdsVal;
+				}
+			
+				if(!ids.length){
+				alert("至少选择一条。");
+					return false; 
+			}
+				
+				var url = "{:url('changeStatus')}";	
+				$.ajax({
+							url : url,
+							dataType : "json", 
+							type : "post",
+							data : {'Ids':ids,'status':status},
+							success: function(data){
+								if (data.code) {
+										alert(data.msg);
+								}else{
+									searchdata(page,0);
+								}
+							},
+							error : function() {
+								alert('修改失败。');
+							}
+				});
+			
+			
+		}	
+		 	
+		 //删除flow
+		 function del(id){
+		 
+		 	 var r=confirm('确认删除?');
+		     	if (!r) 
+		           return; 
+		
+		     	 var ids=[];
+		    	if(id){
+		    		ids.push(id);
+		    	}else{
+		    		
+		         var roleids = document.getElementsByName("customerIds");
+		    		 for ( var j = 0; j < roleids.length; j++) {
+		    		    if (roleids.item(j).checked == true) {
+		    		    	ids.push(roleids.item(j).value);
+		    		    }
+		    		 }
+		    	}
+				
+		    	if(!ids.length){
+		    		alert("至少选择一条。");
+		    		 return false; 
+		    	}
+				 $.post("{:url('delLearning')}",{'id':ids},function(data){
+						if(data){
+							alert(data);
+						}else{
+							searchdata(page,0);
+						}
+				}); 
+		 }
+			
+		//改变状态	
+		function getchange(obj){
+			
+			var val = $(obj).val();
+			
+			page = 0;
+			status = val;
+			
+		  searchdata(page,0);
+			
+		}	
+			
+	 </script>
+     
+
+
+<style type="text/css">
+	.textwidth{
+		  width:250px;
+	}
+	.add_yuyin{height:.85rem;border-top:1px solid #e5e5e5;margin-left:.28rem;line-height: .85rem;width:100%;;float:left;}
+	.luzhiyy{position:relative;font-size:.3rem;color:#666}
+	.luzhiyy::after{position:absolute;right:.25rem;top:.28rem;width:.3rem;height:.3rem;content:"";background:url("../images/icon.png") no-repeat -5.78rem -3.59rem;background-size:14.57rem 4.86rem;}
+	.luzhiyy s{display: inline-block;width:.48rem;height:.48rem;background:url("../images/icon.png") no-repeat -5.59rem -2.86rem;background-size:14.57rem 4.86rem;vertical-align: middle;margin-right:.24rem;}
+	.tijaobtn{width:90%;height:.8rem;background-color:#f16461;text-align: center;line-height: .8rem;color:#fff;margin:0rem auto;display: block;border-radius: 6px;font-size:.3rem;}
+	.tijaobtn[disabled]{background-color:#f4cac9;}
+	.r_yuyin{color:#999999;height:.4rem;line-height:.4rem;padding:0 .1rem;    background-color: #95ce73;
+	    border: 1px solid #368e42;border-radius: 6px;max-width: 75%;min-width: 18%;position: relative;float:right;}
+	.r_yuyin s{width:.4rem;height:.4rem;position:absolute;right:.2rem;top:.09rem;background:url("../images/icon.png") no-repeat -7.11rem -3.62rem;background-size:14.57rem 4.86rem;}
+	 .deleteicon{width:.55rem;height:.5rem;background:url("../images/icon.png") no-repeat -6.17rem -3.41rem;background-size:14.57rem 4.86rem;margin-top:.12rem;margin-left:.1rem;float:left;}
+
+	.luyin_dialog{position: absolute;z-index: 500;top:0;left:0;bottom:0;right:0;background: url("../images/luyinbg.jpg") no-repeat center center;background-size: cover;display: none;}
+	.r_yuyin i{    float: right;
+	    color: #ffffff;
+	    font-size: 21px;
+	    font-weight: 600;
+		}
+	.header_img {
+	   font-size:30px;
+	}
+	.audio-c{
+	 width: 100%;
+	    background-color: #6b9cb6;
+	    text-align: center;
+		padding-top: 5px;
+
+	}
+	.info{
+		display:block;
+		float:left;
+		width:27%;
+		background-color:#fff;
+		margin-right:7px;
+
+	}
+	.info h4{
+	    font-weight: bold;
+	    background-color: #6b9cb6;
+	    color: #fff;
+	    padding: 5px;
+	    margin-top: 0px;
+		width:100%
+
+	}
+	.item{
+		border-bottom:2px solid #ccc;
+		
+		padding:5px;
+
+	}
+
+	.greenactive{
+
+	    background-color: green;
+		color:white;
+	}
+
+	.tip{
+		font-size:12px;
+	}
+	.popover-content{
+		color:#008cee; 
+		text-align: right;
+		margin-right: 50px;
+}
+</style>
+
+
+
+<link href="__STATIC__/css/chat.css" rel="stylesheet" type="text/css">
+<script src="__STATIC__/js/audio.js"></script>
+
+
+<!--  通话详情  -->
+
+<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	
+	<div class="modal-dialog modal-lg" role="document">
+
+		<div class="modal-content">
+
+		  <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		    <h4 class="modal-title"><strong>通话详情</strong></h4>
+		  </div>
+
+		  <div class="modal-body">
+
+          <div class="row">
+						
+						<div class="containerss">
+
+							<div class="info" >
+
+								<div style="margin-top: 10px;font-size: 13px;">
+								姓名：<span class="record" style="font-size: 13px;" id="nickname"></span>
+								</div>
+
+								<div style="margin-top: 10px;font-size: 13px;">
+								性别：<span class="iparea" style="font-size: 13px;" id="sex"></span>
+								</div>
+
+								<div style="margin-top: 10px;font-size: 13px;">
+								号码：<span style="font-size: 10px;" id="mobile"></span>
+								</div>
+
+								<h4>通话结果</h4>
+								<div style="margin-top: 10px;font-size: 13px;">
+								拨打时间：<span class="record" style="font-size: 13px;" id="last_dial_time"></span>
+								</div>
+
+								<div style="margin-top: 10px;font-size: 13px;">
+								通话时长：<span class="iparea" style="font-size: 13px;" id="duration"></span>
+								</div>
+								
+								<div style="margin-top: 10px;font-size: 13px;">
+								通话轮次：<span class="iparea" style="font-size: 13px;" id="callRotation"></span>
+								</div>
+								<div style="margin-top: 10px;font-size: 13px;">
+								机器坐席：<span class="iparea" style="font-size: 13px;" id="originatingCall"></span>
+								</div>
+								<div style="margin-top: 10px;font-size: 13px;">
+								命中关键词：<span class="iparea" style="font-size: 13px;" id="keyNum"></span>
+								</div>
+
+								<div style="margin-top: 10px;font-size: 13px;">
+								拨打状态:<span style="font-size: 10px;" id="statusinfo"></span>
+								</div>
+
+								<h4 >客户意向评估等级</h4>
+
+								<div class="item" data-v="5" id="level5">
+								A类<span class="tip" >(较强)</span>
+								</div>
+
+								<div class="item" data-v="4" id="level4">
+								B类<span class="tip">(一般)</span>
+								</div>
+
+								<div class="item" data-v="3" id="level3">
+								C类<span class="tip">(很少)</span>
+								</div>
+
+								<div class="item" data-v="2" id="level2">
+								D类<span class="tip">(待观察)</span>
+								</div>
+
+								<div class="item" data-v="1" id="level1">
+								E类<span class="tip">(无意向)</span>
+								</div>
+
+								<h5 style="text-align:left;background-color:#ccc;padding-left: 27px;">*点击上面等级可以修改</h5>
+
+							</div>
+
+							<div id="chatcontent" class="content chat-block" tabindex="0">
+
+								<div class="audio-c">
+										<audio src="" id="record_path" controls="controls"></audio>
+								</div>
+
+								<div id="msglist">
+
+
+								</div>
+						
+							</div>
+
+											<!--  -->
+						</div>
+						
+			    </div>		       
+		  	
+		  </div>
+
+		  <div class="modal-footer">
+				
+		    <input id="thisId" type="hidden" value="" />
+		  	
+		   	<button type="button" class="btn btn-default pull-left" id="default-cancel" data-dismiss="modal">取消</button>
+		   
+		    <button type="button" class="btn btn-primary" onclick="ensure()">确认</button>
+		    
+		  </div>
+
+		</div>
+
+	</div>
+
+
+<script type="text/javascript">
+  
+
+	function gotoDetail(uid){
+
+		// window.location.href = "{:url(\'detail\')}/id/"+uid;  
+
+          
+	    $.post("{:url('backdetail')}",{'id':uid},function(data){
+				if(data){
+
+					if(data.code == 0){
+						var memberInfo = data.data.memberInfo;
+							var bills = data.data.bills;
+
+							$("#nickname").text(memberInfo.nickname);
+							$("#sex").text(memberInfo.sex);
+							$("#mobile").text(memberInfo.mobile);
+							$("#last_dial_time").text(memberInfo.last_dial_time);
+
+							$("#duration").text(memberInfo.duration+'秒');
+							
+							$("#callRotation").text(memberInfo.call_rotation+'轮');  
+							$("#originatingCall").text(memberInfo.originating_call);
+							$("#keyNum").text(data.data.num);
+						 
+							$("#statusinfo").text(memberInfo.status);
+							$(".greenactive").removeClass("greenactive");
+	
+							if(memberInfo.level == 1){
+								 $("#level1").addClass("greenactive");
+							}else if(memberInfo.level == 2){
+								 $("#level2").addClass("greenactive");
+							}else if(memberInfo.level == 3){
+								 $("#level3").addClass("greenactive");
+							}else if(memberInfo.level == 4){
+								 $("#level4").addClass("greenactive");
+							}else if(memberInfo.level == 5){
+								 $("#level5").addClass("greenactive");
+							}
+
+							$("#record_path").attr('src','/'+memberInfo.record_path);
+
+							 $("#msglist").empty();
+
+						for(var i=0;i<bills.length;i++){
+
+							var tempbills = bills[i];
+
+							//var tempstr = "";
+
+							if(tempbills.role == 0){
+								var tempstr = '<div class="jimi_lists clearfix">'
+										+ '<div class="header_img  icon iconfont icon-zuoxi1"></div>' 
+										+ '<table class="msg" cellspacing="0" cellpadding="0">'
+										+ '<tbody>'
+										+ '<tr>'
+										+ '<td></td>'
+										+ '<td></td>'
+										+ '</tr>'
+										+ '<tr>'
+										+ '<td class="lt"></td>'
+										+ '<td class="tt"></td>'
+										+ '<td class="rt"></td>'
+										+ '</tr>'
+										+ '<tr>'
+										+ '<td class="lm"><span></span></td>'
+										+ '<td class="mm">'
+										+ '<span class="wel"><span class="visitor"><p>'
+										+ ''+tempbills.message+'</p></span></span>'
+										+ '</td>'
+										+ '<td class="rm">'	
+										+ '</td>'
+										+ '</tr>'
+										+ '<tr>'
+										+ '<td class="lb"></td>'
+										+ '<td class="bm"></td>'
+										+ '<td class="rb"></td>'
+										+ '</tr>'
+										+ '<tr><td></td></tr>'
+										+ '</tbody>'
+										+ '</table>'
+										+ '</div>'; 
+
+							}else{
+                                    var tempstr = '<div class="customer_lists clearfix">'
+										+ '<div class="header_img jimi3 icon iconfont icon-gerenkehuguanli">'
+										+ '</div>'
+										+ '<table class="msg" cellspacing="0" cellpadding="0">'
+										+ '<tbody>'
+										+ '<tr>'
+										+ '<td></td>'
+										+ '<td></td>'
+										+ '</tr>'
+										+ '<tr>'
+										+ '<td class="lt"></td>'
+										+ '<td class="tt"></td>'
+										+ '<td class="rt"></td>'
+										+ '</tr>'
+
+										+ '<tr>'
+										+ '<td class="lm"></td>'
+										+ '<td class="mm">'+tempbills.message+'</td>'									
+										+ '<td class="rm"><span></span></td>'
+										+ '</tr>'
+										+ '<tr>'
+										+ '<td class="lb"></td>'
+										+ '<td class="bm"></td>'
+										+ '<td class="rb"></td>'
+										+ '</tr>'
+
+										+ '</tbody>'
+										+ '</table>'
+										+ '</div>';
+
+										if((tempbills.status == 1) && tempbills.hit_keyword){
+                                          tempstr += '<div class="customer_lists clearfix">'
+											  + '<div class="session-item-left">'
+													 + '<div class="ant-popover-placement ant-popover-placement-left">'
+															 + '<div class="popover-content">【'+tempbills.hit_keyword+'】<br></div>'
+													 + '</div>'
+											  + '</div>'
+										     + '</div>';
+										}
+
+							}
+
+                          $("#msglist").append(tempstr);
+							
+
+						}
+
+
+
+					}else{
+							console.log(data);
+					}
+
+				}else{
+
+					console.log(data);
+				  //	window.location.href=window.location.href;
+				}
+		 }); 	
+
+	  $("#thisId").val(uid);  
+
+	  $('#myModal').modal('show');
+
+	}	
+
+	function ensure(){
+
+	  $('#myModal').modal('hide');
+
+	}
+
+	$('.item').click(function(){	
+
+		var level = $(this).attr('data-v');
+		var uid = $("#thisId").val();  
+
+		$.post("{:url('changeLevel')}/id/"+uid,{'level':level},function(res){
+			if (res.code == 0){	
+
+			}
+			alert(res.msg);
+		});
+		$(".greenactive").removeClass("greenactive");
+		$(this).addClass("greenactive");
+	});
+
+</script>
+
+</div>
+
+ <!-- 导入 -->
+<div class="modal fade" id="importExcel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								 <span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">请选择话术文件</h4>
+				 </div>
+				 <div class="modal-body">
+						 <form id="fileform" action="{:url('user/scenarios/importExcel')}" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+							 <input type="file" class="" id="excel" name="excel" />
+							 
+							 <input type="hidden" name="scenariosId" id="importscenariosId" value="{$thisId|default=''}">
+
+					 </form>
+				 <br/>
+				 <a href="__STATIC__/template2.xlsx" >话术模板下载</a>
+				 </div>
+				 <div style="clear:both;"></div>
+				<div class="modal-footer">
+				
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" onclick="Savechange();" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+						 
+			</div>
+		 
+    <script type="text/javascript">
+
+	     //保存页面
+		 function loadexcel(){	
+			 $('#importExcel').modal('show');
+		 }	
+
+	       //保存页面
+		  function Savechange(){	
+	
+	    	   $("#fileform").submit();
+	         $('#importExcel').modal('hide');
+		  }	
+  
+    </script>
+      
+</div>
+
+
+{/block}
+

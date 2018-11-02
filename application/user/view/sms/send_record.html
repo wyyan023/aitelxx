@@ -1,0 +1,104 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<script type="text/javascript" href="__PUBLIC__/plugs/bootstrap/popover.js"></script>
+
+<link href="/public/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="/public/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="/public/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/record.css"/>
+
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="main-box clearfix">	
+			<header class="main-box-header n_head_box n_head_box_b clearfix">
+			  <div class="pull-left">
+				  <span class="n_panel_title"><i class="icon iconfont icon-duanxin1"></i>发送记录</span>
+			  </div>
+			</header>
+				<div class="main-context main-box-body"> 	
+					<section class="navbar clearfix">		
+							<div class="clearfix">
+								<div class="form-inline pull-left" method="get" role="form">
+									<div class="form-group">
+										<label class="statusSelect fl">发送时间：</label>
+										<input type="text" style="" class="form-control r_inputwidth" id="startshow" name="startshow" value="" readonly="" />
+										<script>
+											$('#startshow').fdatepicker({
+												format: 'yyyy-mm-dd ',
+											});
+										</script>	
+											至
+										<input type="text" class="form-control r_inputwidth" id="endshow" name="endshow" value="" readonly="" />
+										<script>
+											$('#endshow').fdatepicker({
+												format: 'yyyy-mm-dd ',
+											});
+										</script>	
+									</div>
+			
+									<div class="form-group"> 
+										<label class="statusSelect">短信通道：</label>
+										<select style="width:100px;" name="status" id="companyName" class="form-control">
+											<option value=" " selected="">请选择</option>
+										</select>
+									</div>
+									<div class="form-group"> 
+										<label class="statusSelect">手机号码：</label>
+										<input type="text" class="form-control" value="" style="width:110px;"/>
+									</div>
+									<div class="form-group"> 
+										<label class="statusSelect">发送状态：</label>
+										<select style="width:100px;" name="status" id="companyName" class="form-control">
+											<option value=" " selected="">全部</option>
+											<option value=" ">未发送</option>
+											<option value=" ">已发送</option>
+										</select>
+									</div>
+									<span class="btn btn-primary" type="button" onclick=";">清空条件</span>
+									<span class="btn btn-primary" type="button" onclick=";">搜索</span>
+								
+								</div>
+							</div>  
+							
+						</section>
+					<table class="table table-bordered table-hover r_sendtable r_layout"> 
+						<thead class="ant-table-thead ">
+							<tr>
+								<th>手机号</th>
+								<th>计费</th>
+								<th>短信类型</th>
+								<th>发送内容</th>
+								<th>发送时间</th>
+								<th>上行时间</th>
+								<th>状态</th>
+								<th>消息</th>
+							</tr>
+						</thead>
+						
+						<tbody class="ant-table-tbody" id="datadisplay">
+							<tr>
+								<td>18972800816</td>
+								<td>1条</td>
+								<td>营销</td>
+								<td>【贷还APP】我们刚刚通过电话的、邀请您开通信用卡代还；注册下载地址 http://t.cn/EPDJZdE 欢迎使用！</td>
+								<td>2018-10-22 19:57:01</td>
+								<td></td>
+								<td>发送失败</td>
+								<td>账户余额不足，请充值！</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<div id="statpage"></div>
+					
+					<div class="component-page-empty" id="statdesempty">
+					</div>
+				</div>
+
+		</div>
+	</div>				
+</div>
+
+{/block}
+

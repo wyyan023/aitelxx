@@ -1,0 +1,771 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<script src="__PUBLIC__/plugs/echarts/echarts.min.js"></script>
+
+<!-- <script src="__PUBLIC__/plugs/highcharts/js/highcharts.js"></script>
+ -->
+<script src="__PUBLIC__/plugs/highcharts/highcharts.js"></script>
+<script src="__PUBLIC__/plugs/highcharts/modules/series-label.js"></script>
+<script src="__PUBLIC__/plugs/highcharts/modules/exporting.js"></script>
+<script src="__PUBLIC__/plugs/highcharts/modules/export-data.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/controller.css"/>
+<div class="row">
+	
+  <div class="col-lg-12">
+	  <div class="panel panel-default">
+  	  <div class="panel-body" style="padding:15px;">
+  			<div class="panel-top">
+  				<span class="panel-title"><i class="icon iconfont icon-boda"></i>拨打统计</span>
+  			</div>
+  					<!--<div class="panel panel-default panel-mini">-->
+  					<!--	<span class="call-number">0</span>-->
+  					<!--</div>-->
+  					<!--<div class="panel panel-default panel-mini">-->
+  					<!--	<span class="call-number">0</span>-->
+  					<!--</div>-->
+  					<!--<div class="panel panel-default panel-mini">-->
+  					<!--	<span class="call-number">0</span>-->
+  					<!--</div>-->
+  					<!--<div class="panel panel-default panel-mini">-->
+  					<!--	<span class="call-number">0</span>-->
+  					<!--</div>-->
+  			<ul class="c_dialstatistic">
+  				  <li class="c_dialliOne">
+  				    <p>机器人总数：<span>0</span>个（总开通：0）</p>
+  				    <p>剩余点数 <span>0</span>个</p>
+  				    <p class="c_countdetail">剩余识别次数：<span>0</span>条<a href="javascript:;">详情</a></p>
+  				    <p class="c_recharge">
+  				      <a href="javascript:;">充值余额</a>
+  				      <span></span>
+  				      <a href="javascript:;">购买机器人</a>
+  				    </p>
+  				  </li>
+  				  <li class="c_dialliOne">
+  				    <div class="c_dialtop">
+  				      <p>
+  				        <span>使用率</span>
+  				        <span>0.00%</span>
+  				      </p>
+  				      <p>
+  				        <span>我的余额</span>
+  				        <span>￥ 20000.00</span>
+  				      </p>
+  				    </div>
+  				    <p class="c_dialbottom">
+  				      <span>本月：￥0</span>
+  				      <i></i>
+  				      <span>消耗：￥0.00</span>
+  				    </p>
+  				  </li>
+  				  <li class="c_dialliOne">
+  				    <div class="c_dialtop">
+  				      <p>
+  				        <span>使用率</span>
+  				        <span>0.00%</span>
+  				      </p>
+  				      <p>
+  				        <span>已开通</span>
+  				        <span>1</span>
+  				      </p>
+  				    </div>
+  				    <p class="c_dialbottom">
+  				      <span>执行中：0个</span>
+  				      <i></i>
+  				      <span>空闲：0个</span>
+  				    </p>
+  				  </li>
+  				  <li class="c_dialliOne">
+  				    <div class="c_dialtop">
+  				      <p>
+  				        <span>使用率</span>
+  				        <span>0.00%</span>
+  				      </p>
+  				      <p>
+  				        <span>机器人剩余</span>
+  				        <span>0个</span>
+  				      </p>
+  				    </div>
+  				    <p class="c_dialbottom">
+  				      <span>本账号使用：0</span>
+  				      <i></i>
+  				      <span>下级使用：0</span>
+  				    </p>
+  				  </li>
+  				</ul>
+  	  </div>
+	</div>
+			
+			<div class="panel panel-default c_databox">
+					<div class="panel-body">
+						<div class="panel-top">
+							<span class="panel-title"><i class="icon iconfont icon-kuaijiecaozuo"></i>快捷操作</span>
+						</div>
+						<div class="panel panel-default panel-step" style="border:none;">
+						
+							<div class="panel-body" style="text-align:center;padding: 12px 0px;">
+							 <div class="up-num">
+							 <span class="icon iconfont icon-changjing"></span>
+							 <i class="icon iconfont icon-jiantou1"></i>
+							</div>
+							
+							 <div class="date-left">添加话术场景<br/><a href="{:url('scenarios/index')}">查看></a></div>
+							</div>
+						</div>
+						
+						<div class="panel panel-default panel-step" style="border:none;">
+						
+							<div class="panel-body" style="text-align:center;padding: 12px 0px;">
+							 <div class="up-num">
+							 <span class="icon iconfont icon-daoru" style="font-size:22px;padding:19px 15px"></span>
+							 <i class="icon iconfont icon-jiantou1"></i>
+							</div>
+							
+							 <div class="date-left">导入客户号码<br/><a href="{:url('member/memberlist')}">查看></a></div>
+							</div>
+						</div>
+						
+						<div class="panel panel-default panel-step" style="border:none;">
+							<div class="panel-body" style="text-align:center;padding: 12px 0px;">
+							 <div class="up-num">
+							 <span class="icon iconfont icon-task"></span>
+							 <i class="icon iconfont icon-jiantou1"></i>
+							</div>
+							 <div class="date-left">添加拨打任务<br/><a href="{:url('plan/index')}">查看></a></div>
+							</div>
+						</div>
+						
+						<div class="panel panel-default panel-step" style="border:none;">
+						
+							<div class="panel-body" style="padding: 12px 15px;">
+							 <div class="up-num">
+							 <span class="icon iconfont icon-boda"></span>
+							</div>
+							<br/>
+							
+							 <div class="date-left" style="padding-bottom:11px;">自动拨打<br/></div>
+							</div>
+						</div>
+						
+					</div>
+			</div>			
+			<div class="panel panel-default" style="width:51%;float: left;height: 210px;">
+			  <div class="panel-body">
+					<div class="panel-top">
+						<span class="panel-title"><i class="icon iconfont icon-shuju"></i>我的数据</span>
+					  </div>
+					<div class="panel panel-default panel-step ">
+					  <div class="panel-body pr date-right-text">
+						 <div class="up-num" id="mtotal">
+						   0
+					   </div>
+						 <div class="date-right">待拨打数量<br/><a href="{:url('member/memberlist')}">查看></a></div>
+						  <i class="date-rightborder"></i>
+					  </div>
+					</div>
+					
+					<div class="panel panel-default panel-step">
+					
+					  <div class="panel-body pr date-right-text">
+						 <div class="up-num" id="simtotal">
+						  0
+						 </div>
+						
+						 <div class="date-right">机器座席<br/><a href="{:url('device/robot')}">查看></a></div>
+						 <i class="date-rightborder"></i>
+					  </div>
+					</div>
+					
+					<div class="panel panel-default panel-step" >
+					
+					  <div class="panel-body pr date-right-text">
+						 <div class="up-num" id="tsrtotal">
+					   	0
+						</div>
+						
+						 <div class="date-right">人工座席<br/><a href="{:url('tsr/index')}">查看></a></div>
+						 <i class="date-rightborder"></i>
+					  </div>
+					</div>
+					
+					<div class="panel panel-default panel-step">
+					
+					  <div class="panel-body date-right-text">
+						 <div class="up-num" id="sales">
+						  0
+						 </div>
+						
+						 <div class="date-right" >销售人员<br/><a href="{:url('manager/sales')}">查看></a></div>
+					  </div>
+					</div>
+					
+			  </div>
+			  
+			</div>
+		
+	</div>
+	
+	<div class="col-lg-12">
+		
+		
+		 <div class="panel panel-default c_dialresult">
+			 
+				<div class="panel-body">
+				  <div class="panel-top" style="padding-bottom:15px;">
+  					<span class="panel-title dialresulticon"><i class="icon iconfont icon-icon-test"></i>拨打结果</span>
+  					<span class="c_linetype">
+  						<span class=" imgbtn btn-default" onclick="changetype(this,'line');">折线图</span>
+  						<span class=" imgbtn" onclick="changetype(this,'column');">柱状图</span>
+            </span>
+  					<span class="fr c_yeartype">
+  					  <span class=" btn-default imgbtn" id="sevenday" onclick="getreportdata(7);">7天</span>
+  						<span class="imgbtn" id="thirtyday" onclick="getreportdata(30);">30天</span>
+  						<span class="imgbtn" id="yearsday" onclick="getreportdata(365);">1年</span>
+  					</span>
+			  	</div>
+					<div class="home-call-l fr">
+
+						  <div class="home-call-block">
+							   <!--<div class="left">-->
+							   <!--  <span class="circle circle-purple"></span>-->
+							   <!--</div> -->
+							   <div class="right">
+								   <p class="num">{$ydata.Ytotal|default='0'}</p>
+								   <p>昨日呼叫总数</p>
+							   </div>
+						   </div> 
+
+						   <div class="home-call-block">
+							   <!--<div class="left">-->
+							   <!--   <span class="circle circle-blue"></span>-->
+							   <!--</div> -->
+							   <div class="right">
+							      <p class="num">{$tdata.Ttotal|default='0'}</p> 
+							      <p>今日呼叫总数</p>
+							    </div>
+						    </div>
+
+					    </div>
+					 <div style="width:85%;" class="fl">
+				       <div id="container" style="min-width:400px;height:300px;"></div>
+					 </div>
+				</div>
+			</div>
+			
+			
+		 <div class="panel panel-default c_intention">
+	 
+				<div class="panel-body">
+					<div class="panel-top" style="padding-bottom:15px;">
+						<span class="panel-title dialgrade"><i class="icon iconfont icon-shouruzhanbi"></i>客户意向等级占比</span>
+						<div class="fr c_yeartype">
+						  <span class="imgbtn btn-default" id="sevendaypie" onclick="getleveldata(7);">七天</span>
+				    	<span class="imgbtn" id="thirtydaypie" onclick="getleveldata(30);">30天</span>
+					    <span class="imgbtn" id="yearsdaypie" onclick="getleveldata(365);">1年</span>
+						</div>
+					</div>
+					 <div style="width:85%;">
+						  <div id="pieContainer" style="min-width:400px;height:324px;"></div>
+					 </div>
+					 
+				</div>
+				
+		 </div>
+ 
+ 
+</div>
+	
+<script type="text/javascript">	
+
+//改变图形
+function changetype(obj,type){
+
+  $(obj).addClass("btn-default");
+  $(obj).siblings().removeClass("btn-default");
+
+   types = type; 
+   getreportdata(7);
+
+}
+
+function GetDateStr(AddDayCount) { 
+	var dd = new Date(); 
+	dd.setDate(dd.getDate()+AddDayCount);//获取AddDayCount天后的日期 
+	var y = dd.getFullYear(); 
+	var m = dd.getMonth()+1;//获取当前月份的日期 
+	var d = dd.getDate(); 
+	return y+"-"+m+"-"+d; 
+} 
+
+
+var types = 'line';  //column
+//获取status
+function getreportdata(time){
+   
+   if(time == 7){
+
+   	  $("#sevenday").addClass("btn-default");
+      $("#sevenday").siblings().removeClass("btn-default");
+   	
+   }else if(time == 30){ 
+
+      $("#thirtyday").addClass("btn-default");
+      $("#thirtyday").siblings().removeClass("btn-default");
+   	
+   }else{
+   	  $("#yearsday").addClass("btn-default");
+      $("#yearsday").siblings().removeClass("btn-default");
+   }
+
+	
+	$.ajax({
+		type: "POST",
+		dataType:'json',
+		url: "{:url('backData')}",
+		cache: false,
+		data:{"time":time},
+		success: function(res) {
+
+			//var datalist = JSON.stringify(datalist);
+
+
+			var step = 1;
+
+			if(time == 30){
+				step = 3;
+			}
+
+
+			Highcharts.chart('container', {
+					credits: {
+						enabled: false
+					},
+					chart: {
+				        type: types
+				    },
+					title: {
+							text: '呼叫折线图'
+					},
+
+					subtitle: {
+							text: ''
+					},
+
+					xAxis:{
+						categories: res.backtime,
+						labels: {
+							step: step
+						},
+					   title:{
+					       text:'日期'
+					   }
+					},
+
+					yAxis: {
+							title: {
+									text: '人数'
+							}
+					},
+					legend: {
+							layout: 'vertical',
+							align: 'right',
+							verticalAlign: 'middle'
+					},
+
+					plotOptions: {
+							series: {
+									label: {
+											connectorAllowed: false
+									},
+									pointStart:0
+							}
+					},
+                   
+                   /**
+                   {
+							name: '未拨打',
+							data: res.back.zero
+					}, */
+					series: [{
+							name: '拨打排队中',
+							data: res.back.one
+					}, {
+							name: '已接通',
+							data: res.back.two
+					}, {
+							name: '未接听挂断/关机/欠费',
+							data: res.back.three
+					}, {
+							name: '总数',
+							data: res.back.total
+					}],
+					exporting: {
+						enabled: false
+					},
+
+					responsive: {
+							rules: [{
+									condition: {
+											maxWidth: 500
+									},
+									chartOptions: {
+											legend: {
+													layout: 'horizontal',
+													align: 'center',
+													verticalAlign: 'bottom'
+											}
+									}
+							}]
+					}
+
+			});
+   
+		},
+		error: function(data) {
+		  alert("获取数据失败");
+		}
+	});
+	
+}
+
+function getCallNumber(){
+	
+	$.ajax({
+	   type: "POST",
+	   dataType:'json',
+	   url: "{:url('getCallNumber')}",
+	   cache: false,
+	   data:{},
+	   success: function(res) {
+			if (res.code == 0) {
+				if (res.data >0){
+					var str = String(res.data);
+					var arr = str.split("")
+					var callNumberEls =$(".call-number");
+					var startIndex = callNumberEls.length - arr.length;
+					console.log(callNumberEls.length);
+					for(var i=0; i<arr.length; i++){
+						$(callNumberEls[startIndex+i]).text(arr[i]);
+						//console.log(arr[i]);
+					}
+					
+				}
+			} 
+	   },
+	   error: function(data) {
+		 alert("保存数据失败");
+	   }
+	});
+	
+}
+
+	
+	$.ajax({
+		type: "POST",
+		dataType:'json',
+		url: "{:url('getIsShow')}",
+		cache: false,
+		data:{},
+		success: function(res) {
+			
+			if(res.code==0){
+				 if(res.data == 0){
+					 $('#myModal').modal('show');
+				 }
+				
+			}
+			console.log(res);
+
+		},
+		error: function(data) {
+		  console("获取数据失败");
+		}
+	});
+
+
+$(function(){
+  
+ getCallNumber();
+
+ //获取status
+ getreportdata(7);
+
+ //获取level
+ getleveldata(7);
+ 
+ //获取我的数据(待拨打数量，机器座席，人工座席，销售人员)
+ getMydata();
+ 
+
+});
+
+//获取我的数据
+function getMydata(){
+		$.ajax({
+			type: "POST",
+			dataType:'json',
+			url: "{:url('getMyData')}",
+			cache: false,
+			data:{},
+			success: function(res) {
+				
+				if(res.code==0){
+					
+					$("#mtotal").text(res.data.mtotal);
+	        $("#simtotal").text(res.data.simtotal);
+					$("#tsrtotal").text(res.data.tsrtotal);
+					$("#sales").text(res.data.sales);
+
+				}
+				console.log(res);
+	
+			},
+			error: function(data) {
+			  console("获取数据失败");
+			}
+		});
+}
+
+window.setInterval("getCallNumber()",30000);
+
+ </script>
+ 
+ 
+<style type="text/css">
+	
+	#container {
+		min-width: 310px;
+		max-width: 800px;
+		height: 400px;
+		margin: 0 auto
+	}
+	
+</style> 
+
+
+<script type="text/javascript">
+//获取level
+function getleveldata(time){
+
+   if(time == 7){
+
+   	  $("#sevendaypie").addClass("btn-default");
+      $("#sevendaypie").siblings().removeClass("btn-default");
+   	
+   }else if(time == 30){ 
+
+      $("#thirtydaypie").addClass("btn-default");
+      $("#thirtydaypie").siblings().removeClass("btn-default");
+   	
+   }else{
+   	  $("#yearsdaypie").addClass("btn-default");
+      $("#yearsdaypie").siblings().removeClass("btn-default");
+   }
+
+	
+	$.ajax({
+		type: "POST",
+		dataType:'json',
+		url: "{:url('levelData')}",
+		cache: false,
+		data:{"time":time},
+		success: function(res) {
+
+		 // var datalist = JSON.stringify(datalist);
+            var chart = Highcharts.chart('pieContainer', {
+            	credits: {
+						enabled: false
+				},
+				chart: {
+					spacing : [40, 0 , 40, 0],
+					//marginTop: 100
+					marginLeft: 150
+				},
+				title: {
+					floating:true,
+					text: '客户意向等级占比',
+					x: 70
+				},
+				tooltip: {
+					pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				},
+			    legend: {
+					layout: 'vertical',
+					backgroundColor: '#FFFFFF',
+					align: 'left',
+					verticalAlign: 'top',
+					floating: true,
+					x: 0,
+					y: -20,
+					labelFormat:'{name}: <b>{percentage:.1f}%</b>'
+					// labelFormatter: function (obj) {
+					// 	return this.name + ' {point.percentage:.1f} %';
+					// }
+				},
+				plotOptions: {
+					pie: {
+						allowPointSelect: true,
+						cursor: 'pointer',
+						dataLabels: {
+							enabled: false,
+							format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+							style: {
+								color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+							}
+						},
+						point: {
+							events: {
+								mouseOver: function(e) {  // 鼠标滑过时动态更新标题
+									// 标题更新函数，API 地址：https://api.hcharts.cn/highcharts#Chart.setTitle
+									chart.setTitle({
+										text: e.target.name+ '\t'+ e.target.y + ' %'
+									});
+								}
+								//, 
+								// click: function(e) { // 同样的可以在点击事件里处理
+								//     chart.setTitle({
+								//         text: e.point.name+ '\t'+ e.point.y + ' %'
+								//     });
+								// }
+							}
+						},
+						showInLegend: true,
+
+					}
+				},
+				series: [{
+					type: 'pie',
+					innerSize: '80%',
+					name: '意向等级',
+					data: [
+						{name:'A类(较强)',   y: res.back.typeA},
+						['B类 (一般)', res.back.typeB],
+						{
+							name: 'C类(很少)',
+							y: res.back.typeC,
+							sliced: true,
+							selected: true
+						},
+						['D类(待观察)', res.back.typeD],
+						['E类 (无意向)',  res.back.typeE],
+					]
+				}],
+				exporting: {
+					enabled: false
+				}
+			}, function(c) { // 图表初始化完毕后的会掉函数
+				// 环形图圆心
+				var centerY = c.series[0].center[1],
+					titleHeight = parseInt(c.title.styles.fontSize);
+				// 动态设置标题位置
+				c.setTitle({
+					y:centerY + titleHeight/2
+				});
+			});
+						    
+			   
+		},
+		error: function(data) {
+		  alert("获取数据失败");
+		}
+	});
+	
+}
+		
+</script>
+ 
+  
+</div>
+	
+<!-- 用户协议提示 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">用户协议</h4>
+				</div>
+				<div class="modal-body">
+					  <div>
+							<p><b>用户业务承诺书</b></p> 
+						
+					  <p>
+							为保证平台健康、稳定运行，所有平台使用方需知悉并确认，一旦平台发现使用方利用平台进行违法行为，平台有权立即停止服务，不退还所有已付款项，
+并立即向有关机关报案。承诺内容包含但不限于如下：
+						</p>
+						<p>
+							一、使用平台进行外呼业务，遵守国家有关法律、法规和各行政规章制度。不开展任何违法、违规业务。
+							</p>
+							<p>
+							二、不利用平台开展各种形式违反社会公德和商业操守的外呼业务。
+						</p>
+						<p>
+							三、不利用提供的平台资源从事危害国家安全、泄露国家机密等违法犯罪行为。
+						</p>
+						<p>
+							四、不利用平台传播妨碍社会治安和宣传封建迷信、淫秽黄色等信息；窃取、泄露国家秘密、情报或者军事机密；煽动民族仇恨、民族歧视，破坏民族团结；组织邪教活动、联络邪教组织成员破坏国家法律、行政法规实施。
+						</p>
+						<p>
+							五、不利用平台进行窃取、诈骗、敲诈勒索。
+							</p>
+							<p>
+							六、用户明确表示拒绝后，不得继续向其发起呼叫。
+						</p>
+						<p>
+							七、规范外呼时段、频率行为等，不得对用户正常生活造成影响。
+						</p>
+						
+	        	</div>
+				</div>
+				<div class="modal-footer">
+					
+					<div class="checkbox" style="float:left;">
+						<label>
+							<input type="checkbox" value="1" name="isagreeshow" id="isagreeshow"> 不再显示
+						</label>
+					</div>
+					
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					
+				</div>
+    </div>
+  </div>
+	
+	<script type="text/javascript">
+		
+		$('#myModal').on('hidden.bs.modal', function (e) {
+			
+		  var isagreeshow =	$("#isagreeshow").prop('checked');
+			
+			if(isagreeshow){
+				 	
+				 	$.ajax({
+				 		type: "POST",
+				 		dataType:'json',
+				 		url: "{:url('changeShow')}",
+				 		cache: false,
+				 		data:{},
+				 		success: function(res) {
+
+				 			console.log(res);
+				 
+				 		},
+				 		error: function(data) {
+				 		 // alert("获取数据失败");
+				 		}
+				 	});
+			}
+		 
+			
+		})
+			
+	</script>
+	 
+	
+	
+</div>
+	
+	
+
+{/block}

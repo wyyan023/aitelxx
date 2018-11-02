@@ -1,0 +1,334 @@
+{extend name="public/base" /}
+{block name="body"}
+<style type="text/css">
+.table tbody>tr>td {
+padding: 12px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+.imgclass > td > p>img{
+width:50px;
+}
+	.textwidth{
+		width:250px;
+	}
+
+	.table-bordered, .table thead>tr>th {
+	  border: none;
+	}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header n_head_box clearfix">
+		  <div class="pull-left">
+			  <span class="n_panel_title"><i class="icon iconfont icon-label"></i>标签管理</span>
+				
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+		
+	        <section class="navbar  main-box-header clearfix">
+	         <div  class="pull-left">
+						 <form class="form-inline"  method="get" role="form">
+							 
+							<div class="form-group">
+								<label>标签名：</label>
+								<input type="text" class="form-control" id="keyword" name="keyword" placeholder="请输入标签名.....">
+							</div>
+							<button class="btn btn-primary" type="submit">搜索</button>
+						</form>
+			    </div>
+			    <a class="btn btn-primary pull-right" href="javascript:void(0);" onclick="addNew(0);">添加标签</a>
+		   </section>
+
+		     <!--<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>-->
+		     
+			  <div class="table-responsive">
+			  
+				 <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr style="background-color:#f2f7fd">
+					        <th class="text-center"></th>
+									<th class="text-center">所属人</th>
+					        <th class="text-center">标签名称</th>
+					        <th class="text-center">关键字</th>
+					        <th class="text-center">操作</th> 
+					    </tr>
+				    </thead>
+				   <tbody>
+				      {volist name="list" id="vo"}
+  
+								<tr>
+								 <td class="text-center">
+										<input type="checkbox" name="roleids" class="rolecheck" value="{$vo.id}"/>
+								 </td>
+									<td class="text-center">{$vo.username}</td>
+									<td class="text-center">{$vo.label}</td>
+									<td class="text-center">{$vo.keyword}</td>
+							
+									<td class="text-center">
+										  <a href="javascript:void(0);" onclick="addNew({$vo.id});">编辑</a>
+											<a href="javascript:void(0);" onclick="delRole({$vo.id});">删除</a>	
+									</td>
+								</tr>  
+				       {/volist}
+		          
+				    </tbody>
+				  </table>
+				    <div class="row">
+								<div class="col-sm-4 text-left"></div>
+								<div class="col-sm-8 text-right">{$page}</div>
+						</div>
+			  </div>
+		
+				<footer class="main-box-footer clearfix">
+					<div class="pull-left">
+							<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+						<button class="btn btn-primary" onclick="delRole(0);" target-form="ids">删 除</button>
+					</div>
+				</footer>
+		</div>
+					
+	</div>					
+    
+
+
+</div>
+
+ <script type="text/javascript">
+ 
+ $(function(){
+		var keyword = "{$_GET['keyword']|default=''}";
+		$('#keyword').val(keyword);
+})
+ 
+
+//删除角色
+ function delRole(id){
+    var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+     	   var ids;
+ 	    	if(id){
+ 	    		var Ids=[];
+ 	    		Ids.push(id);
+ 	    		ids = Ids;
+ 	    	}else{
+ 	    		 var IdsVal = [];
+ 	        	 var roleids = document.getElementsByName("roleids");
+ 	    		 for ( var j = 0; j < roleids.length; j++) {
+ 	    		    if (roleids.item(j).checked == true) {
+ 	    		    	IdsVal.push(roleids.item(j).value);
+ 	    		    }
+ 	    		 }
+ 	    		 ids = IdsVal;
+ 	    	}
+ 		
+ 	    	if(!ids.length){
+ 	    		alert("至少选择一条。");
+ 	    		 return false; 
+ 	    	}
+ 	    	
+     		 $.post("{:url('delLabel')}",{'label_id':ids},function(data){
+     			if (data.code) {
+		    		 alert(data.msg);
+		    	}else{
+		    		 location.reload();
+		    	}
+ 				
+ 			}); 
+     
+
+ }
+//全选
+ function allcheck(){			
+ 	if ($('.check-all').is(":checked")) {	
+ 		$('.rolecheck').prop("checked","checked");
+ 	}else{
+ 		$('.rolecheck').prop("checked",false);
+ 	}
+
+ }
+  
+ </script>
+  
+</div>
+
+
+<!-- 新建标签 -->
+<div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								 <span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">新建(编辑)标签</h4>
+				 </div>
+				 <div class="modal-body">
+						  <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" method="post">
+						      
+				
+									<div class="form-group">
+										<label class="col-lg-2 control-label">标签名：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <input type="text" class="form-control textwidth" onkeyup="checkname(this);" placeholder="请输入标签名" name="labelName" id="labelName" value="" />
+										</div>
+									</div>
+										
+									<div class="form-group">
+										<label class="col-lg-2 control-label">关键字：</label>
+										<div class="col-lg-10 col-sm-10">
+											 <textarea name="remark" id="remark" style="width: 70%;"></textarea>
+											 <div class="help-block">关键字，多个之间用“;"分隔</div>
+
+										</div>
+		
+									</div>
+									
+				          <input type="hidden" name="labelId" id="labelid" value="" />
+ 
+							</form>
+				  <br/>
+				 </div>
+				 <div style="clear:both;"></div>
+				<div class="modal-footer">
+				
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" onclick="uploadData();" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+						 
+			</div>
+		 
+    <script type="text/javascript">
+
+	     //保存页面
+		 function addNew(uid){	
+			 $("#labelid").val(uid);
+			 
+			 if(uid > 0){
+
+				 		$.ajax({
+				 				type: "POST",
+				 				dataType:'json',
+				 				url: "{:url('User/Label/getLabel')}",
+				 				cache: false,
+				 				data: {id:uid},
+				 				success: function(data) {
+									
+				             console.log(data);
+				 					//location.href = "{:url('User/member/whitelist')}";
+									if (data.code == 0) {
+										
+										  var data = data.data;
+											$("#labelName").val(data.label);
+											$("#remark").val(data.keyword);
+                    
+                      $('#newModal').modal('show');
+
+									}
+									
+ 				 				},
+				 				error: function(data) {
+				 					alert("提交失败");
+				 				}
+				 		}) 
+				 		
+				 
+			 }else{
+				 
+				 $("#labelName").val("");
+				 $("#remark").val("");
+
+				 $('#newModal').modal('show');
+
+			 }
+			
+		 }	
+		 
+		 
+		 function uploadData(){
+		 	
+		 		var labelName = $("#labelName").val();
+		 		if(!labelName){
+		 			alert("标签名称不能为空"); 
+		 			return false; 
+		 		}
+		 	
+		
+				var remark = $("#remark").val();
+				if(remark==''){
+					alert("关键字不能为空"); 
+					return false; 
+				}
+				
+				
+				var href = "{:url('User/Label/addLabel')}";
+				
+			 var labelid = $("#labelid").val();
+			 if(labelid > 0){
+				
+				 href = "{:url('User/Label/editLabel')}";
+				 
+			 }
+	
+	
+		 		 $.ajax({
+		 		     type: "POST",
+		 		     dataType:'json',
+		 		     url: href,
+		 		     cache: false,
+		 		     data: $("#form").serialize(),
+		 		     success: function(data) {
+		 
+		 		     	 //location.href = "{:url('User/member/whitelist')}";
+		 		    	if (data.code == 0) {
+		 		    	     alert(data.msg + ' 页面即将自动刷新~');
+		 		    	 	// location.href = "{:url('User/member/whitelist')}";
+		 		    	}else{
+		 		    		 alert(data.msg);
+		 		    		
+		 		    	}
+							
+							location.reload();
+							
+		 		     },
+		 		     error: function(data) {
+		 		    	 alert("提交失败");
+		 		     }
+		 		 }) 
+		 		 
+		   $('#newModal').modal('hide');
+
+		 }
+		 
+
+// 		 function checkname(obj){
+// 		 	
+// 		 	var name = $(obj).val();
+// 		 	
+// 		 	$.post("{:url('chackname')}",{'name':name},function(data){
+// 		 		
+// 		 		if(!data.code){
+// 		 			alert(data.msg);
+// 		 		}else{
+// 		 			//window.location.href=window.location.href;
+// 		 		}
+// 		 		
+// 		 	}); 
+// 		 	
+// 		 }
+// 		 
+    </script>
+      
+</div>
+
+
+{/block}
+

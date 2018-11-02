@@ -1,0 +1,711 @@
+{extend name="public/base" /}
+{block name="body"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/new_liens.css"/>
+<style type="text/css">
+  .table tbody>tr>td {
+  padding: 12px 8px;
+  }
+  .table-responsive {
+  min-height: .01%;
+  overflow-x: hidden;
+  }
+  
+  .messageinfo{
+   text-align:right;
+   
+  }
+  .infotable tr td{
+   padding:5px;
+  }
+  
+  .textwidth{
+  	width:250px;
+  }
+  .setmarginB {
+    margin-bottom: 20px;
+  }
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+	  <ul class="nav nav-tabs setmarginB" role="tablist">
+			<li role="presentation" class="active">
+				 <a href="#home" aria-controls="home" role="tab" data-toggle="tab">线路管理</a>
+			</li>
+			<li role="presentation">
+				<a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">线路配置</a>
+			</li>
+		</ul>
+		<!--<header class="main-box-header n_head_box n_head_box_b clearfix">-->
+		<!--  <div class="pull-left">-->
+		<!--	  <span class="n_panel_title"><i class="icon iconfont icon-xianluguanli"></i>线路管理</span>-->
+		<!--  </div>-->
+		<!--  {/* if condition="$super > 0" */}-->
+		<!--		<button class="btn btn-primary pull-left" onclick="showModal(0);">添加</button>-->
+		<!--	{/* /if */}-->
+		<!--</header>-->
+		
+		   
+		<div class="main-box-body clearfix">
+		  <div class="tab-content">
+		    <!--线路管理-->
+		    <div role="tabpanel" class="table-responsive tab-pane active" id="home">
+			  {/* if condition="$super > 0" */}
+				  <button class="btn btn-primary pull-left setmarginB" onclick="showModal(0);">添加</button>
+			  {/* /if */}
+				<table class="table table-bordered table-hover">
+				<thead>
+						<tr>
+								<th class="text-center"></th>
+								<th class="text-center">线路名称</th>
+								<!--<th class="text-center">主叫号码</th>-->
+								<!--<th class="text-center">呼叫前缀</th>-->
+								<!--<th class="text-center">对接IP</th>-->
+								<th class="text-center">所属用户</th>
+							
+								<th class="text-center">呼叫次数</th>
+								<th class="text-center">状态</th>
+								<th class="text-center">备注</th>
+								 {/* if condition="$super > 0" */}
+								<th class="text-center">操作</th>  
+								{/* /if */}
+						</tr>
+					</thead>
+				<tbody>
+						{volist name="list" id="vo"}
+							<tr>
+						    <td class="text-center">
+									<input type="checkbox" name="customerIds" class="customerIds" value="{$vo.id}"/>
+								</td>
+					    	
+
+								<td class="text-center">{$vo.name}</td>
+								<!--<td class="text-center">-->
+								<!--	{$vo.phone}-->
+								<!--</td>-->
+								<!--<td class="text-center">{$vo.call_prefix}</td>-->
+								<!--<td class="text-center">{$vo.inter_ip}</td>-->
+								<td class="text-center">{$vo.username}</td>
+								
+							
+								<td class="text-center">
+									{$vo.call_num}
+								</td>
+								<td class="text-center">
+								
+									{switch name="$vo.status"}
+										{case value="1"}
+												{if condition="$super > 0"}
+													<a href="javascript:void(0);" onclick="setstatus({$vo.id},0);">开启</a>
+												{else/}
+													开启
+												{/if}
+												
+										{/case}
+										{default /}
+												{if condition="$super > 0"}
+													<a href="javascript:void(0);" onclick="setstatus({$vo.id},1);">关闭</a>
+												{else/}
+													关闭
+												{/if}
+												
+									{/switch}
+								</td>
+								<td class="text-center">
+								 {$vo.remark}
+								</td>
+								{if condition="$super > 0 || $vo.pid == 0"}	
+								
+								<td class="text-center">
+										<a href="javascript:void(0);" onclick="showModal({$vo.id});">编辑</a>
+											 &nbsp;
+										<a href="javascript:void(0);" onclick="delSim('{$vo.id}');">删除</a>
+								</td>
+								{/if}
+							</tr>
+								{/volist}
+					</tbody>
+				</table>
+					<div class="row">
+						<div class="col-sm-4 text-left">
+							{if condition="$super > 0"}	
+								<div class="pull-left">
+										<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+										<button class="btn btn-primary" onclick="delSim(0);" target-form="ids">删 除</button>
+								</div>	
+								{/if}			
+						</div>
+						<div class="col-sm-8 text-right">{$page}</div>
+					</div>
+			</div>
+		    <!--线路配置-->
+		    <div role="tabpanel" class="tab-pane" id="profile">
+		      <div class="n_main clearfix">
+		        <div class="main_left">
+		          <div class="component-base-button">
+		            <!--<button class="btn btn-primary" onclick="showEnModal(0)" target-form="ids">+&nbsp;添加企业</button>-->
+		          </div>
+		         <!-- <div class="n_keysearch">-->
+        			<!--	<input type="text" class="key_uid">-->
+        			<!--</div>-->
+        			<div class="main_left_content">
+        				{volist name='subordinate_members' id='data'}
+					          <div data-id='{$data.id}' class="left_data ">
+					            <p>{$data.username}</p>
+					            <!--<i class="icon iconfont icon-shanchu"></i>-->
+				          	</div>
+			          {/volist}
+							</div>
+		        </div>
+		        <div class="main_right">
+		          <div class="main_right_content">
+		            <div class="distribution">
+		               <button class="btn btn-primary portion" onclick="showlineModal()" target-form="ids">分配线路</button>
+		               <!--<button class="btn btn-primary save" onclick="" target-form="ids">保存</button>-->
+          			</div>
+          			<div class="line_main_content clearfix">
+          			  
+          			</div>
+		          </div>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+					
+	</div>					
+    
+
+
+</div>
+	<script type='text/template' id='line_option_template'>
+		<div class="line_main" data-id="{%id%}">
+	    <p class="lm_linesel">
+	      {%line_name%}
+	    </p>
+	    <p class="lm_sale">成本价：<span>{%price%}</span></p>
+	    <p class="lm_sale">销售价：{%sales_price%}</p>
+	    <a class="lm_delete" href="javascript:;" onclick="del_subordinate_line({%member_id%}, {%id%})"><i class="icon iconfont icon-delete"></i></a>
+	  </div>
+	</script>
+  <script id="allocation" type="text/html">
+   <div class="line_main">
+	    <p class="lm_linesel">
+	      <select class="form-control" name="type">
+			    <option value="">请选择路线</option>	
+			    {volist name='list' id='vo'}
+					  <option data-price="{$vo.sales_price}" value="{$vo.id}">{$vo.name}</option>
+					{/volist}
+				</select>
+	    </p>
+	    <p class="lm_price">成本价：<span></span></p>
+	    <p class="lm_sale">销售价：<input type="text" name="shortcost"></p>
+	    <a class="lm_delete" href="javascript:;" onclick="del_subordinate_line({%member_id%}, {%id%})"><i class="icon iconfont icon-delete"></i></a>
+	  </div>
+  </script>
+  
+  <script type="text/javascript">
+  	$(function(){
+  		$('.main_left_content > div.left_data ').eq(0).click();
+  	})
+    function line_select(obj) {
+      if($(obj).hasClass('lm_dataSel')) {
+        $(obj).removeClass('lm_dataSel');
+        $(obj).siblings('span').text('(可选路线)');
+      } else {
+        $(obj).addClass('lm_dataSel');
+        $(obj).siblings('span').text('(当前路线)');
+        $(obj).parents('.line_main').siblings().find('p.lm_data>i').removeClass('lm_dataSel');
+        $(obj).parents('.line_main').siblings().find('p.lm_data>span').text('(可选路线)');
+      }
+    }
+    
+    function delete_line(obj) {
+      $(obj).parents('.line_main').remove();
+    }
+    
+    function add_lines() {
+      var tem = $('#allocation').html();
+      $('.line_main_content').append(tem);
+    }
+  </script>
+  
+  <script type="text/javascript">
+ 
+	//全选
+  function allcheck(){			
+  	if ($('.check-all').is(":checked")) {	
+  		$('.customerIds').prop("checked","checked");
+  	}else{
+  		$('.customerIds').prop("checked",false);
+  	}
+  }
+  
+	//设置状态
+	function setstatus(id,status){			
+			var url = "{:url('setLineStatus')}";	
+			$.ajax({
+				url : url,
+				dataType : "json", 
+				type : "post",
+				data : {'sId':id,'status':status},
+				success: function(data){
+					if (data.code) { 
+					alert(data.msg);
+					}else{
+							location.reload();
+					}
+				},
+				error : function() {
+					alert('失败。');
+				}
+			});
+	}
+	
+	
+ 
+ //删除
+ function delSim(id){
+ 
+ 	 var r=confirm('确认删除?');
+   	if (!r) 
+         return; 
+
+   	 var ids=[];
+  	if(id){
+  		ids.push(id);
+  	}else{
+  		
+      	 var roleids = document.getElementsByName("customerIds");
+  		 for ( var j = 0; j < roleids.length; j++) {
+  		    if (roleids.item(j).checked == true) {
+  		    	ids.push(roleids.item(j).value);
+  		    }
+  		 }
+  	}
+	
+  	if(!ids.length){
+  		alert("至少选择一条。");
+  		 return false; 
+  	}
+		 $.post("{:url('delLine')}",{'id':ids},function(data){
+			if(data){
+				alert(data);
+			}else{
+				window.location.href=window.location.href;
+			}
+	}); 
+ }
+	//删除线路
+	function del_subordinate_line(member_id, id)
+	{
+		console.log(member_id);
+		console.log(id);
+		var bool = confirm('确认删除?');
+		if(bool === true){
+			var url = '{:url("delete_subordinate_line_api")}';
+			$.ajax({
+				type:'get',
+				dataType:"json",
+				data:{
+					line_id:id,
+					member_id:member_id
+				},
+				url:url,
+				success:function(result){
+					console.log(result);
+					if(result.code === 0){
+						var member_id = $('.main_left_content > .left_dataSel').data('id');
+						show_line_datas(member_id);
+						alert('删除成功');
+					}else{
+						alert('删除失败');
+					}
+				},
+				error:function(){
+					alert('删除失败');
+				}
+			});
+		}
+		
+	}
+	//显示线路数据
+	function show_line_datas(member_id)
+	{
+		if(member_id == null){
+			return false;
+		}
+		var url = "{:url('get_member_line_data_api')}";	
+		$.ajax({
+			type:'get',
+			data:{
+				member_id:member_id
+			},
+			dataType:'json',
+			url:url,
+			success:function(result){
+				console.log(result);
+				if(result.code === 0){
+					var htmls = '';
+					$.each(result.data.lines, function (index, object) {
+						var html_option = $('#line_option_template').html();
+								html_option	= html_option.replace('{%line_name%}', object.name);
+								html_option = html_option.replace('{%price%}', object.price);
+								html_option = html_option.replace('{%sales_price%}', object.sales_price);
+								html_option = html_option.replace('{%id%}', object.id);
+								html_option = html_option.replace('{%id%}', object.id);
+								html_option = html_option.replace('{%member_id%}', member_id);
+								htmls += html_option;
+					});
+					$('.line_main_content').html(htmls);
+					var line_options = '<option value="">请选择路线</option>';
+					$.each(result.data.user_lines, function(index, object){
+						line_options += '<option data-price="'+object.sales_price+'" value="'+object.id+'">'+object.name+'</option>';
+					});
+					$('#enline').html(line_options);
+				}
+			},
+			error:function(){
+				console.log('错误');
+			}
+		});
+	}
+	//选择企业
+	$('.main_left_content > .left_data').click(function(){
+		
+		if($(this).hasClass('left_dataSel') === false){
+			$(this).addClass('left_dataSel').siblings().removeClass('left_dataSel');
+			var member_id = $(this).data('id');
+			//显示当前选择的用户的线路信息
+			show_line_datas(member_id);
+		}
+	});
+	
+	//删除动作
+	// function delete_line()
+	// {
+	// 	$('.lm_delete').unbind('click');
+	// 	$('.lm_delete').click(function(){
+	// 		del_subordinate_line(id);
+	// 		var id = $(this).data('id');
+			
+	// 	});
+	// }
+ </script>
+</div>
+
+
+
+<!-- 添加与编辑 -->
+<div class="modal fade" id="checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+		
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">编辑线路信息</h4>
+       </div>
+       <div class="modal-body pagelists">
+				 
+          	
+	        <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+	      
+					     <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>线路商名称：</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="name" id="name" />
+								</div>
+					    </div>
+						 <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>线路对接类型:</label>
+								<div class="col-lg-8 col-sm-8">
+								    <select class="form-control textwidth" id="type" name="type">
+										    <option value="">请选择线路对接类型</option>												
+												<option value="0">IP对接</option>
+												<option value="1">账号密码对接</option>
+										</select>
+								</div>
+					    </div>
+						  <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>接口IP</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="inter_ip" id="inter_ip" />
+								</div>
+					    </div>
+						
+					     <div class="form-group">
+								<label class="col-lg-4 control-label">呼叫前缀</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="call_prefix" id="call_prefix" />
+								</div>
+					    </div>
+						 <div class="form-group">
+								<label class="col-lg-4 control-label">网关名称</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="gateway" id="gateway" />
+								</div>
+					    </div>
+						
+					    <div class="form-group" style='display:none;'>
+								<label class="col-lg-4 control-label">所属用户：</label>
+								<div class="col-lg-8 col-sm-8">
+								    <select class="form-control textwidth" id="member_id" name="member_id">
+										    <option value="">请选择用户</option>
+												{volist name="memberList" id="item"}
+														<option value="{$item.id}">{$item.username}</option>
+												{/volist}
+										</select>
+								</div>
+					    </div>
+					   <div class="form-group">
+								<label class="col-lg-4 control-label">账号：</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="phone" id="phone" />
+								</div>
+					    </div>
+					    <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>成本价格：</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="price" id="price" />
+								</div>
+					    </div>
+					   <!-- <div class="form-group">-->
+								<!--<label class="col-lg-4 control-label"><i>*</i>销售价格：</label>-->
+								<!--<div class="col-lg-8 col-sm-8">-->
+								<!--	 <input type="text" class="form-control textwidth" name="phone" id="phone" />-->
+								<!--</div>-->
+					   <!-- </div>-->
+							
+						<div class="form-group">
+							<label class="col-lg-4 control-label">备注：</label>
+							<div class="col-lg-8 col-sm-8">
+								<textarea class="form-control textwidth" id="remark" name="remark"></textarea>
+							</div>
+						</div>
+
+
+					    <div class="form-group" style="text-align: center;">
+							   	<input type="hidden" name="deviceId" id="deviceId" value="{$thisId|default=''}">
+								  <input type="hidden" name="simId" id="simId" value="">
+									<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						 </div>
+		
+			
+		     </form>
+				 
+					
+       </div>
+       <div style="clear:both"></div>
+      
+			
+	 
+	 </div>
+           
+  </div>
+
+	<script type="text/javascript">
+			
+		function showModal(id){
+		
+			 
+			 if(id){
+					var url = "{:url('user/Device/getLineInfo')}";	
+					 $.ajax({
+							url : url,
+							dataType : "json", 
+							type : "post",
+							data : {'id':id},
+							success: function(data){
+									$("#phone").val(data.phone);
+									$("#member_id").val(data.member_id);
+									$("#name").val(data.name);
+									$('#price').val(data.sales_price);
+									$("#call_prefix").val(data.call_prefix);
+									$("#inter_ip").val(data.inter_ip);
+									$("#gateway").val(data.gateway);
+									$("#remark").val(data.remark);
+									$("#simId").val(data.id);
+									$("#type").val(data.type);
+									// $("#type").get(1).selectedIndex=1; 
+									$('#checkpage').modal('show')
+							},
+							error : function() {
+								alert('获取信息失败。');
+							}
+						});
+				
+			 }
+			 else{
+
+					 $('#checkpage').modal('show');
+					 
+			 }
+			
+
+		}
+	 
+	 
+	 //检查表单的必填项
+		function checkform(){
+
+			var phone = $("#phone").val();
+			<!-- if(!phone){ -->
+				<!-- //alert("号码不能为空");  -->
+				<!-- return false;  -->
+			<!-- } -->
+			
+		
+			
+			 var simId = $("#simId").val();
+
+			 var href = "{:url('user/Device/addLine')}";
+			 if(simId){
+					 href = "{:url('user/Device/editLine')}";
+			 }
+
+			 
+			 $.ajax({
+					 type: "POST",
+					 dataType:'json',
+					 url: href,
+					 cache: false,
+					 data: $("#form").serialize(),
+					 success: function(data) {
+						if (data.code == 0) {
+							 // alert(data.msg);
+								$('#checkpage').modal('hide');
+							 location.reload();
+						}else{
+							 alert(data.msg);
+
+						}
+				
+					 },
+					 error: function(data) {
+						 alert("提交失败");
+					 }
+			 })  
+		}
+
+
+	
+	</script>
+	
+   
+</div>
+
+<!--添加企业-->
+<div class="modal fade" id="addline">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">路线选择</h4>
+      </div>
+      <div class="modal-body">
+        <form id="enform" method="post" class="form-horizontal margintop" enctype="multipart/form-data">
+          <div class="form-group">
+						<label class="col-lg-4 control-label">选择路线:</label>
+						<div class="col-lg-8 col-sm-8">
+						    <select class="form-control textwidth" id="enline" name="type">
+								    <option value="">请选择路线</option>
+								    {volist name='list' id='vo'}
+										  <option data-price="{$vo.sales_price}" value="{$vo.id}">{$vo.name}</option>
+										{/volist}
+								</select>
+						</div>
+			    </div>
+			    <div class="form-group">
+						<label class="col-lg-4 control-label">成本价:</label>
+						<div class="col-lg-8 col-sm-8 n_costprice">
+						   <span id='show_price'>0</span>
+						</div>
+			    </div>
+			    <div class="form-group">
+								<label class="col-lg-4 control-label">销售价：</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="number" class="form-control textwidth" name="name" id="prices" />
+								</div>
+					    </div>
+			    <div class="form-group" style="text-align: center;">
+							<button class="btn btn-success submit-btn" onclick="" id='submit' type="button">确 定</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				 </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    function showlineModal() {
+      $('#addline').modal('show');
+    }
+    //清空表单
+    function empty_add_line_from()
+    {
+    	$('.modal-backdrop').hide();
+    	$('#addline').modal('hide');
+    	$('#enline > option').eq(0).attr('selected', true);
+    	$('#selected').text(0);
+    	$('#prices').val('');
+    }
+    $('#enline').change(function(){
+    	var price = $(this).find('option:selected').data('price');
+    	$('#show_price').text(price);
+    });
+    $('#submit').click(function(){
+    	var member_id = $('.main_left_content > .left_dataSel').data('id');
+    	var sales_price = $('#prices').val();
+    	var line_id = $('#enline').val();
+    	if(!member_id){
+    		alert('请选择用户');
+    		return false;
+    	}
+    	if(!line_id){
+    		alert('请选择线路');
+    		return false;
+    	}
+    	if(!sales_price){
+    		alert('请设置销售价格');
+    		return false;
+    	}
+    	var url = "{:url('insert_line_allocation_api')}";
+    	$.ajax({
+    		type:'get',
+    		dataType:'json',
+    		data:{
+    			member_id:member_id,
+    			sales_price:sales_price,
+    			line_id:line_id,
+    		},
+    		url:url,
+    		success:function(result){
+    			if(result.code === 0){
+    				alert('添加成功');
+    				var member_id = $('.main_left_content > .left_dataSel').data('id');
+						//刷新数据
+						show_line_datas(member_id);
+    			}else if(result.code === 2){
+    				alert(result.data);
+    			}else{
+    				alert('添加失败');
+    			}
+    			//清空表单
+					empty_add_line_from();
+    		},
+    		error:function(){
+    			alert('添加失败');
+    			//清空表单
+					empty_add_line_from();
+    		}
+    	});
+    });
+  </script>
+</div>
+
+
+
+{/block}
+

@@ -1,0 +1,572 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+.table tbody>tr>td {
+	padding: 12px 8px;
+}
+.table-responsive {
+	min-height: .01%;
+	overflow-x: hidden;
+}
+
+.messageinfo{
+	text-align:right;
+}
+.infotable tr td{
+	padding:5px;
+}
+.textwidth{
+	width:250px;
+}
+
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header n_head_box n_head_box_b clearfix">
+		  <div class="pull-left">
+			  <span class="n_panel_title"><i class="icon iconfont icon-changjing1"></i>话术场景</span>
+		  </div>
+		  <button class="btn btn-primary pull-right" onclick="showModal(0);">添加</button>
+		</header>
+		
+		<div class="main-box-body clearfix">
+			
+		     	<!--<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>-->
+		     	<div class="table-responsive">
+		     	
+		     		<table class="table table-bordered table-hover">
+							<thead>
+									<tr>
+											<th class="text-center"></th>
+										
+											<th class="text-center">用户</th>
+											<th class="text-center">名称</th>
+											<th class="text-center">行业类型</th>
+										
+											<th class="text-center">状态</th>
+											<th class="text-center">是否自动打断</th>
+											 {eq name="examine" value="1"}
+												<th class="text-center">审核结果</th>
+											{/eq}
+											
+											<th class="text-center">操作</th> 
+									</tr>
+								</thead>
+							<tbody>
+		     				{volist name="list" id="vo"}
+		     					<tr>
+		     						<td class="text-center">
+		     							<input type="checkbox" name="customerIds" class="customerIds" value="{$vo.id}"/>
+		     						</td>
+		     				
+		     						
+		     						<td class="text-center">
+		     							{$vo.username}
+		     						</td>
+		     						<td class="text-center">
+		     							{$vo.name}
+		     						</td>
+		     						<td class="text-center">
+												{switch name="$vo.type"}
+													{case value="0"}请选择行业{/case}
+													{case value="1"}金融{/case}
+													{case value="2"}贷款{/case}
+													{case value="3"}房产{/case}
+													{case value="4"}装修{/case}
+													{case value="5"}汽车{/case}
+													{case value="6"}教育{/case}
+													
+													{default /}其他
+												{/switch}
+										</td>
+										
+		     						<td class="text-center">
+		     								{switch name="$vo.status" }
+													{case value="1"}
+															<a href="javascript:void(0);" onclick="setstatus({$vo.id},0);">开启</a>
+													{/case}
+													{default /}
+															<a href="javascript:void(0);" onclick="setstatus({$vo.id},1);">关闭</a>
+		     									
+		     								{/switch}
+		     						</td>
+		     						<td class="text-center">
+		     							{switch name="$vo.break"}
+		     								{case value="1"}否{/case}
+		     								{default /}是
+		     							{/switch}
+		     						</td>	
+									 {eq name="examine" value="1"}
+									<td class="text-center">
+		     							
+												
+											{if condition="$super == 1"} 
+												{switch name="$vo.auditing"}
+													{case value="2"}
+													 <a href="javascript:void(0);" onclick="showExamine({$vo.id});">审核</a>
+													{/case}
+													{default /}
+													
+												{/switch}
+											
+											{else /}
+											
+														{switch name="$vo.auditing"}
+															{case value="1"}
+																<a href="javascript:void(0);"  onclick="submitAuditing({$vo.id});">提交审核</a>
+															{/case}
+															{case value="2"}
+																审核中
+															{/case}
+															{case value="3"}
+																不通过
+															{/case}
+															{default /}
+															审核通过
+														{/switch}
+
+											
+											{/if}
+										
+											 
+											
+		     						</td>
+									{/eq}
+		     						<td class="text-center">
+											
+											
+												
+											
+												
+												<a href="javascript:void(0);" onclick="showModal({$vo.id});">编辑</a>
+												<a href="javascript:void(0);" onclick="delScenarios('{$vo.id}');">删除</a>
+												
+											
+												
+													{if condition="$examine == 1 && $super == 0 && $vo.auditing == 2"} 
+														设计话术流程
+													{else/}
+														<a href="{:url('flow',['id'=>$vo.id])}">设计话术流程</a>
+													{/if}
+												
+													 
+													
+		     						</td>
+		     					</tr>
+		     				{/volist}
+		     			</tbody>
+		     		</table>
+						<div class="row">
+							<div class="col-sm-4 text-left">
+									<div class="pull-left">
+											<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+											<button class="btn btn-primary" onclick="delScenarios(0);" target-form="ids">删 除</button>
+									</div>	
+												
+							</div>
+							<div class="col-sm-8 text-right">{$page}</div>
+						</div>
+		     		
+		     	</div>
+		     				
+		</div>
+					
+	</div>					
+    
+
+
+</div>
+
+ <script type="text/javascript">
+
+//全选
+ function allcheck(){			
+ 	if ($('.check-all').is(":checked")) {	
+ 		$('.customerIds').prop("checked","checked");
+ 	}else{
+ 		$('.customerIds').prop("checked",false);
+ 	}
+ }
+ 
+ //设置状态
+  function setstatus(id,status){			
+  	 var url = "{:url('setstatus')}";	
+  	 $.ajax({
+  	        url : url,
+  	        dataType : "json", 
+  	        type : "post",
+  	        data : {'sId':id,'status':status},
+  	        success: function(data){
+  	        	if (data.code) {
+ 		    		 alert(data.msg);
+ 		    	}else{
+ 		    		 location.reload();
+ 		    	}
+  	        },
+  	        error : function() {
+  	        	alert('失败。');
+  	        }
+  	  });
+  }
+ 
+ function submitAuditing(id){
+	 var url = "{:url('setAuditing')}";	
+  	 $.ajax({
+  	        url : url,
+  	        dataType : "json", 
+  	        type : "post",
+  	        data : {'id':id},
+  	        success: function(data){
+  	        	if (data.code) {
+ 		    		 alert(data.msg);
+ 		    	}else{
+ 		    		 location.reload();
+ 		    	}
+  	        },
+  	        error : function() {
+  	        	alert('失败。');
+  	        }
+  	  });
+ 
+ }
+ 
+ //删除
+ function delScenarios(id){
+ 
+ 	 var r=confirm('如果删除，连流程表里面的数据也会删除，确认删除?');
+     	if (!r) 
+           return; 
+
+     	 var ids=[];
+    	if(id){
+    		ids.push(id);
+    	}else{
+    		
+        	 var roleids = document.getElementsByName("customerIds");
+    		 for ( var j = 0; j < roleids.length; j++) {
+    		    if (roleids.item(j).checked == true) {
+    		    	ids.push(roleids.item(j).value);
+    		    }
+    		 }
+    	}
+		
+    	if(!ids.length){
+    		alert("至少选择一条。");
+    		 return false; 
+    	}
+  		 $.post("{:url('delScenarios')}",{'id':ids},function(data){
+				if(data){
+					alert(data);
+				}else{
+					window.location.href=window.location.href;
+				}
+		}); 
+ }
+
+
+ </script>
+  
+</div>
+
+
+ <!--  新增  -->
+<div class="modal fade" id="checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  
+	  <div class="modal-dialog">
+			
+			<div class="modal-content">
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								 <span aria-hidden="true">×</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">添加话术场景</h4>
+				 </div>
+				 <div class="modal-body pagelists">
+					 
+							
+						<form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+					
+								 <div class="form-group">
+									<label class="col-lg-4 control-label">场景名称：</label>
+									<div class="col-lg-8 col-sm-8">
+										 <input type="text" class="form-control textwidth" name="name" id="name" />
+									</div>
+								</div>
+							
+								<div class="form-group">
+									<label class="col-lg-4 control-label">行业类型：</label>
+									<div class="col-lg-8 col-sm-8">
+										
+										<select class="form-control textwidth" id="tradeType" name="tradeType">
+											 <option value="0">请选择行业</option>
+											 <option value="1">金融</option>
+											 <option value="2">贷款</option>
+											 <option value="3">房产</option>
+											 <option value="4">装修</option>
+											 <option value="5">汽车</option>
+											 <option value="6">教育</option>
+											<option value="7">其他</option>
+										</select>
+									
+									</div>
+								</div>
+								
+								<div class="form-group" id="tplContent">
+									<label class="col-lg-4 control-label">是否使用模板：</label>
+									<div class="col-lg-8 col-sm-8">
+										<select class="form-control textwidth" id="is_tpl" name="is_tpl">
+											<option value="0">空白模板</option>
+												{volist name="checklist" id="item"}
+													
+														<option value="{$item.id}">{$item.name}</option>
+													
+												{/volist}
+											</select>
+									</div>
+								</div>
+
+								<div class="form-group" id="breakContent">
+									<label class="col-lg-4 control-label">是否支持自动打断：</label>
+									<div class="col-lg-8 col-sm-8">
+										<select class="form-control textwidth" id="break" name="break">
+											<option value="0">是</option>
+											<option value="1">否</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="form-group" style="text-align: center;">
+										<input type="hidden" name="scenariosId" id="scenariosId" value="">
+										<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+										<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+							 </div>
+			
+				
+					 </form>
+					 
+						
+				 </div>
+				 <div style="clear:both"></div>
+				
+		 </div>
+						 
+    </div>
+ 
+		<script type="text/javascript">
+				
+			function showModal(id){
+				 
+				 if(id){
+							var url = "{:url('user/Scenarios/getmessage')}";	
+						 $.ajax({
+								url : url,
+								dataType : "json", 
+								type : "post",
+								data : {'id':id},
+								success: function(data){	
+									
+										 $("#name").val(data.name);
+										 $("#scenariosId").val(data.id);
+											 document.getElementById('tradeType').value = data.type;
+										 //$("#is_tpl option[value="+data.type+"]").;
+										 $("#tplContent").css("display","none");
+										 $("#breakContent").css("display","none");
+													 
+										 $('#checkpage').modal('show')
+								},
+								error : function() {
+									alert('审核信息失败。');
+								}
+							});
+					
+				 }else{
+					 
+						 $("#scenariosId").val("");
+
+						 $("#tplContent").css("display","block");
+						 $("#breakContent").css("display","block");
+						 $('#checkpage').modal('show');
+						 
+				 }
+				
+			
+					 
+			}
+		 
+		 
+		 //检查表单的必填项
+			function checkform(){
+
+					var name = $("#name").val();
+					if(!name){
+						alert("场景名不能为空"); 
+						return false; 
+					}
+					
+				 var scenariosId = $("#scenariosId").val();
+
+				 var href = "{:url('user/Scenarios/addScenarios')}";
+				 if(scenariosId){
+						 href = "{:url('user/Scenarios/editscenarios')}";
+				 }
+
+				 
+				 $.ajax({
+						 type: "POST",
+						 dataType:'json',
+						 url: href,
+						 cache: false,
+						 data: $("#form").serialize(),
+						 success: function(data) {
+							if (data.code == 0) {
+								 // alert(data.msg);
+									$('#checkpage').modal('hide');
+								 location.reload();
+							}else{
+								 alert(data.msg);
+
+							}
+					
+						 },
+						 error: function(data) {
+							 alert("提交失败");
+						 }
+				 })  
+			}
+
+
+		
+		</script>
+		
+   
+</div>
+	
+	 <!-- 审核 -->
+	<div class="modal fade" id="myLargepage" tabindex="1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+	  
+		  <div class="modal-dialog">
+				
+				<div class="modal-content">
+					
+						<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									 <span aria-hidden="true">×</span>
+								</button>
+								<h4 class="modal-title">话术审核</h4>
+					  </div>
+						
+					 <div class="modal-body pagelists">
+						 
+								
+							<form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+						
+						  <div class="form-group" id="breakContent" style="display: block;">
+									<label class="col-lg-4 control-label">备注：</label>
+									<div class="col-lg-8 col-sm-8">
+								   	<textarea id="remarks" style="width: 250px;height:auto">null</textarea>
+
+									</div>
+								</div>
+						 
+								
+									<div class="form-group" style="text-align: center;">
+											<input type="hidden" name="scenariosId" id="scenariosId" value="">
+											<button class="btn btn-success submit-btn" onclick="auditing(0);" type="button">通 过</button>
+											<button class="btn btn-success submit-btn" onclick="auditing(3);" type="button">不通过</button>
+
+											<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								 </div>
+				
+					
+						 </form>
+						 
+							
+					 </div>
+					 <div style="clear:both"></div>
+					
+			 </div>
+							 
+	    </div>
+	   
+	      <script type="text/javascript">
+		      	
+		      function showExamine(id){
+	
+						
+					  	$("#scenariosId").val(id);
+						
+
+							var url = "{:url('user/Scenarios/getmessage')}";	
+							$.ajax({
+									url : url,
+									dataType : "json", 
+									type : "post",
+									data : {'id':id},
+									success: function(data){	
+										
+											$("#remarks").val(data.remark);
+										
+											$('#myLargepage').modal('show');
+
+									},
+									error : function() {
+										alert('审核信息失败。');
+									}
+								});
+						
+
+		 
+		      }
+		     
+				 
+				 //检查表单的必填项
+					function auditing(status){
+						
+			
+						var scenariosId = $("#scenariosId").val();
+						var remarks = $("#remarks").val();
+
+
+						var url = "{:url('user/Scenarios/auditing')}";	
+							 $.ajax({
+											url : url,
+											type : "post",
+											data : {'scenariosId':scenariosId,'remarks':remarks,'status':status},
+											success: function(data){	
+												
+												$('#myLargepage').modal('hide');
+
+												if(data){
+													alert(data);
+												}else{
+													location.reload();
+												}
+											
+											},
+											error : function() {
+												alert(data);
+											}
+								});
+						
+
+						 
+					}
+	
+	
+		    
+	      </script>
+	      
+	   
+	  </div>
+	
+	
+
+
+
+
+
+
+{/block}
+

@@ -1,0 +1,576 @@
+{extend name="public/base" /}
+{block name="body"}
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/new_liens.css"/>
+<style type="text/css">
+  .table tbody>tr>td {
+  padding: 12px 8px;
+  }
+  .table-responsive {
+  min-height: .01%;
+  overflow-x: hidden;
+  }
+  
+  .messageinfo{
+   text-align:right;
+   
+  }
+  .infotable tr td{
+   padding:5px;
+  }
+  
+  .textwidth{
+  	width:250px;
+  }
+  
+  .l-head{
+  padding: 15px;	
+  }
+  
+  .setmarginB {
+    margin-bottom: 20px;
+  }
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+	  <ul class="nav nav-tabs setmarginB" role="tablist">
+			<li role="presentation" class="active">
+				 <a href="#home" aria-controls="home" role="tab" data-toggle="tab">机器人管理</a>
+			</li>
+		</ul>
+		<!--<header class="main-box-header n_head_box n_head_box_b clearfix">-->
+		<!--  <div class="pull-left">-->
+		<!--	  <span class="n_panel_title"><i class="icon iconfont icon-xianluguanli"></i>线路管理</span>-->
+		<!--  </div>-->
+		<!--  {/* if condition="$super > 0" */}-->
+		<!--		<button class="btn btn-primary pull-left" onclick="showModal(0);">添加</button>-->
+		<!--	{/* /if */}-->
+		<!--</header>-->
+		
+		   
+		<div class="main-box-body clearfix">
+		  <div class="tab-content">
+		    <!--机器人管理-->
+		    <div role="tabpanel" class="table-responsive tab-pane active" id="home">
+		    	<div  class="pull-left l-head">
+			    	<form class="form-inline"  method="get" role="form">
+						  <div class="form-group">
+						    <input type="text" class="form-control" name="userName" id="userName"  placeholder="请输入用户名" value="">
+						  </div>
+						  <div class="form-group">
+						    <input type="text" class="form-control" name="openuserName" id="openuserName" value=""   placeholder="请输入开通者">
+						  </div>
+					    <button class="btn btn-primary" type="submit">搜索</button>
+					    <button class="btn btn-primary" type="reset">重置</button>
+					    <button class="btn btn-primary " onclick="showModal(0);">分配</button>	
+				  </form>
+				 </div>
+				 
+					<!--<div class="form-group"> -->
+					<!--		<label class="statusSelect">企业名称：</label>-->
+					<!--		<select style="width:100px;" name="status" id="member_name" class="form-control">-->
+					<!--			<option value="">全部</option>-->
+					<!--			<option value="" selected="">全部</option>-->
+					<!--		</select>-->
+					<!--</div>-->
+					<!--<span class="btn btn-primary" type="button">查询</span>-->
+					<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+								<th class="text-center">用户名</th>
+								<!--<th class="text-center">主叫号码</th>-->
+								<!--<th class="text-center">呼叫前缀</th>-->
+								<!--<th class="text-center">对接IP</th>-->
+								<th class="text-center">开通者用户</th>
+							
+								<th class="text-center">机器人数量</th>
+								<th class="text-center">状态</th>
+								<th class="text-center">开始时间</th>
+								<th class="text-center">结束时间</th>
+								<th class="text-center">备注</th>
+								<th class="text-center">操作</th>  
+						</tr>
+					</thead>
+					<tbody>
+						{volist name="robot_datas['data']" id="data"}
+							<tr>
+								<td class="text-center">{$data.member_name}</td>
+								<td class="text-center">{$data.p_name}</td>
+								<td class="text-center">{$data.number}</td>
+								<td class="text-center">
+									{$data.state_name}
+								</td>
+								<td class="text-center">{$data.start_time}</td>
+								<td class="text-center">{$data.end_time}</td>
+								<td class="text-center">{$data.note}</td>
+								
+								<td class="text-center">
+										<a href="javascript:void(0);" onclick="show_extend_form({$data.id})">延长</a>
+											 &nbsp;
+										<a href="javascript:void(0);" onclick="show_recovery_form({$data.id})">回收</a>
+								</td>
+							</tr>
+							{/volist}
+					</tbody>
+				</table>
+				{$robot_datas['paging']}
+			</div>
+		    <!--线路配置-->
+		    <div role="tabpanel" class="tab-pane" id="profile">
+		      <div class="n_main clearfix">
+		        <div class="main_left">
+		          <div class="component-base-button">
+		            <!--<button class="btn btn-primary" onclick="showEnModal(0)" target-form="ids">+&nbsp;添加企业</button>-->
+		          </div>
+		         <!-- <div class="n_keysearch">-->
+        			<!--	<input type="text" class="key_uid">-->
+        			<!--</div>-->
+        			<div class="main_left_content">
+							</div>
+		        </div>
+		        <div class="main_right">
+		          <div class="main_right_content">
+		            <div class="distribution">
+		               <button class="btn btn-primary portion" onclick="showlineModal(0)" target-form="ids">分配线路</button>
+		               <!--<button class="btn btn-primary save" onclick="" target-form="ids">保存</button>-->
+          			</div>
+          			<div class="line_main_content clearfix">
+          			  
+          			</div>
+		          </div>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+					
+	</div>					
+    
+</div>
+  
+</div>
+
+
+
+<!-- 分配机器人 -->
+<div class="modal fade" id="checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">分配机器人</h4>
+       </div>
+       <div class="modal-body pagelists">
+	        <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+					   <!--  <div class="form-group">-->
+								<!--<label class="col-lg-4 control-label"><i>*</i>线路商名称：</label>-->
+								<!--<div class="col-lg-8 col-sm-8">-->
+								<!--	 <input type="text" class="form-control textwidth" name="name" id="name" />-->
+								<!--</div>-->
+					   <!-- </div>-->
+						 <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>用户：</label>
+								<div class="col-lg-8 col-sm-8">
+								    <select class="form-control textwidth" id="member_id" name="member_id">
+										    <option value="">请选择用户</option>			
+										    {volist name="users" id='user'}
+													<option value="{$user.id}">{$user.username}</option>
+												{/volist}
+										</select>
+								</div>
+					    </div>
+						  <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>分配数量：</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="number" id="number" />
+								</div>
+					    </div>
+						
+					     <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>开通时长：</label>
+								<div class="col-lg-8 col-sm-8">
+								    <select class="form-control textwidth" id="duration" name="duration">
+										    <option value="">请选择开通时长</option>			
+												<option value="7">一星期</option>
+												<option value="30">一个月</option>
+												<option value="365">一年</option>
+										</select>
+								</div>
+					    </div>
+							<div class="form-group">
+								<label class="col-lg-4 control-label">备注：</label>
+								<div class="col-lg-8 col-sm-8">
+									<textarea class="form-control textwidth" id="note" name="note"></textarea>
+								</div>
+							</div>
+
+
+					    <div class="form-group" style="text-align: center;">
+							   	<input type="hidden" name="deviceId" id="deviceId" value="{$thisId|default=''}">
+								  <input type="hidden" name="simId" id="simId" value="">
+									<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						 </div>
+		
+			
+		     </form>
+				 
+					
+       </div>
+       <div style="clear:both"></div>
+      
+			
+	 
+	 </div>
+           
+  </div>
+
+</div>
+
+<!--延长机器人有效期-->
+<div class="modal fade" id="extend_checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+		
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">延长机器人有效期</h4>
+       </div>
+       <div class="modal-body pagelists">
+				 
+          	
+	        <form id="extend_form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+	      
+					   <!--  <div class="form-group">-->
+								<!--<label class="col-lg-4 control-label"><i>*</i>线路商名称：</label>-->
+								<!--<div class="col-lg-8 col-sm-8">-->
+								<!--	 <input type="text" class="form-control textwidth" name="name" id="name" />-->
+								<!--</div>-->
+					   <!-- </div>-->
+						 <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>用户:</label>
+								<div class="col-lg-8 col-sm-8" id='extend_username'>
+								</div>
+					    </div>
+						  <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>分配数量</label>
+								<div class="col-lg-8 col-sm-8" id='extend_number'>
+								</div>
+					    </div>
+						
+					     <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>延长时间:</label>
+								<div class="col-lg-8 col-sm-8">
+								    <select class="form-control textwidth" id="extend_duration" name="extend_duration">
+										    <option value="">请选择开通时长</option>			
+												<option value="7">一星期</option>
+												<option value="30">一个月</option>
+												<option value="365">一年</option>
+										</select>
+								</div>
+					    </div>
+							<div class="form-group">
+								<label class="col-lg-4 control-label">备注：</label>
+								<div class="col-lg-8 col-sm-8" id='extend_note'>
+									
+								</div>
+							</div>
+					    <div class="form-group" style="text-align: center;">
+									<button class="btn btn-success submit-btn" id='extend_submit' type="button">确 定</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						 </div>
+		
+			
+		     </form>
+				 
+					
+       </div>
+       <div style="clear:both"></div>
+      
+			
+	 
+	 </div>
+           
+  </div>
+
+</div>
+
+<!--recovery-->
+
+<div class="modal fade" id="recovery_checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+		
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">回收机器人</h4>
+       </div>
+       <div class="modal-body pagelists">
+				 
+          	
+	        <form id="recovery_form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+	      
+					   <!--  <div class="form-group">-->
+								<!--<label class="col-lg-4 control-label"><i>*</i>线路商名称：</label>-->
+								<!--<div class="col-lg-8 col-sm-8">-->
+								<!--	 <input type="text" class="form-control textwidth" name="name" id="name" />-->
+								<!--</div>-->
+					   <!-- </div>-->
+						 <div class="form-group">
+								<label class="col-lg-4 control-label"><i>*</i>回收机器人的数量:</label>
+								<div class="col-lg-8 col-sm-8" id='recovery_username'>
+									<input type="number" id='recovery_number' />
+								</div>
+					    </div>
+					    <div class="form-group" style="text-align: center;">
+									<button class="btn btn-success submit-btn" id='recovery_submit' type="button">确 定</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						 </div>
+		
+			
+		     </form>
+				 
+					
+       </div>
+       <div style="clear:both"></div>
+      
+			
+	 
+	 </div>
+           
+  </div>
+
+</div>
+<script type="text/javascript">
+		
+	function showModal(id){
+	
+		 //if(id){
+			// 	var url = "{:url('user/Device/getLineInfo')}";	
+			// 	 $.ajax({
+			// 			url : url,
+			// 			dataType : "json", 
+			// 			type : "post",
+			// 			data : {'id':id},
+			// 			success: function(data){
+			// 					 $("#phone").val(data.phone);
+			// 					 $("#member_id").val(data.member_id);
+			// 					 $("#name").val(data.name);
+								
+			// 					$("#call_prefix").val(data.call_prefix);
+			// 					$("#inter_ip").val(data.inter_ip);
+			// 					 $("#gateway").val(data.gateway);
+			// 					 $("#remark").val(data.remark);
+			// 					 $("#simId").val(data.id);
+			// 					  $("#type").val(data.type);
+			// 					// $("#type").get(1).selectedIndex=1; 
+								
+			// 					 $('#checkpage').modal('show')
+			// 			},
+			// 			error : function() {
+			// 				alert('获取信息失败。');
+			// 			}
+			// 		});
+		 //}else{
+
+				 $('#checkpage').modal('show');
+				 
+		 //}
+	}
+	//显示回收表单
+	function show_recovery_form(id)
+	{
+		if(id){
+			var url = '{:url("get_robot_data_api")}';
+			$.ajax({
+				type:'post',
+				dataType:"json",
+				data:{
+					id:id
+				},
+				url:url,
+				success:function(result){
+					console.log(result);
+					if(result.code === 0){
+						$('#recovery_submit').attr('onclick', 'submit_recovery_form('+id+')');
+						$('#recovery_checkpage').modal('show');
+					}else{
+						alert('获取数据失败');
+					}
+				},
+				error:function(){
+					alert('获取数据失败');
+				}
+			});
+		}
+	}
+	
+	//提交回收表单
+	function submit_recovery_form(id)
+	{
+		if(id){
+			var number = $('#recovery_number').val();
+			if(!number){
+				alert('请输入回收的机器人数量');
+				return false;
+			}
+			var url = '{:url("recovery_robot_api")}';
+			$.ajax({
+				type:'post',
+				dataType:'json',
+				data:{
+					id:id,
+					number:number
+				},
+				url:url,
+				success:function(result){
+					console.log(result);
+					if(result.code === 0){
+						alert('成功');
+						$('#recovery_checkpage').modal('hide');
+						window.location.href = '';
+					}else if(result.code === 4){
+						alert('机器人数量不足');
+					}else{
+						alert('失败');
+						$('#recovery_checkpage').modal('hide');
+					}
+				},
+				error:function(){
+					alert('提交失败');
+					$('#recovery_checkpage').modal('hide');
+				}
+			});
+		}
+	}
+	
+	//显示延长表单
+	function show_extend_form(id)
+	{
+		if(id){
+			var url = '{:url("get_robot_data_api")}';
+			$.ajax({
+				type:'post',
+				dataType:"json",
+				data:{
+					id:id,
+				},
+				url:url,
+				success:function(data) {
+					console.log(data);
+					if(data.code === 0){
+						$('#extend_username').text(data.data.member_name);
+						$('#extend_number').text(data.data.number);
+						$('#extend_note').text(data.data.note);
+						//绑定提交事件
+						$('#extend_submit').attr('onclick', 'submit_extend_from('+id+')');
+						$('#extend_checkpage').modal('show');
+					}else{
+						alert('获取数据失败');
+					}
+				},
+				error:function(data){
+					alert('获取数据失败');
+					console.log('错误');
+				}
+			})
+		}
+	}
+	//提交延长时间表单
+	function submit_extend_from(id)
+	{
+		if(id){
+			var data = {
+				id:id,
+				duration:$('#extend_duration').val()
+			};
+			if(!data.duration){
+				alert('请选择延长时间');
+				return false;
+			}
+			var url = "{:url('extend_duration_api')}";
+			$.ajax({
+				type:'post',
+				data:data,
+				dataType:'json',
+				url:url,
+				success:function(result){
+					if(result.code == 0){
+						alert('提交成功');
+						$('#extend_checkpage').modal('hide');
+						window.location.href = '';
+					}else{
+						alert('提及失败');
+						$('#extend_checkpage').modal('hide');
+					}
+					
+				},
+				error:function(){
+					alert('提交失败');
+					$('#extend_checkpage').modal('hide');
+				}
+			});
+		}
+	}
+	
+ 
+	//检查表单的必填项
+	function checkform(){
+
+		var member_id = $('#member_id').val();
+		if(!member_id){
+			alert('请选择用户');
+			return false;
+		}
+		var number = $('#number').val();
+		if(!number){
+			alert('请输入数量');
+			return false;
+		}
+		var duration = $('#duration').val();
+		if(!duration){
+			alert('请输入时长');
+			return false;
+		}
+		var note = $('#note').val();
+		var href = '{:url("open_up_api")}';
+		$.ajax({
+			type: "POST",
+			dataType:'json',
+			url: href,
+			cache: false,
+			data: $("#form").serialize(),
+			success: function(data) {
+				if(data.code == 0){
+					alert('分配成功');
+					$('#checkpage').modal('hide');
+					window.location.href = '';
+				}else if(data.code == 4){
+					alert('机器人数量不足');
+				}else{
+					alert('分配失败');
+					$('#checkpage').modal('hide');
+				}
+				console.log(data);
+			},
+			error: function(data) {
+				 alert("提交失败");
+				 $('#checkpage').modal('hide');
+			}
+		})  
+	}
+	
+	//recovery_robot_api
+
+
+
+</script>
+
+{/block}
+

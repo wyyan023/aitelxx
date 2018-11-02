@@ -1,0 +1,351 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<!-- datepicker statr -->
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+
+<style type="text/css">
+.textwidth{
+width:250px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.nav-tabs {
+border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+color: #555;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+background-color: #FFFFFF;
+border-color: #FFFFFF;
+color: #FFFFFF;
+border-radius: 0;
+background-clip: padding-box;
+}
+.margintop{
+margin-top:20px;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <header class="main-box-header clearfix">
+		   <div class="pull-left">
+			  <h1><span>{$current|default=''}</span>用户信息</h1>
+		   </div>
+		</header>
+     </div>
+     <div class="panel-body">
+	    <ul class="nav nav-tabs" role="tablist">
+		    <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">基本信息</a></li>		 
+		    <li role="presentation"><a href="#messages" role="tab" data-toggle="tab">收付款信息</a></li>
+		</ul>
+	    <div class="main-box-body clearfix">
+	        <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+	    
+	           <div class="tab-content">
+				  <div role="tabpanel" class="tab-pane active" id="home">
+					    <div class="form-group">
+							<label class="col-lg-2 control-label">用户名：</label>
+							<div class="col-lg-10 col-sm-10">
+							   <input type="text" class="form-control textwidth" name="username" id="username" value="{$mlist.username|default=''}" />
+							</div>
+					    </div>
+		
+					    <div class="form-group">
+							<label class="col-lg-2 control-label">昵称：</label>
+							<div class="col-lg-10 col-sm-10">
+								<input type="text" class="form-control textwidth" name="nickname" id="nickname" value="{$mlist.nickname|default=''}" />
+							</div>
+					    </div>
+					   
+					    <div class="form-group">
+							<label class="col-lg-2 control-label">邮件：</label>
+							<div class="col-lg-10 col-sm-10">
+		 					   <input type="text" class="form-control textwidth" name="email" id="email" value="{$mlist.email|default=''}" />
+							</div>
+					    </div>
+					    
+			            <div class="form-group">
+							<label class="col-lg-2 control-label">头像：</label>
+							<div class="col-lg-10 col-sm-10">
+			                      {:widget('common/Form/show',array(array('type'=>'picture','name'=>'logo'),$picdata))}			
+							</div>
+					    </div>
+			
+					    <div class="form-group">
+							<label class="col-lg-2 control-label">手机号码：</label>
+							<div class="col-lg-10 col-sm-10">
+							   <input name="mobile" id="mobile" class="form-control textwidth" placeholder="手机号码" value="{$mlist.mobile|default=''}" />
+							</div>
+					    </div>
+		
+			            <div class="form-group">
+							<label class="col-lg-2 control-label">性别：</label>
+							<div class="col-lg-10 col-sm-10" style="line-height:33px;">
+			                      <input id="yessex" name="sex"  
+							      {eq name="$mlist.sex|default='1'" value="1" }
+				                    checked
+				                  {/eq}  value="1"  alt="男" type="radio">男 &nbsp; &nbsp;
+							   <input id="notsex" name="sex" 
+							    {eq name="$mlist.sex|default=''" value="0" }
+				                    checked
+				                 {/eq} value="0"  alt="女" type="radio">女
+			
+						     </div>
+					    </div>
+							
+							
+					    
+					   <div class="form-group">
+							<label class="col-lg-2 control-label">生日:</label>
+							<div class="col-lg-10 col-sm-10">
+							   
+						        <div class="input-group textwidth">
+								  <input type="text" class="form-control" id="birthday" name="birthday" value="{$mlist.birthday|default=$create_time}" readonly="" size="10">
+								  <span class="input-group-addon"><i class="fa fa-th"></i></span>
+								</div>
+								<script>
+								$('#birthday').fdatepicker({
+									format: 'yyyy-mm-dd',
+									pickTime: true,
+								});
+								</script>	
+											
+							</div>
+						</div>
+		  
+					 	<!--
+					    <div class="form-group">
+							<label class="col-lg-2 control-label">qq：</label>
+							<div class="col-lg-10 col-sm-10">
+							  <input type="text" class="form-control textwidth" name="qq" id="qq" value="{$mlist.qq|default=''}" />
+							</div>
+					    </div>
+					     -->
+					    <div class="form-group">
+							<label class="col-lg-2 control-label">用户积分：</label>
+							<div class="col-lg-10 col-sm-10">
+									<input type="text" class="form-control textwidth" name="score" id="score" value="{$mlist.score|default=''}" />
+							</div>
+					    </div>
+				
+		
+		                 <div class="form-group">
+							<label class="col-lg-2 control-label">余额：</label>
+							<div class="col-lg-10 col-sm-10">
+							   <input type="text" class="form-control textwidth" readonly="readonly" name="money" id="money" value="{$mlist.money|default=''}" />
+							</div>
+					     </div>
+			
+						<div class="form-group">
+							<div class="col-lg-offset-2 col-lg-10">	<!--   target-form="form-horizontal" -->	
+							    <input type="hidden" name="uid" id="uid" value="{$mlist.uid|default=''}" />			  
+								<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+								<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+							</div>
+						 </div>
+		
+
+					  </div>
+					
+					<div role="tabpanel" class="tab-pane" id="messages" >
+			         
+					    
+					     <div class="form-group">
+							<label class="col-lg-2 control-label">支付宝账号：</label>
+							<div class="col-lg-10 col-sm-10">
+							   <input type="text" class="form-control textwidth" name="alipay" id="alipay" value="{$mlist.alipay|default=''}" />
+							</div>
+					    </div>
+					    
+					     <div class="form-group">
+							<label class="col-lg-2 control-label">开户银行名称：</label>
+							<div class="col-lg-10 col-sm-10">
+							   <input type="text" class="form-control textwidth" name="bank_name" id="bank_name" value="{$mlist.bank_name|default=''}" />
+							</div>
+					    </div>
+					    
+					     <div class="form-group">
+							<label class="col-lg-2 control-label">开户银行帐号：</label>
+							<div class="col-lg-10 col-sm-10">
+							   <input type="text" class="form-control textwidth" name="bank_account" id="bank_account" value="{$mlist.bank_account|default=''}" />
+							</div>
+					    </div>
+					    
+					    <div class="form-group">
+							<label class="col-lg-2 control-label">开户银行地址：</label>
+							<div class="col-lg-10 col-sm-10">
+							   <input type="text" class="form-control textwidth" name="bank_address" id="bank_address" value="{$mlist.bank_address|default=''}" />
+							</div>
+					    </div>
+					    
+					      <div class="form-group">
+							<label class="col-lg-2 control-label" style="margin-top:53px;">微信提现二维码：</label>
+							<div class="col-lg-10 col-sm-10">
+							   <div style="float:left;">
+							      <img src="{$mlist.withdraw_qrcode|default=''}" id="withdrawqrcode" style="width:150px;"/>
+							      <input type="hidden" id="weixintixianerweima" name="withdraw_qrcode" value="{$mlist.withdraw_qrcode|default=''}" />
+							      
+							   </div>
+							  
+							    <div style="float:left;position: relative;">
+							         <button class="btn btn-success submit-btn" style="margin-left:10px;margin-top: 50px;">上传二维码</button>
+							         <div style="position: absolute; top: 0px;left:0px;height: 28px;cursor: pointer;bottom: auto; right: auto;">
+					                   <input type="file" name="file" id="myImg" onchange="chang(this);" style="position: absolute; top: 50px;left:0px;width:80px;height:34px; opacity: 0; filter:Alpha(opacity=0); "  multiple="multiple" >			
+								     </div>
+							    </div> 
+						  
+							
+							</div>
+					    </div>
+					    
+					    <div class="form-group">
+							<div class="col-lg-offset-2 col-lg-10">	<!--   target-form="form-horizontal" -->	
+								<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+								<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+							</div>
+						 </div>
+					
+					</div>	
+				</div>	
+	
+		     </form>
+	     </div>
+		
+	  </div>
+</div>	
+					
+	
+					
+<!-- 样式文件 -->
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/umeditor/themes/default/css/umeditor.css">
+<!-- 配置文件 -->
+<script type="text/javascript" src="__PUBLIC__/plugs/umeditor/umeditor.config.js?vi=ddd"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__PUBLIC__/plugs/umeditor/umeditor.js"></script>
+
+<script type="text/javascript">
+   $(function(){
+        var um = UM.getEditor('detail',{ 
+        	imageUrl: "{:url('upload/editor')}"
+        });
+    }); 
+</script>
+
+<script type="text/javascript">
+
+function chang(obj){
+	
+    var file = obj.files[0]; 	
+     //判断类型是不是图片
+     if(!/image\/\w+/.test(file.type)){   
+             alert("请确保文件为图像类型"); 
+             return false; 
+     } 
+     var reader = new FileReader(); 
+     reader.readAsDataURL(file); 
+     reader.onload = function(e){ 
+          //   alert(this.result); //就是base64
+          //  imgdata = this.result;
+    	 var href = "{:url('User/Member/uploadimg')}";
+		 $.ajax({
+		     type: "POST",
+		     dataType:'json',
+		     url: href,
+		     cache: false,
+		     data:{'picdata':this.result},
+		     success: function(data) {
+		    	 if (data.code == 1) {
+		    		 $("#weixintixianerweima").val(data.url);
+		    	     $("#withdrawqrcode").attr("src",data.url);
+		    	}else{
+		    		 alert("上传图片失败");
+		    	
+		    	} 
+		     },
+		     error: function(data) {
+		    	 alert("上传图片失败");
+		     }
+		 })  
+          
+     }  
+
+}
+
+//检查表单的必填项
+function checkform(){
+
+	  var username = $("#username").val();
+	  if(!username){
+		  alert("用户名不能为空"); 
+		  return false; 
+	  }
+	  if(username.length>60){
+		  alert("用户名限60个字内"); 
+		  return false; 
+	  } 
+	  
+	  var mobile = $("#mobile").val();
+	  if(!mobile){
+		  alert("手机号码不能为空"); 
+		  return false; 
+	  }
+	  
+	  var mobileREa = /^1[3|4|5|7|8]\d{9}$/;
+	   var matrix = mobileREa.test(mobile);
+	    //如果手机号码不能通过验证
+	   if(!matrix){
+		    alert("手机号码不符合规则！");
+			return false;
+	   } 
+	  
+
+	// var query = $("#form").serialize();
+	 var href = window.location.href;
+	 
+	 $.ajax({
+	     type: "POST",
+	     dataType:'json',
+	     url: href,
+	     cache: false,
+	     data: $("#form").serialize(),
+	     success: function(data) {
+	    	if (data.code == 1) {
+	    	     alert(data.msg + ' 页面即将自动跳转~');
+	    	 	 location.href = data.url;
+	    	}else{
+	    		 alert(data.msg);
+	    		 location.reload();
+	    	}
+		
+	     },
+	     error: function(data) {
+	    	 alert("提交失败");
+	     }
+	 })  
+}
+</script>
+
+</div>
+
+</div>
+
+{/block}
+

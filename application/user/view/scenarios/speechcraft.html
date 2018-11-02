@@ -1,0 +1,173 @@
+<div class="modal fade" id="speechcraft" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  
+	  <div class="modal-dialog modal-sm" style="width: 360px;">
+			
+			<div class="modal-content">
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								 <span aria-hidden="true">×</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">添加话术场景</h4>
+				 </div>
+				 <div class="modal-body pagelists">
+							
+						<form id="formScenariosform" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+					
+								 <div class="form-group">
+									<label class="col-lg-3 control-label">场景名称：</label>
+									<div class="col-lg-6 col-sm-6">
+										 <input type="text" class="form-control" placeholder="请输入场景名称" name="name" id="name" />
+									</div>
+								</div>
+							
+								<div class="form-group">
+									<label class="col-lg-3 control-label">行业类型：</label>
+									<div class="col-lg-6 col-sm-6">
+										
+										<select class="form-control" id="tradeType" name="tradeType">
+											 <option value="0">请选择行业</option>
+											 <option value="1">金融</option>
+											 <option value="2">贷款</option>
+											 <option value="3">房产</option>
+											 <option value="4">装修</option>
+											 <option value="5">汽车</option>
+											 <option value="6">教育</option>
+											<option value="7">其他</option>
+										</select>
+									
+									</div>
+								</div>
+								
+								<div class="form-group" id="tplContent">
+									<label class="col-lg-3 control-label">使用模板：</label>
+									<div class="col-lg-6 col-sm-6">
+										<select class="form-control" id="is_tpl" name="is_tpl">
+											<option value="0">空白模板</option>
+												{volist name="checklist" id="item"}
+													
+														<option value="{$item.id}">{$item.name}</option>
+													
+												{/volist}
+											</select>
+									</div>
+								</div>
+
+								<div class="form-group" id="breakContent">
+									<label class="col-lg-3 control-label">自动打断：</label>
+									<div class="col-lg-6 col-sm-6">
+										<select class="form-control" id="break" name="break">
+											<option value="0">是</option>
+											<option value="1">否</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="modal-footer" style="text-align: center;">
+										<input type="hidden" name="scenariosId" id="scenariosId" value="">
+										<button class="btn btn-primary submit-btn" onclick="formScenarios();" type="button">确 定</button>
+										<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+							 </div>
+			
+				
+					 </form>
+					 
+						
+				 </div>
+				 <div style="clear:both"></div>
+				
+		 </div>
+						 
+    </div>
+ 
+		<script type="text/javascript">
+				
+			function newScenariosModal(id){
+				 
+				 if(id){
+							var url = "{:url('user/Scenarios/getmessage')}";	
+						 $.ajax({
+								url : url,
+								dataType : "json", 
+								type : "post",
+								data : {'id':id},
+								success: function(data){	
+									
+										 $("#name").val(data.name);
+										 $("#scenariosId").val(data.id);
+											 document.getElementById('tradeType').value = data.type;
+										 //$("#is_tpl option[value="+data.type+"]").;
+										 $("#tplContent").css("display","none");
+										 $("#breakContent").css("display","none");
+													 
+										 $('#speechcraft').modal('show')
+								},
+								error : function() {
+									alert('审核信息失败。');
+								}
+							});
+					
+				 }
+				 else{
+					 
+					    $("#name").val("");
+
+						  $("#scenariosId").val("");
+							document.getElementById('tradeType').value = "0";
+							$("#is_tpl").val("0");
+              $("#break").val("1");
+						 $("#tplContent").css("display","block");
+						 $("#breakContent").css("display","block");
+						 $('#speechcraft').modal('show');
+						 
+				 }
+				
+		 
+			}
+		 
+		 
+		 //检查表单的必填项
+			function formScenarios(){
+
+					var name = $("#name").val();
+					if(!name){
+						alert("场景名不能为空"); 
+						return false; 
+					}
+					
+				 var scenariosId = $("#scenariosId").val();
+
+				 var href = "{:url('user/Scenarios/addScenarios')}";
+				 if(scenariosId){
+						 href = "{:url('user/Scenarios/editscenarios')}";
+				 }
+
+				 
+				 $.ajax({
+						 type: "POST",
+						 dataType:'json',
+						 url: href,
+						 cache: false,
+						 data: $("#formScenariosform").serialize(),
+						 success: function(data) {
+							if (data.code == 0) {
+								  
+									$('#speechcraft').modal('hide');
+								 location.reload();
+							}else{
+								 alert(data.msg);
+
+							}
+					
+						 },
+						 error: function(data) {
+							 alert("提交失败");
+						 }
+				 })  
+			}
+
+
+		
+		</script>
+		
+   
+</div>

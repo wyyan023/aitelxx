@@ -1,0 +1,268 @@
+{extend name="public/base" /}
+{block name="body"}
+
+
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+
+
+<style type="text/css">
+.table tbody>tr>td {
+padding: 12px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+
+h1 {
+    clear: both;
+    color: #03a9f4;
+    margin: 0 0 20px 0;
+    padding-left: 14px;
+    font-size: 2em;
+}
+
+
+.textwidth{
+width:250px;
+}
+.n_panel_title i {
+    font-size: 21px;
+  }
+</style>
+
+
+<div class="row">
+<div class="col-lg-12">
+   <div class="main-box clearfix">
+   
+       <header class="main-box-header n_head_box n_head_box_b clearfix">
+      <div class="pull-left">
+        <span class="n_panel_title"><i class="icon iconfont icon-jichushezhi"></i>基础设置</span>
+      </div>
+    </header>
+   
+       <div class="main-box-body clearfix">
+
+        <!--<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>-->
+         
+        <div class="table-responsive">    
+           <div class="panel-body">
+             
+             <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" method="post">  
+			      
+		              <div class="form-group">
+				          <label class="col-lg-2 control-label">网站名称:</label>
+				          <div class="col-lg-10 col-sm-10">
+				            <input type="text" class="form-control textwidth" name="websitename" id="websitename" value="{$res.val.websitename|default=""}" />
+				          </div>
+		             </div>
+					          
+					<div class="form-group">
+                        <label class="col-lg-2 control-label">官方网址:</label>
+                        <div class="col-lg-10 col-sm-10">
+                          <input type="text" class="form-control textwidth" name="websiteURL" id="websiteURL" value="{$res.val.websiteURL|default=""}" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">联系地址:</label>
+                        <div class="col-lg-10 col-sm-10">
+                          <input type="text" class="form-control textwidth" placeholder="办公地址" name="Contactaddress" id="Contactaddress" value="{$res.val.Contactaddress|default=""}" />
+                        </div>
+                    </div>
+                    
+                 <!--      
+	                 <div class="form-group">
+	                    <label class="col-lg-2 control-label">平台佣金:</label>
+	                    <div class="col-lg-10 col-sm-10" style="line-height: 40px;">
+	                      <input type="text" style="float: left;" class="form-control textwidth" placeholder="司机每单扣多少钱(百分比)" name="commission" id="commission" value="{$res.val.commission|default=""}" />
+	                      <span style="margin-left: 5px;">%</span>
+	                    </div>
+                    </div>
+                    
+	                  <div class="form-group">
+	                    <label class="col-lg-2 control-label">提现抽水:</label>
+	                    <div class="col-lg-10 col-sm-10" style="line-height: 40px;">
+	                      <input style="float: left;" type="text" class="form-control textwidth" placeholder="提现抽水(百分比)" name="drawwater" id="drawwater" value="{$res.val.drawwater|default=""}" />
+	                      <span style="margin-left: 5px;">%</span>
+	                    </div>
+                    </div>
+					          
+					          -->
+					          <div class="form-group">
+						          <label class="col-lg-2 control-label">网站描述:</label>
+						          <div class="col-lg-10 col-sm-10">
+						               <textarea name="desc" placeholder="描述" id="desc" style="width: 80%;height:100px;">{$res.val.desc|default=""}</textarea>
+						          </div>
+						        </div>
+					
+					
+					          <div class="form-group">
+					             <label class="col-lg-2 control-label">网站logo:</label>
+							          <div class="col-lg-10 col-sm-10">
+							               {:widget('common/Form/show',array(array('type'=>'picture','name'=>'cover'),$cover))}      
+							               <div class="help-block">建议使用宽280像素-高50像素内的GIF或PNG透明图片；点击下方"提交"按钮后生效。</div> 
+							          </div>
+					          </div>
+					              
+					           <div class="form-group">
+							          <label class="col-lg-2 control-label">网站备案号:</label>
+							          <div class="col-lg-10 col-sm-10">
+							            <input type="text" class="form-control textwidth" name="Websiterecordnumber" id="Websiterecordnumber" value="{$res.val.Websiterecordnumber|default=""}" />
+							          </div>
+					          </div>
+					          
+					            <div class="form-group">
+							          <label class="col-lg-2 control-label">网站联系方式:</label>
+							           <div class="col-lg-10 col-sm-10">
+                          <input type="text" class="form-control textwidth" placeholder="电话号码" name="contactmode" id="contactmode" value="{$res.val.contactmode|default=""}" />
+                         </div>
+					            </div>
+              
+					         <div class="form-group">
+					          <div class="col-lg-offset-2 col-lg-10">   
+					             <input type="hidden" name="configId" id="configId" value="{$res.id|default=''}" />    
+					             <span class="btn btn-success submit-btn" onclick="checkform();" type="submit">确 定</span>
+					          </div>
+					         </div>
+		     
+    
+             </form>
+
+             
+           </div>
+        </div>
+        
+  
+   
+     </div> 
+   </div>
+  </div>
+</div>
+  
+<script type="text/javascript"> 
+
+//检查表单的必填项
+function checkform(){
+
+  var websitename = $("#websitename").val();
+    if(!websitename){
+      alert("名称不能为空"); 
+      return false; 
+    }
+  
+      var websiteURL = $("#websiteURL").val();
+    if(!websiteURL){
+      alert("网址不能为空"); 
+      return false; 
+    }
+    
+      /* 
+    var starttime = $("#starttime").val();
+    var endtime = $("#endtime").val();
+
+  
+    if(endtime < starttime){
+      alert("“结束时间”不能小于“开始时间”"); 
+      return false; 
+    }
+     */
+    
+//   var commission = $("#commission").val();
+//   var reg = /^\d+(\.\d+)?$/;
+//   if (!reg.test(commission) || commission>100 ) { 
+//     alert("提成佣金不能为空并且只能是小于100的数字"); 
+//     return false; 
+//   }   
+//       
+//  var drawwater = $("#drawwater").val();
+//   if (!reg.test(drawwater) || drawwater>100 ) { 
+//     alert("提现佣金不能为空并且只能是小于100的数字"); 
+//     return false; 
+//   }   
+//   
+// 
+     var href = window.location.href;
+     console.log($("#form").serialize());
+     $.ajax({
+         type: "POST",
+         dataType:'json',
+         url: href,
+         cache: false,
+         data: $("#form").serialize(),
+         success: function(data) {
+           if (data.code) {
+             alert(data.msg);
+            // location.reload();
+          }else{
+             alert(data.msg + ' 页面即将自动跳转~');
+          } 
+           location.href = "{:url('User/System/setting')}";
+         },
+         error: function(data) {
+           alert("提交失败");
+         }
+     }) 
+
+}
+
+
+
+
+/*
+document.getElementById("externalWx").addEventListener("toggle",function(event){ 
+    if(event.detail.isActive){
+        $("#certfiles").attr('style','display: block;');
+        $("#keyfiles").attr('style','display: block;');
+        $("#mchIdGroup").attr('style','display: block;');
+        $("#partnerGroup").attr('style','display: block;');
+        $("#wxpay").val(1);
+    }else{
+      $("#certfiles").attr('style','display: none;');
+      $("#keyfiles").attr('style','display: none;');
+      $("#mchIdGroup").attr('style','display: none;');
+      $("#partnerGroup").attr('style','display: none;');
+      $("#wxpay").val(0);
+    }
+});
+
+ 
+document.getElementById("externalAli").addEventListener("toggle",function(event){ 
+    if(event.detail.isActive){
+        $("#alipay").val(1);
+    }else{
+      $("#alipay").val(0);
+    }
+});
+
+
+
+document.getElementById("externalBalance").addEventListener("toggle",function(event){ 
+    if(event.detail.isActive){
+        $("#balancepay").val(1);
+    }else{
+      $("#balancepay").val(0);
+    }
+});
+
+
+
+document.getElementById("externalCash").addEventListener("toggle",function(event){ 
+    if(event.detail.isActive){
+        $("#cashpay").val(1);
+    }else{
+      $("#cashpay").val(0);
+    }
+});
+
+*/
+
+
+ </script>
+
+  
+
+{/block}

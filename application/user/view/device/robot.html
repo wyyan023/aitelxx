@@ -1,0 +1,116 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+.table tbody>tr>td {
+padding: 12px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+
+.messageinfo{
+ text-align:right;
+ 
+}
+.infotable tr td{
+ padding:5px;
+}
+
+.textwidth{
+	width:250px;
+}
+.n_panel_title i {
+  font-size: 20px;
+}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	
+	
+	<div class="main-box clearfix">	
+		<header class="main-box-header n_head_box n_head_box_b clearfix">
+		  <div class="pull-left">
+			  <span class="n_panel_title"><i class="icon iconfont icon-wodejiqiren"></i>我的机器人</span>
+		  </div>
+		</header>
+		
+		   
+		<div class="main-box-body clearfix">
+		
+		
+			<!--<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>-->
+			<div class="table-responsive">
+			
+				<table class="table table-bordered table-hover">
+				<thead>
+						<tr>
+								<th class="text-center">编号</th>
+								<th class="text-center">号码</th>
+								<th class="text-center">sim卡位置</th>
+								<th class="text-center">呼叫次数</th>
+								<th class="text-center">状态</th>
+								<th class="text-center">备注</th>
+							
+						</tr>
+					</thead>
+				<tbody>
+						{volist  name="list" id="vo"}
+							<tr>
+						    <td class="text-center">
+									{$vo.id}
+								</td>
+					    	
+								<td class="text-center">
+									{$vo.phone}
+								</td>	
+								
+								<td class="text-center">{$vo.position}端口</td>
+								
+								<td class="text-center">
+									{$vo.call_num}
+								</td>
+								<td class="text-center">
+									{switch name="$vo.status"}
+										{case value="1"}
+												开启
+										{/case}
+										{default /}
+												关闭
+									{/switch}
+								</td>
+								<td class="text-center">
+								 {$vo.remark}
+								</td>
+							
+								
+							</tr>
+								{/volist}
+					</tbody>
+				</table>
+					
+			</div>
+				     
+		</div>
+					
+	</div>					
+    
+
+
+</div>
+
+ <script type="text/javascript">
+ 
+ /
+
+
+ </script>
+  
+</div>
+
+
+
+
+{/block}
+

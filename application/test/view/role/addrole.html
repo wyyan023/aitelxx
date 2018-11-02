@@ -1,0 +1,268 @@
+{extend name="public/base" /}
+{block name="body"}
+
+
+<style type="text/css">
+.textwidth{
+width:250px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.nav-tabs {
+border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+color: #555;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+background-color: #FFFFFF;
+border-color: #FFFFFF;
+color: #FFFFFF;
+border-radius: 0;
+background-clip: padding-box;
+}
+
+.proleAuth{
+    float: left;
+}
+
+.roleAuth{
+    float: left;
+}
+.field-status{
+    float: left;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+  
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <header class="main-box-header clearfix">
+       <div class="pull-left">
+        <h1><span>{$current|default=''}</span>角色页面</h1>
+       </div>
+     </header>
+         </div>
+    <div class="panel-body">
+        <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">基本信息</a></li>
+       
+        <li role="presentation" style="display:block;" ><a href="#messages" role="tab" data-toggle="tab">菜单权限</a></li>
+      </ul>
+      
+      <!-- Tab panes -->
+  <!--  <form id="form" method="post" onsubmit="return checkform();" class="form-horizontal"  action="" enctype="multipart/form-data" method="post">  
+      -->  
+    <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" > 
+        
+      <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="home">
+  
+          <div class="main-box-body clearfix">
+  
+          <div class="form-group" style="margin-top:10px;">
+          <label class="col-lg-2 control-label">角色名称：</label>
+          <div class="col-lg-10 col-sm-10">
+             <input type="text" class="form-control textwidth" name="roleName" id="roleName" value="{$rolelist.name|default=''}" />
+          </div>
+          </div>
+          
+
+          <div class="form-group">
+          <label class="col-lg-2 control-label">角色简介：</label>
+          <div class="col-lg-10 col-sm-10">
+            <textarea name="roleIntro" id="roleIntro" style="width: 50%;height:100px;padding:5px;">{$rolelist.intro|default=""}</textarea>
+            <div class="help-block"></div>
+          </div>
+          </div>
+    
+            <div class="form-group">
+          <label class="col-lg-2 control-label">角色状态：</label>
+          <div class="col-lg-10 col-sm-10" style="margin-top: 6px;">
+          
+                      <div class="field-status">
+                         <input type="radio" class="radio-radioed" name="status" 
+                          {eq name="$rolelist.status|default='1'" value="1" }
+                        checked
+                      {/eq} 
+                         value="1" title="启用">
+                         <span>启用</span>
+                      </div>
+                      <div class="field-status" style="margin-left:20px;">
+                         <input type="radio" class="radio-radioed" name="status"
+                          {eq name="$rolelist.status|default='1'" value="0" }
+                        checked
+                      {/eq} 
+                          value="0" title="禁用">
+                         <span>禁用</span>
+                      </div>
+         
+          </div>
+          <div style="clear:boht;"></div>
+          </div>
+                
+             
+          </div>
+      </div>
+    
+      <div role="tabpanel" class="tab-pane" id="messages">
+        
+           <div class="" style="margin-top:10px;">
+         {php}foreach($menulist as $k =>$vo)
+          {
+       
+         {/php}
+                   
+               <div>
+                    <div style="display:block; background-color: #f9f9f9;padding: 10px 10px 10px 10px;">
+                       <input type="checkbox" name="auth[]" onclick="childcheck(this)" class="proleAuth" value="{php}echo $vo['id'];{/php}" 
+                        {php}
+                          if(in_array( $vo['id'], $mlist)){
+                             echo 'checked';
+                           }
+                        {/php}
+                         data-pid="{php}echo $vo['pid'];{/php}">
+                       <div class=""><span>{php}echo $vo['title'];{/php}</span></div>
+                    </div>
+                        <div style="padding-left: 20px;">
+                         {php}
+                         if(isset($vo['child'])){
+                             foreach($vo['child'] as $key =>$cvo)
+                              {
+                         {/php}
+                               <div style="float:left; margin: 10px;">
+                                  <input type="checkbox" name="auth[]" onclick="checkparent(this);" class="roleAuth" value="{php}echo $cvo['id'];{/php}"
+                                    {php}
+                                    if(in_array($cvo['id'], $mlist)){
+                                       echo 'checked';
+                                     }
+                                    {/php}
+                                   data-pid="{php}echo $cvo['pid'];{/php}">
+                                   <div class="" style="float: right;margin-left:2px;">
+                                     <span>{php}echo $cvo['title'];{/php}</span>
+                                   </div>
+                                 </div>
+                           {php}
+                                }
+                              }
+                           {/php}     
+                       </div>
+                   </div>
+                   <div style="clear:both;"></div>
+                 {php} } {/php}        
+                  
+         </div>
+      </div>        
+            
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10"> 
+            <input type="hidden" name="roleId" id="roleId" value="{$rolelist.id|default=''}" />       
+          <span class="btn btn-success submit-btn" onclick="checkform();"  type="submit">确 定</span>
+          <button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+        </div>
+      </div>         
+    
+    </div>
+    
+     </form>
+    
+    
+    </div>
+</div>  
+          
+
+<script type="text/javascript">
+
+function childcheck(obj){     
+  if ($(obj).is(":checked")) {  
+    var cid = $(obj).parent().parent().last().find(".roleAuth").val();
+    //alert(cid);
+    //var dataid = $(obj).parent().parent().parent().first().find(".proleAuth").attr('data-pid');
+      $(obj).parent().parent().last().find(".roleAuth").prop("checked","checked");
+  
+  }else{
+    $(obj).parent().parent().last().find(".roleAuth").prop("checked",false);
+  }
+
+ }
+
+function checkparent(obj){
+    if ($(obj).prop('checked')) {
+     var pid = $(obj).parent().parent().parent().first().find(".proleAuth").val();
+     var dataid = $(obj).parent().parent().parent().first().find(".proleAuth").attr('data-pid');
+     $(obj).parent().parent().parent().first().find(".proleAuth").prop("checked","checked");
+  }
+} 
+
+
+</script>
+
+
+<script type="text/javascript">
+
+//检查表单的必填项
+function checkform(){
+
+    var roleName = $("#roleName").val();
+    if(!roleName){
+      alert("角色名称不能为空"); 
+      return false; 
+    }
+    if(roleName.length>30){
+      alert("角色名称限30个字"); 
+      return false; 
+    } 
+
+
+    var roleIntro = $("#roleIntro").val();
+    if(roleIntro==''){
+      alert("角色简介不能为空"); 
+      return false; 
+    }
+    if(roleIntro.length>1024){
+      alert("角色简介限1024个字"); 
+      return false; 
+    } 
+    
+     
+     var href = window.location.href;
+     
+     $.ajax({
+         type: "POST",
+         dataType:'json',
+         url: href,
+         cache: false,
+         data: $("#form").serialize(),
+         success: function(data) {
+          if (data.code) {
+             alert(data.msg);
+             location.reload();
+          }else{
+             alert(data.msg + ' 页面即将自动跳转~');
+             location.href = "{:url('User/role/index')}";
+          }
+      
+         },
+         error: function(data) {
+           alert("提交失败");
+         }
+     })
+
+}
+</script>
+
+
+</div>
+
+</div>
+
+{/block}
+

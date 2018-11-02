@@ -1,0 +1,90 @@
+{extend name="public/base" /}
+{block name="body"}
+<div class="row">
+<div class="col-lg-12">
+	<style type="text/css">
+.textwidth{
+width:250px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.nav-tabs {
+border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+color: #555;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+background-color: #FFFFFF;
+border-color: #FFFFFF;
+color: #FFFFFF;
+border-radius: 0;
+background-clip: padding-box;
+}
+.margintop{
+margin-top:5px;
+}
+</style>
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+             <header class="main-box-header clearfix">
+		   <div class="pull-left">
+			  <h1>自动应答回复</h1>
+		   </div>
+		</header>
+         </div>
+
+	
+		    <div class="main-box-body clearfix">
+				 <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" method="post">	
+	    
+			   
+			  
+			   <div class="form-group">
+					<label class="col-lg-2 control-label">关注应答：</label>
+					<div class="col-lg-10 col-sm-10 margintop">
+         		<textarea name="subscribe" style="width: 80%;height:100px;">{$subscribe.content|default='亲，你终于来了！'}</textarea>
+					 	<input type="hidden" name="subscribeId" value="{$subscribe.id|default=''}" />
+					</div>
+			    </div>
+
+	
+	      <div class="form-group">
+					<label class="col-lg-2 control-label">回答不上来：</label>
+					<div class="col-lg-10 col-sm-10 margintop">
+           	<textarea name="noAnwer"style="width: 80%;height:100px;">{$noAnwer.content|default='对不起您的问题我回答不上来，我已上报领导，请耐心等待！'}</textarea>
+							<input type="hidden" name="noAnwerId" value="{$noAnwer.id|default=''}" />
+					</div>
+			    </div>
+          
+
+		
+			     
+				 <div class="form-group">
+					<div class="col-lg-offset-2 col-lg-10">	  
+					   <input type="hidden" name="configId" id="configId" value="{$configlist.id|default=''}" />		
+						<button class="btn btn-success submit-btn" type="submit">确 定</button>
+					</div>
+				 </div>
+		 
+		
+		         </form>
+		      </div>
+		
+		
+</div>	
+
+
+</div>
+
+</div>
+
+
+{/block}
+

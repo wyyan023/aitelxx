@@ -1,0 +1,260 @@
+{extend name="public/base" /}
+{block name="body"}
+
+
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+
+<style type="text/css">
+.textwidth{
+	width:250px;
+}
+.nav-tabs {
+	background: #ffffff;
+}
+.nav-tabs {
+	border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+	color: #555;
+	cursor: default;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+	background-color: #FFFFFF;
+	border-color: #FFFFFF;
+	color: #FFFFFF;
+	border-radius: 0;
+	background-clip: padding-box;
+}
+.field-status{
+    float: left;
+}
+
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <header class="main-box-header clearfix">
+		   <div class="pull-left">
+			  <h1><span>修改资料</h1>
+		   </div>
+		 </header>
+         </div>
+	  <div class="panel-body">
+		 
+			
+			<!-- Tab panes -->
+	<!--  <form id="form" method="post" onsubmit="return checkform();" class="form-horizontal"  action="" enctype="multipart/form-data" method="post">	
+	    -->  
+	  <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+	      
+	    <div class="tab-content">
+
+		     <div class="main-box-body clearfix">
+	
+			    <div class="form-group" style="margin-top:10px;">
+						<label class="col-lg-2 control-label">用户名：</label>
+						<div class="col-lg-10 col-sm-10">
+							 <input type="text" class="form-control textwidth" onkeyup="checkname(this);"  placeholder="请输入用户名" name="userName" id="userName" value="{$list.username|default=''}" />
+						</div>
+			    </div>
+					
+					<div class="form-group">
+					  <label class="col-lg-2 control-label">头像：</label>
+						<div class="col-lg-10 col-sm-10">
+										{:widget('common/Form/show',array(array('type'=>'picture','name'=>'headpic'),$picdata))}			
+						</div>
+					</div>
+			    
+			     {switch name="$current" }
+			       {case value="添加"}
+	                  <div class="form-group" style="margin-top:10px;">
+	                    <label class="col-lg-2 control-label">登陆密码：</label>
+						<div class="col-lg-10 col-sm-10">
+						   <input type="password" class="form-control textwidth" placeholder="请输入密码...." name="password" id="password" value="{$rolelist.name|default=''}" />
+						</div>
+				     </div>         
+			       {/case}
+			       {default /}
+			    {/switch}
+			    
+	
+			    <div class="form-group" style="margin-top:10px;">
+						<label class="col-lg-2 control-label">联系手机：</label>
+						<div class="col-lg-10 col-sm-10">
+							 <input type="text" class="form-control textwidth" placeholder="请输入联系手机...." name="mobile" id="mobile" value="{$list.mobile|default=''}" />
+						</div>
+			    </div>
+			    
+			    <div class="form-group" style="margin-top:10px;">
+						<label class="col-lg-2 control-label">会员有效期：</label>
+						<div class="col-lg-10 col-sm-10">
+							<input type="text" class="form-control textwidth" id="expiry_date" name="expiry_date" value="{$list.expirydate|default=''}" readonly="">
+									<script>
+									$('#expiry_date').fdatepicker({
+										format: 'yyyy-mm-dd',
+										pickTime: true
+									});
+									</script>	
+						</div>
+			    </div>
+			    
+			    <div class="form-group" style="margin-top:10px;">
+						<label class="col-lg-2 control-label">联系邮箱：</label>
+						<div class="col-lg-10 col-sm-10">
+							 <input type="text" class="form-control textwidth" placeholder="请输入邮箱...." name="email" id="email" value="{$list.email|default=''}" />
+						</div>
+			    </div>
+			  
+
+			    <div class="form-group">
+						<div class="col-lg-offset-2 col-lg-10">	
+								<input type="hidden" name="adminId" id="adminId" value="{$list.id|default=''}" />			  
+							<span class="btn btn-success submit-btn" onclick="checkform();" type="submit">确 定</span>
+							<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+						</div>
+				 </div>       
+				   
+			</div>
+	
+		</div>
+		
+		 </form>
+		
+		
+	  </div>
+</div>	
+					
+
+
+
+
+<script type="text/javascript">
+
+//检查表单的必填项
+function checkform(){
+
+	  var userName = $("#userName").val();
+	  if(!userName){
+		  alert("管理员名称不能为空"); 
+		  return false; 
+	  }
+	
+	  {switch name="$current" }
+	      {case value="添加"}
+		      var password = $("#password").val();
+			  if(!password){
+				  alert("密码不能为空"); 
+				  return false; 
+			  }
+			  
+			  if(password.length<6|| password.length>12){
+				  alert("密码必须大于6位小于12位。");
+				  return false; 
+			  }
+		   
+	      {/case}
+	      {default /}
+	  {/switch}
+   
+	  var mobile = $("#mobile").val();
+	  if(!mobile){
+		  alert("手机号码不能为空"); 
+		  return false; 
+	  }
+	  
+	  var mobileREa = /^1[3|4|5|7|8]\d{9}$/;
+	  var matrix = mobileREa.test(mobile);
+	  if(!matrix){
+		    alert("手机号码不符合规则！");
+			return false;
+	  } 
+	 
+	   var expiry_date = $("#expiry_date").val();
+	  if(expiry_date){
+          var myDate = new Date();
+	      var date = myDate.getFullYear() + "-" + (myDate.getMonth() + 1) + "-" + myDate.getDate();
+	     // console.log(date , expiry_date);
+	      var nowtime = Date.parse(new Date(date));
+	      var sendtime = Date.parse(new Date(expiry_date));
+	      if (sendtime <= nowtime) {
+	        alert("会员有效期不能小于等于当前日期");
+	        return false;
+	      }
+	  }  
+	 
+	  var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/; 
+	  var email = $("#email").val();
+	  if(email){
+		  if(!reg.test(email)){
+			    alert("邮箱不符合规则！");
+				return false;
+		  }  
+	  }
+	 
+	
+	  
+		
+		 var href = window.location.href;
+		 
+		 $.ajax({
+		     type: "POST",
+		     dataType:'json',
+		     url: href,
+		     cache: false,
+		     data: $("#form").serialize(),
+		     success: function(data) {
+		    	if (data.code) {
+		    		 alert(data.msg);
+		    		 location.reload();
+		    	}else{
+		    		 alert(data.msg + ' 页面即将自动跳转~');
+		    		 location.href = "{:url('user/index/index')}";
+		    	}
+			
+		     },
+		     error: function(data) {
+		    	 alert("提交失败");
+		     }
+		 }) 
+
+}
+
+function checkname(obj){
+	
+	var name = $(obj).val();
+	
+	$.post("{:url('chackname')}",{'name':name},function(data){
+		
+		if(!data.code){
+			alert(data.msg);
+		}else{
+			//window.location.href=window.location.href;
+		}
+		
+	}); 
+	
+}
+
+
+</script>
+
+
+</div>
+
+</div>
+
+{/block}
+

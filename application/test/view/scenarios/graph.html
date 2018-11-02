@@ -1,0 +1,375 @@
+{extend name="public/base" /}
+{block name="body"}
+
+ 
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<!-- <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
+<link href="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
+
+
+<script src="https://cdn.bootcss.com/node-uuid/1.4.8/uuid.min.js"></script>
+<script src="https://cdn.bootcss.com/mustache.js/2.3.0/mustache.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery/1.12.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdn.bootcss.com/jsPlumb/1.7.6/jquery.jsPlumb.min.js"></script> 
+<script src="__PUBLIC__/plugs/graph/graphlib.min.js"></script>
+  
+<script src="__PUBLIC__/plugs/graph/data.js"></script>
+<script src="__PUBLIC__/plugs/graph/config.js"></script>
+<script src="__PUBLIC__/plugs/graph/api.js"></script>
+
+<script src="__PUBLIC__/plugs/graph/index.js?v=03"></script> 
+
+
+<style type="text/css">
+	
+.min-height{
+  height: 900px;
+}
+.btn{
+  z-index: 2;
+}
+.pa{
+  position: absolute;
+}
+.fixed-node{
+  position: absolute;
+  top: 80px;
+  left: 150px;
+}
+
+#end-node{
+  left: 150px;
+  top: 700px;
+}
+.panel-node{
+  width: 236px;
+  display: inline-block;
+  margin: auto 25px;
+}
+.panel-node-list{
+  padding: 10px 10px;
+}
+.delete-node{
+  cursor: pointer;
+  width: 20px;
+  display: inline-block;
+  text-align: center;
+}
+.delete-node:hover{
+  color: red
+}
+/* ._jsPlumb_connector{
+	 width: 50%!important;
+}	 */ 
+.actionli {
+    float: left;
+    margin-right: 4px;
+    padding: 5px;
+    background-color: #bce8f1;
+    margin-bottom: 5px;
+}
+</style>
+
+
+
+<div class="row">
+	<div class="col-lg-12">
+		
+		<div class="main-box clearfix">	
+		
+			<div id="app">
+				
+				<div class="container-fluid">
+					
+					<div class="row">
+                            <!--   -->
+						<div id="side-buttons" class="bg-info" style="min-height: 50px;">
+							<div>
+							<!-- 	<h5>节点类型列表</h5> -->
+								<a class="btn btn-success btn-controler" href="#" data-template="tpl-audio" role="button">
+									<i class="fa fa-play-circle-o" aria-hidden="true"></i>
+									语音播报</a>
+								<a class="btn btn-success btn-controler" href="#" data-template="tpl-menu" role="button">
+									<i class="fa fa-navicon" aria-hidden="true"></i>
+									菜单</a>
+								<a class="btn btn-success btn-controler" href="#" data-template="tpl-demo" role="button">
+										<i class="fa fa-question" aria-hidden="true"></i>
+									条件判断</a>
+								<a class="btn btn-success btn-controler" href="#" data-template="tpl-WorkTime" role="button">
+										<i class="fa fa-calendar-times-o" aria-hidden="true"></i>
+									工作时间判断</a>
+								<a class="btn btn-success btn-controler" href="#" data-template="tpl-Exit" role="button">
+										<i class="fa fa-paper-plane" aria-hidden="true"></i>
+									接口调用</a>
+								<a class="btn btn-success btn-controler" href="#" data-template="tpl-Menu" role="button">
+										<i class="fa fa-list-alt" aria-hidden="true"></i>
+									表单</a>
+								<a class="btn btn-success btn-controler" href="#" data-template="tpl-Root" role="button">
+										<i class="fa fa-share" aria-hidden="true"></i>
+									转接</a>
+							</div>
+						</div>
+						
+						<div class="bg-success min-height" id="drop-bg">
+
+							<!-- <div id="begin-node" class="fixed-node" data-fun="">
+								<a class="btn btn-default" href="#" role="button">开始节点</a>
+							</div>
+							<div id="end-node" class="fixed-node">
+								<a class="btn btn-default" href="#" role="button">结束节点</a>
+							</div> -->
+							
+						</div>
+					
+						
+					</div>
+					
+				</div>
+				
+			</div>
+	 
+		</div>
+		
+	</div>
+</div>
+
+
+  <script id="tpl-audio" type="text/html">
+    <div class='pa' id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+      <a class='btn btn-default' href='#' role='button'> 放音
+        <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+      </a>
+    </div>
+  </script>
+
+  <script id="tpl-demo" type="text/html">
+    <div class='pa' id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+      <a class='btn btn-default' href='#' role='button'> {{name}}
+        <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+      </a>
+    </div>
+  </script>
+
+  <script id="tpl-Announce" type="text/html">
+    <div class='pa' id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+
+      <a class='btn btn-default' href='#' role='button'>
+        <i class="fa fa-play-circle-o" aria-hidden="true"></i>
+        {{name}}
+        <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+      </a>
+    </div>
+  </script>
+
+  <script id="tpl-menu" type="text/html">
+    <div class="pa" id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+      <div class="panel panel-default panel-node panel-info">
+        <div id='{{id}}-heading' data-id="{{id}}" class="panel-heading">菜单
+          <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+        </div>
+        <ul class="list-group">
+          <li id="{{generateId}}" data-pid="{{id}}" class="list-group-item panel-node-list">按1
+          </li>
+          <li id="{{generateId}}" data-pid="{{id}}" class="list-group-item panel-node-list">按2
+          </li>
+          <li id="{{generateId}}" data-pid="{{id}}" class="list-group-item panel-node-list">按3
+          </li>
+        </ul>
+      </div>
+    </div>
+  </script>
+
+  <script id="tpl-Root" type="text/html">
+    <div class='pa' id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+      <a class='btn btn-success' href='#' role='button'> {{name}}
+        <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+      </a>
+    </div>
+  </script>
+
+  <script id="tpl-Exit" type="text/html">
+    <div class='pa' id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+      <a class='btn btn-danger' href='#' role='button'> {{name}}
+        <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+      </a>
+    </div>
+  </script>
+
+  <script id="tpl-WorkTime" type="text/html">
+    <div class="pa" id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+      <div class="panel panel-default panel-node panel-info">
+        <div id='{{id}}-heading' data-id="{{id}}" class="panel-heading">
+		  <i class="fa fa-calendar-times-o" aria-hidden="true"></i> {{name}}
+          <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+        </div>
+        <ul class="list-group">
+          <li id="{{id}}-onWorkTime" data-pid="{{id}}" class="list-group-item panel-node-list">工作时间
+          </li>
+          <li id="{{id}}-offWorkTime" data-pid="{{id}}" class="list-group-item panel-node-list">非工作时间
+          </li>
+        </ul>
+      </div>
+    </div>
+  </script>
+
+  <script id="tpl-Menu" type="text/html">
+    <div class="pa" id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+      <div class="panel panel-default panel-node panel-info">
+        <div id='{{id}}-heading' data-id="{{id}}" class="panel-heading"><i class="fa fa-navicon" aria-hidden="true"></i> {{name}}
+          <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+        </div>
+        <ul class="list-group">
+          <li id="{{id}}-noinput" data-pid="{{id}}" class="list-group-item panel-node-list">{{content}}
+          </li>
+          <li id="{{id}}-nomatch" data-pid="{{id}}" class="list-group-item panel-node-list" style="padding-left: 5px;padding-right: 5px;">
+		        {{#choices}}
+
+				  <div id="key-{{nextNode}}-{{id}}" data-pid="{{id}}" class="actionli">{{name}}</div>  
+				{{/choices}}
+				<!-- <div id="{{generateId}}" data-pid="{{id}}" class="actionli">拒绝</div>  
+				<div id="{{generateId}}" data-pid="{{id}}" class="actionli">否定</div>  
+				<div id="{{generateId}}" data-pid="{{id}}" class="actionli">未识别</div>  
+				<div id="{{generateId}}" data-pid="{{id}}" class="actionli">特殊</div>  -->
+
+          </li>
+         
+          
+        </ul>
+      </div>
+    </div>
+  </script>
+
+ <script type="text/javascript">
+	 
+	 $(function () {
+	
+     });
+		 
+ </script>	 
+	 
+<!-- 
+ <script type="text/javascript">
+
+	jsPlumb.setContainer('diagramContainer');
+
+	$('.btn-controler').draggable({
+	helper: 'clone',
+	scope: 'ss'
+	})
+
+	$("#drop-bg").droppable({
+		scope: 'ss',
+		drop: function (event, ui) {
+				
+				//
+
+		console.log(ui.draggable[0].dataset.template);
+		console.log(ui.position);
+		
+		 dropNode(ui.draggable[0].dataset.template, ui.position)
+		}
+	})
+
+	$('#app').on('click', function (event) {
+	event.stopPropagation()
+	event.preventDefault()
+	eventHandler(event.target.dataset)
+	})
+
+	// 单点击了连接线上的X号
+	jsPlumb.bind('dblclick', function (conn, originalEvent) {
+	DataDraw.deleteLine(conn)
+	})
+
+	// 当链接建立
+	jsPlumb.bind('beforeDrop', function (info) {
+	return connectionBeforeDropCheck(info)
+	})
+
+	// 放入拖动节点
+
+	function dropNode (template, position) {
+	 position.left -= $('#side-buttons').outerWidth()
+	 position.id = uuid.v1()
+	 position.generateId = uuid.v1
+	 var html = renderHtml(template, position)
+
+	 $("#drop-bg").append(html)
+
+	 initSetNode(template, position.id)
+	}
+	
+	// 渲染html
+	function renderHtml (type, position) {
+		return Mustache.render($('#' + type).html(), position)
+	}
+	
+	  // 初始化节点设置
+	  function initSetNode (template, id) {
+	    addDraggable(id)
+	
+	    if (template === 'tpl-audio') {
+	      setEnterPoint(id)
+	      setExitPoint(id)
+	    } else if (template === 'tpl-menu') {
+	      setEnterPoint(id + '-heading')
+	      setExitMenuItem(id)
+	    }
+	  }
+	
+	  // 设置入口点
+	  function setEnterPoint (id) {
+	    var config = getBaseNodeConfig()
+	
+	    config.isSource = false
+	    config.maxConnections = -1
+	
+	    jsPlumb.addEndpoint(id, {
+	      anchors: 'Top',
+	      uuid: id + '-in'
+	    }, config)
+	  }
+	
+	  // 设置出口点
+	  function setExitPoint (id, position) {
+	    var config = getBaseNodeConfig()
+	
+	    config.isTarget = false
+	    config.maxConnections = 1
+	
+	    jsPlumb.addEndpoint(id, {
+	      anchors: position || 'Bottom',
+	      uuid: id + '-out'
+	    }, config)
+	  }
+	
+	  function setExitMenuItem (id) {
+	    $('#' + id).find('li').each(function (key, value) {
+	      setExitPoint(value.id, 'Right')
+	    })
+	  }
+	
+      // 让元素可拖动
+      function addDraggable (id) {
+      	jsPlumb.draggable(id, {
+      		containment: 'parent'
+      	})
+      }
+	
+	  
+	  // 获取基本配置
+	  function getBaseNodeConfig () {
+		return Object.assign({}, visoConfig.baseStyle)
+	  }
+	
+	
+
+ </script>
+ 
+ -->
+
+
+
+{/block}
+

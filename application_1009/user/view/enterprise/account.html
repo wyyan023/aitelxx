@@ -1,0 +1,1101 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+.imgclass>td>p>img {
+	width: 50px;
+}
+
+.table-responsive {
+	min-height: .01%;
+	overflow-x: hidden;
+}
+
+.wi80-BFB {
+	width: 80%;
+}
+
+.viplist {
+	border: 1px solid #999;
+	height: 150px;
+	overflow: auto;
+}
+
+.nav-tabs>li {
+	margin-bottom: -3px;
+}
+
+.nav-tabs {
+	background: #ffffff;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover
+	{
+	color: #555;
+	background-color: #dfeaf9;
+	border: 0px solid #ddd;
+	border-top: 0px solid #03a9f4;
+}
+
+.con-padding {
+	padding: 20px;
+}
+
+.my-header {
+	background-color: #fff;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.my-title {
+	font-weight: 700;
+	font-size: 18px;
+}
+
+.ant-avatar {
+	display: inline-block;
+	text-align: center;
+	background: #ccc;
+	color: #fff;
+	white-space: nowrap;
+	position: relative;
+	overflow: hidden;
+	width: 32px;
+	height: 32px;
+	border-radius: 16px;
+	float: left;
+	line-height: 32px;
+}
+
+.my-header>.my-detail {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-align: center;
+	align-items: center;
+	padding: 20px 10px;
+	padding-bottom: 0;
+	margin-bottom: 20px;
+}
+
+.my-header>.my-detail>.ant-avatar {
+	width: 52px;
+	height: 52px;
+	border-radius: 50%;
+}
+
+.my-header>.my-detail>.my-detail-info {
+	margin-left: 20px;
+}
+
+.label {
+	line-height: 2;
+	color: #000000;
+}
+
+.seat-wrap {
+	padding: 10px;
+	background-color: #fff;
+	/*  border-bottom: 1px solid #e0e0e0; */
+	margin-bottom: 20px;
+}
+
+.sms-wrap {
+	padding: 0 10px;
+	color: #333;
+	margin-bottom: 20px;
+}
+
+.btn-size-default {
+	height: 28px;
+	font-size: 14px;
+	border-radius: 3px;
+	font-weight: 300;
+	border: 1px solid #1f8cec;
+	color: #1f8cec;
+	background-color: #fff;
+	text-align: center;
+	white-space: nowrap;
+	line-height: 1.15;
+	padding: 0 15px;
+}
+
+.seat-wrap .seat-num {
+	margin: 10px 0;
+}
+
+.table .ant-table-thead>tr>th {
+	font-size: 14px;
+	font-weight: 400;
+	background-color: rgba(223, 234, 249, .4);
+}
+
+.table .ant-table-row {
+	border-bottom: 1px solid #e9e9e9;
+} 
+
+.table-responsive {
+	margin-top: 20px;
+}
+
+.main-context {
+	height: calc(100vh - 45px);
+	padding: 20px;
+	overflow: auto;
+	background-color: #ffffff;
+}
+
+.img-circle{
+	width: 52px; 
+	height: 52px;
+}
+
+
+.statusSelect {
+		line-height: 30px;
+		float: left;
+}
+
+</style>
+
+<script type="text/javascript" href="__PUBLIC__/plugs/bootstrap/popover.js"></script>
+
+<link href="/public/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="/public/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="/public/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+
+<div class="row">
+			<div class="col-lg-12">
+						<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist" style="margin-bottom: 20px;">
+					<li role="presentation" class="active">
+						 <a href="#home" aria-controls="home" role="tab" data-toggle="tab">企业账户</a>
+					</li>
+					<li role="presentation">
+						<a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">订购充值</a>
+					</li>
+					<li role="presentation">
+						<a href="#Consumption" aria-controls="Consumption" role="tab" data-toggle="tab">消耗记录</a>
+					</li>
+				</ul>
+
+
+				<div class="main-box clearfix">	
+				
+				<!-- Tab panes -->
+				<div class="tab-content">
+					
+					<div role="tabpanel" class="tab-pane active con-padding" id="home">
+						
+							<div class="my-header">
+							
+								<div class="my-title">账户总览 </div>
+								
+								<div class="my-detail">			    
+										<span class="ant-avatar">
+											<img class="img-circle" id="headImg" src="/uploads/picture/20180817/2b9ed9374d08157949a1feb6741208c3.jpg" />
+										</span>
+										
+										<div class="my-detail-info">
+												<div class="my-detail-info-item">
+													<span class="label">客户名称：</span>
+													<span id="adminUser">颜孙植</span>
+												 </div>
+												 <div class="my-detail-info-item">
+													 <span class="label">版本：</span>
+													 <span class="version">专业版</span>
+												 </div>
+												 <div class="my-detail-info-item">
+													 <span class="label">余额：</span>
+													 <span class="version" id="adminmoney">0.00</span>
+												 </div>
+										</div>
+								</div>
+								 
+							</div>
+							
+							<div class="seat-wrap">
+								<div class="my-title">坐席</div>
+								
+								<div class="seat-num">AI坐席：1个 （剩余可用：1个）
+									 <button type="button" class="btn btn-size-default">
+										购买更多并发
+									 </button>
+								</div>
+								<div class="seat-num">人工坐席：2个 （剩余可用：1个）
+									<button type="button" class="btn btn-size-default">
+										购买更多并发
+									</button>
+									</div>
+							
+								
+								<div class="table-responsive">					 
+									 <table class="table table-hover"> 
+										<thead class="ant-table-thead">
+											<tr>
+												<th><span>购买数量</span></th>
+												<th><span>购买时间</span></th>
+												<th><span>服务周期</span></th>
+												<th><span>操作</span></th>
+											</tr>
+										</thead>
+											<tbody class="ant-table-tbody">
+												<tr class="ant-table-row">
+													<td><span id="robotNum">2</span>个</td>
+													<td id="creattime">2018-08-31 19:12:57</td>
+													<td id="expirydate">
+														018-08-29至2018-09-29
+													</td>
+													<td>
+													 <div style="max-width: 190px;">
+														  <button type="button" class="btn btn-size-default" title="温馨提示"
+																			data-container="body" data-toggle="popover" data-placement="left"
+																			data-content="如需购买或延期，请联系您的销售经理">
+																	右侧的 Popover
+															</button>
+													<!-- 	 <a href="#" data-toggle="popover" title="Example popover">延 期</a> -->
+													 </div>
+													</td>
+												</tr>
+											</tbody>		
+									 </table>
+								</div>
+								
+							</div>
+							
+							<!-- <div class="sms-wrap">
+								 <div class="my-title">话费</div>
+									<div class="table-responsive">					 
+										 <table class="table table-hover"> 
+											<thead class="ant-table-thead">
+												<tr>
+													<th><span>线路名</span></th>
+													<th><span>线路别名</span></th>
+													<th><span>费率类型</span></th>
+													<th><span>计费周期</span></th>
+													<th><span>价格</span></th>
+													<th><span>余额</span></th>
+													<th><span>操作</span></th>
+												</tr>
+											</thead>
+												<tbody class="ant-table-tbody">
+													<tr class="ant-table-row">
+														<td>2个</td>
+														<td>2018-08-31 19:12:57</td>
+														<td>2018-08-29至2018-09-29</td>
+														<td>2个</td>
+														<td>2018-08-31 19:12:57</td>
+														<td>2018-08-29至2018-09-29</td>
+														<td style="max-width: 190px;">
+																<button type="button" class="btn btn-size-default">通话详单</button>
+																<button type="button" class="btn btn-size-default">余额转移</button>
+														</td>
+													</tr>
+												</tbody>	
+													
+										 </table>
+									</div>
+							 </div> -->
+							<!-- 	 
+								 <div class="sms-wrap">
+										<div class="my-title">短信</div>
+										<div class="table-responsive">					 
+											 <table class="table table-hover"> 
+												<thead class="ant-table-thead">
+													<tr>
+														<th><span>余量</span></th>
+														<th><span>操作</span></th>
+													</tr>
+												</thead>
+													<tbody class="ant-table-tbody">
+														<tr class="ant-table-row">
+															<td style="width: 80%;">
+																<div>0条</div>
+															</td>
+															<td>
+															 <div style="max-width: 190px;">
+																 <button type="button" class="btn btn-size-default"><span>消耗详单</span></button>
+															 </div>
+															</td>
+														</tr>
+													</tbody>		
+											 </table>
+										</div>
+								 </div>
+								 -->
+					</div>
+					
+					
+					<div role="tabpanel" class="tab-pane" id="profile">
+						  		
+						<div class="main-context"> 
+
+								<div class="table-responsive">		
+							
+										<section class="navbar navbar-default main-box-header clearfix">
+													
+											<div class="pull-right">
+							
+												<div class="form-inline" method="get" role="form">
+							
+													<div class="form-group">
+														<label class="statusSelect">时间范围:</label>
+														<div class="col-lg-9 col-sm-9">
+															<div class="col-lg-12 col-sm-12">
+																<input type="text" style="width:167px;" class="form-control" id="startDate" name="startDate" value="" readonly="" />
+															</div>
+															<script>
+															$('#startDate').fdatepicker({
+																format: 'yyyy-mm-dd  hh:ii:ss',
+																pickTime: true
+															});
+															</script>	
+															
+														</div>
+													</div>
+													至
+													<div class="form-group">
+							
+														<div class="col-lg-9 col-sm-9">
+															<div class="col-lg-12 col-sm-12">
+																<input type="text" class="form-control" id="endTime" name="endTime" value="" readonly="" />
+															</div>
+							
+															<script>
+																$('#endTime').fdatepicker({
+																	format: 'yyyy-mm-dd hh:ii:ss',
+																	pickTime: true
+																});
+															</script>	
+															
+														</div>
+							
+													</div>
+							
+													<div class="form-group">
+															<label>所属人：</label>
+															<input type="text" class="form-control" style="width:120px;" id="Personal" name="Personal" placeholder="请输入所属人">
+													</div>&nbsp;&nbsp;
+													<div class="form-group"> 
+														<label class="statusSelect">状态：</label>
+														<select style="width:100px;" name="status" id="status" class="form-control">
+															<option value=" " selected="">全部</option>
+															<option value="0">未成功</option>
+															<option value="1">已成功</option>
+														</select>
+												</div>
+													<span class="btn btn-primary" type="button" onclick="searchdata(1,1);">搜索</span>
+												
+							
+												</div>
+																																	 
+											</div>  
+											
+										</section>
+																  		 
+											 
+									<table class="table table-bordered table-hover"> 
+											<thead class="ant-table-thead">
+												<tr>
+													<th>所属人</th>
+													<th>充值金额</th>
+													<th>充值类型</th>
+													<th>状态</th>
+												<!-- 	<th>充值方式</th> -->
+													<th>充值时间</th>
+												</tr>
+											</thead>
+											
+											<tbody class="ant-table-tbody" id="depositlist">
+												
+									
+											</tbody>		
+									</table>
+									
+									<div id="modalpagybody"></div>
+									
+								</div>
+								<div class="component-page-empty" id="desempty">
+									<div class="empty-tip line">暂无数据</div>
+								</div>
+			
+						</div>
+						  				
+					</div>
+					
+					
+					<div role="tabpanel" class="tab-pane" id="Consumption">
+				
+							<div class="main-context"> 
+				
+									<div class="table-responsive">			
+											<section class="navbar navbar-default main-box-header clearfix">
+														
+												<div class="pull-right">
+								 
+													<div class="form-inline" method="get" role="form">
+								 
+														<div class="form-group">
+															<label class="statusSelect">时间范围:</label>
+															<div class="col-lg-9 col-sm-9">
+																<div class="col-lg-12 col-sm-12">
+																	<input type="text" style="width:167px;" class="form-control" id="startTime" name="startTime" value="" readonly="" />
+																</div>
+																<script>
+																$('#startTime').fdatepicker({
+																	format: 'yyyy-mm-dd  hh:ii:ss',
+																	pickTime: true
+																});
+																</script>	
+																
+															</div>
+														</div>
+														至
+														<div class="form-group">
+								 
+															<div class="col-lg-9 col-sm-9">
+																<div class="col-lg-12 col-sm-12">
+																	<input type="text" class="form-control" id="endDate" name="endDate" value="" readonly="" />
+																</div>
+								 
+																<script>
+																	$('#endDate').fdatepicker({
+																		format: 'yyyy-mm-dd hh:ii:ss',
+																		pickTime: true
+																	});
+																</script>	
+																
+															</div>
+								 
+														</div>
+								 
+														<div class="form-group">
+																<label>管理员：</label>
+																<input type="text" class="form-control" style="width:120px;" id="ownerps" name="ownerps" placeholder="请输入管理员">
+														</div>&nbsp;&nbsp;
+													
+														<span class="btn btn-primary" type="button" onclick="orderRecharge(1,1);">搜索</span>
+													
+								 
+													</div>
+																																		
+												</div>  
+												
+											</section>
+											 												
+										<table class="table table-bordered table-hover"> 
+												<thead class="ant-table-thead">
+													<tr>
+														<th>管理员</th>
+														<th>用户</th>
+														<th>被叫号码</th>
+														<th>消费金额</th>
+													
+														<th>按时计费单价</th>
+														<th>按月计费单价</th>
+														<th>按识别计费单价</th>
+														<th>识别次数</th>
+														<th>通话时间长</th>
+
+														<th>创建时间</th>
+														<th>结束时间</th>
+													</tr>
+												</thead>
+												
+												<tbody class="ant-table-tbody" id="orderlist">
+													
+													<!-- <tr class="ant-table-row">
+														<td>扩容</td>
+														<td>
+															2018-08-31 19:12:57
+														</td>
+														<td>
+															1个并发 * 1个月
+														</td>
+													</tr> -->
+													
+												</tbody>		
+										</table>
+										
+										
+										<div id="modalbody"></div>
+										
+									</div>
+									
+									<div class="component-page-empty" id="componentempty">
+										<div class="empty-tip line">暂无数据</div>
+									</div>
+									
+							</div>
+		
+					</div>
+				
+	</div>
+
+		</div>
+	</div>				
+</div>
+
+
+ <script type="text/javascript">
+	 
+ var despage = 1;
+ 	var page = 1;
+ $(function(){
+	 
+   userInfo();
+	 
+	 orderRecharge(page,0);
+	 
+	 searchdata(despage,0);
+	 
+	 $("[data-toggle='popover']").popover();
+   
+ }) 
+
+	function userInfo(){	
+ 
+		var url = "{:url('getInformation')}";	
+		$.ajax({
+			url : url,
+			dataType : "json", 
+			type : "post",
+			data : {},
+			success: function(data){
+				
+				if(data.code=="0"){
+					
+					var mresult = data.data.mresult; 
+					$("#adminUser").text(mresult.username);
+					if(mresult.headImg){
+						$("#headImg").attr(mresult.headImg);
+					}
+					if(mresult.money){
+				   	$("#adminmoney").text(mresult.money);
+					}
+					$("#robotNum").text(mresult.robot_mum);
+					$("#creattime").text(mresult.create_time);
+					$("#expirydate").text(mresult.create_time + " 至 " + mresult.expiry_date);
+
+				}else{
+					console.log(data.msg);
+				}
+   
+         
+
+			},
+			error: function() {
+				console.log('获取列表失败。');
+			}
+		});
+	 
+	}	
+
+ </script>
+ 
+ <script type="text/javascript">
+	
+  // 订购充值 的搜索	
+	var startDate,endTime,personal,status;
+  function recharge(page){
+		
+		 	var url = "{:url('getConsume')}";	
+		 	$.ajax({
+		 					url : url,
+		 					dataType : "json", 
+		 					type : "post",
+		 					data : {
+								'page':page,
+								'startDate':startDate,
+								'endTime':endTime,
+								'personal':personal,
+								'status':status
+								},
+		 				
+		 					success: function(data){
+		 
+		 						var total = data.data.total;
+		 						var Nowpage = data.data.Nowpage;
+		 						var page = data.data.page;
+		 						var Nowpage = parseInt(Nowpage);
+		 						
+		 						var data = data.data.list;
+		 							if(data.length > 0){
+		 								
+		 									$("#desempty").css("display","none");
+		 								
+		 									$("#depositlist").find("tr").remove();
+		 									
+		 									for(var i=0;i<data.length;i++){
+		 										
+		 									
+		 										var id = data[i].id;
+		 										var username = data[i].username;
+		 										var menoy = data[i].menoy;
+		 										var type = data[i].type;
+		 										var status = data[i].status;
+		 										var create_time = data[i].create_time;
+		 										var deposit_type = data[i].deposit_type;
+		 										
+		 										var typestr = "现金";
+		 										if(type == '1'){
+		 											var typestr = "语音充值";
+		 										}
+		//  										var destypestr = "微信";
+		//  										if(deposit_type == '1'){
+		//  											var destypestr = "支付宝";
+		//  										}
+		//  
+		 								
+		 											var strstatus = "未成功";
+		 											if(status == "1"){
+		 													strstatus = "已成功";
+		 											}
+		 
+		 											var string = '<tr class="itemId'+id+'" alt="'+id+'">'
+		 											+'<td>'+username+'</td>'
+		 											+'<td>'+menoy+'</td>'
+		 											+'<td>'+typestr+'</td>'
+		 											+'<td>'+strstatus+'</td>'
+		 											// +'<td>'+destypestr+'</td>'
+		 											+'<td>'+create_time+'</td>';
+		 											string += '</tr>';
+		 											$("#depositlist").append(string); 
+		 
+		 									}
+		 									
+		 									var prepage = Nowpage-1;
+		 									var nextpage = Nowpage+1;
+		 									
+		 									var str = '<div class="row">'
+		 									+'<div class="col-sm-3 text-left">'
+		 												
+		 									+'<table class="table table-bordered table-hover" style="margin-bottom: 0px; ">'
+		 									+'<tbody><tr>'
+		 									+'<td class="text-center">总充值金额：'
+		 									+'</td>'
+		 									+'<td class="text-center">'+total+'&nbsp;元'
+		 									+'</td>'
+		 																
+		 									+'</tr> '
+		 									+'</tbody></table>'                                     
+		 		
+		 									+'</div>'
+		 									+'<div class="col-sm-9 text-right">'
+		 									+'<ul class="pagination">';
+		 									
+		 									if(Nowpage == 1){
+		 										str += '<li id="prevbtn" class="disabled"><span>«</span></li> ';
+		 									}else{
+		 										str += '<li><a href="javascript:void(0);" onclick="searchdata('+prepage+',0);"><span>«</span></a></li> ';
+		 									}
+		 									
+		 									if(page > 10){
+		 									
+		 										if(Nowpage < 7){
+		 											for(var i=0;i<page;i++){
+		 												var nownum = i+1;
+		 												if(nownum < 9){
+		 														if(nownum == Nowpage){
+		 															str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+' </a></li> ';  
+		 														}else{
+		 															str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+' </a></li> ';  
+		 														}
+		 												}
+		 												
+		 												if(nownum == 9 && nownum != Nowpage){
+		 														str += '<li class="disabled"><span>...</span></li>';  
+		 												}else if(nownum == 9){
+		 													str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+'</a></li> ';  
+		 												}
+		 											
+		 													if(nownum > (page-2)){
+		 															if(nownum == Nowpage){
+		 																str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+' </a></li> ';  
+		 															}else{
+		 																str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+' </a></li> ';  
+		 															}
+		 													}
+		 
+		 												}
+		 										}else if(Nowpage > 6 && Nowpage < (page-6)){
+		 											for(var i=0;i<page;i++){
+		 												var nownum = i+1;
+		 												var Nowpage = parseInt(Nowpage);
+		 												if(nownum < 3){
+		 													str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+' </a></li> '; 
+		 												}
+		 												
+		 												if((nownum > Nowpage-5) && (nownum < Nowpage+5)){
+		 											
+		 																	if(nownum == (Nowpage-4)){
+		 																		str += '<li class="disabled"><span>...</span></li>';
+		 																	}   
+		 																
+		 																		if(nownum > (Nowpage-4) && nownum < Nowpage){
+		 																			str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+'</a></li>'; 
+		 																		}  
+		 																	
+		 																		if(nownum == Nowpage){
+		 																		str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+'</a></li>';  
+		 																		} 
+		 																	
+		 																		if(nownum < (Nowpage + 4) && nownum > Nowpage){
+		 																		str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+'</a></li>'; 
+		 																		}  
+		 															
+		 																		if(nownum == (Nowpage + 4)){
+		 																	
+		 																		str += '<li class="disabled"><span>...</span></li>';
+		 																		}   
+		 													}
+		 													
+		 												if(nownum > (page-2)){
+		 													var Nowpage = parseInt(Nowpage);
+		 													if(nownum == Nowpage){
+		 																str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+'</a></li>';
+		 														}else{
+		 															str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+'</a></li> ';
+		 														}   
+		 												
+		 													}     
+		 
+		 												}
+		 										}else{
+		 											
+		 											for(var i=0;i<page;i++){
+		 												var nownum = i+1;
+		 												if(nownum<3){
+		 													str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+' </a></li>';  
+		 												}
+		 											
+		 												if(nownum == (page-10) && nownum != Nowpage){
+		 													str += '<li class="disabled"><span>...</span></li>';   
+		 												}else if(nownum == (page-10) && nownum == Nowpage){
+		 													str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+'</a></li>';   
+		 												}
+		 												
+		 												if(nownum > (page-10)){
+		 													if(nownum == Nowpage){
+		 														str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+'</a></li> ';   
+		 													}else{
+		 														str += '<li ><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+'</a></li>';   
+		 													}
+		 												}
+		 												
+		 												
+		 											}
+		 									
+		 												
+		 										}
+		 									}else{
+		 											for(var i=0;i<page;i++){
+		 												var nownum = i+1;
+		 												if(nownum == Nowpage){
+		 													str += '<li class="active"><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+' </a></li> ';  
+		 												}else{
+		 													str += '<li><a href="javascript:void(0);" onclick="searchdata('+nownum+',0);">'+nownum+' </a></li> ';  
+		 												}
+		 											}
+		 									}
+		 									
+		 				
+		 								
+		 									if(Nowpage == page){
+		 										str += '<li id="prevbtn" class="disabled"><span>»</span></li> ';
+		 									}else{
+		 										str += '<li><a href="javascript:void(0);" onclick="searchdata('+nextpage+',0);"><span>»</span></a></li>';
+		 									}
+		 								
+		 									str += '</ul>'
+		 									+'</div>'
+		 									+'</div>'
+		 									
+		 									$("#modalpagybody").find("div").remove();
+		 									$("#modalpagybody").append(str); 
+		 									
+		 									}
+		 							else{
+		 								
+		 									$("#desempty").css("display","block");
+		 
+		 									$("#depositlist").find("tr").remove();
+		 						
+		 							}
+		 							
+		 					},
+		 					error : function() {
+		 						alert('获取列表失败。');
+		 					}
+		 		});
+		 	
+	
+  }	 
+  	 
+ //获取订购充值列表
+ function searchdata(page,type){	
+
+  		if(type == 1){
+  			startDate = $("#startDate").val();
+  			endTime = $("#endTime").val();
+  			personal = $("#Personal").val();
+  			status = $("#status").val();
+  		}
+  
+	    recharge(page);
+ }	
+ 
+ </script>
+ 
+ 
+ <script type="text/javascript">
+	 
+	 	//获取等待列表
+ 	var startTime,endDate,ownerps;
+
+	 	function orderRecharge(page,type){	
+			
+	     		if(type == 1){
+	     			startTime = $("#startTime").val();
+	     			endDate = $("#endDate").val();
+	     			ownerps = $("#ownerps").val();
+	     		}
+	     
+	     		consumption(page);
+	  }	
+	 
+	 function consumption(page){
+		 	
+		 		var url = "{:url('getorderRecharge')}";	
+		 		$.ajax({
+		 						url : url,
+		 						dataType : "json", 
+		 						type : "post",
+		 						data : {
+									'page':page,
+									'startTime':startTime,
+									'endDate':endDate,
+									'ownerps':ownerps,
+									},
+		 					
+		 						success: function(data){
+		 
+		 							var total = data.data.total;
+		 							var Nowpage = data.data.Nowpage;
+		 							var page = data.data.page;
+		 							var Nowpage = parseInt(Nowpage);
+		 							
+		 							var data = data.data.list;
+		 							if(data.length > 0){
+		 								
+		 										$("#componentempty").css("display","none");
+		 								
+		 										$("#orderlist").find("tr").remove();
+		 										
+		 										for(var i=0;i<data.length;i++){
+		 											
+		 											var id = data[i].id;
+		 											var musername = data[i].musername;
+		 											var ausername = data[i].ausername;
+		 											var owner = data[i].owner;
+		 											var member_id = data[i].member_id;
+		 											var mobile = data[i].mobile;
+		 											var duration = data[i].duration;
+		 											var money = data[i].money;
+		 											var time_price = data[i].time_price;
+		 											var month_price = data[i].month_price;
+		 											var asr_price = data[i].asr_price;
+		 											var create_time = data[i].create_time;
+		 											var end_time = data[i].end_time;
+		 											var asr_cnt = data[i].asr_cnt;
+		 
+		 											var string = '<tr class="itemId'+id+'" alt="'+id+'">'
+		 												+'<td>'+ausername+'</td>'
+		 												+'<td>'+musername+'</td>'
+		 												+'<td>'+mobile+'</td>'
+		 												+'<td>'+money+'（元）</td>'
+		 												+'<td>'+time_price+'</td>'
+		 												+'<td>'+month_price+'</td>'
+		 												+'<td>'+asr_price+'</td>'
+		 												+'<td>'+asr_cnt+'</td>'
+		 												+'<td>'+duration+'</td>'   
+		 												+'<td>'+create_time+'</td>'
+		 												+'<td>'+end_time+'</td>';
+		 												string += '</tr>';
+		 												$("#orderlist").append(string); 
+		 
+		 										}
+		 										
+		 										var prepage = Nowpage-1;
+		 										var nextpage = Nowpage+1;
+		 									
+		 										var str = '<div class="row">'
+		 										+'<div class="col-sm-3 text-left">'
+		 													
+		 										+'<table class="table table-bordered table-hover" style="margin-bottom: 0px; ">'
+		 										+'<tbody><tr>'
+		 										+'<td class="text-center">总消费金额：'
+		 										+'</td>'
+		 										+'<td class="text-center">'+total+'&nbsp;元'
+		 										+'</td>'
+		 																
+		 										+'</tr> '
+		 										+'</tbody></table>'                                     
+		 			
+		 										+'</div>'
+		 										+'<div class="col-sm-9 text-right">'
+		 										+'<ul class="pagination">';
+		 									
+		 										if(Nowpage == 1){
+		 											str += '<li id="prevbtn" class="disabled"><span>«</span></li> ';
+		 										}else{
+		 											str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+prepage+',0);"><span>«</span></a></li> ';
+		 										}
+		 										
+		 										if(page > 10){
+		 										
+		 											if(Nowpage < 7){
+		 												for(var i=0;i<page;i++){
+		 													var nownum = i+1;
+		 													if(nownum < 9){
+		 														if(nownum == Nowpage){
+		 															str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';  
+		 														}else{
+		 															str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';  
+		 														}
+		 													}
+		 													
+		 													if(nownum == 9 && nownum != Nowpage){
+		 														str += '<li class="disabled"><span>...</span></li>';  
+		 													}else if(nownum == 9){
+		 														str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li> ';  
+		 													}
+		 												
+		 														if(nownum > (page-2)){
+		 															if(nownum == Nowpage){
+		 																str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';  
+		 															}else{
+		 																str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';  
+		 															}
+		 														}
+		 
+		 												}
+		 											}else if(Nowpage > 6 && Nowpage < (page-6)){
+		 												for(var i=0;i<page;i++){
+		 													var nownum = i+1;
+		 													var Nowpage = parseInt(Nowpage);
+		 													if(nownum < 3){
+		 														str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> '; 
+		 													}
+		 													
+		 													if((nownum > Nowpage-5) && (nownum < Nowpage+5)){
+		 												
+		 																	if(nownum == (Nowpage-4)){
+		 																			str += '<li class="disabled"><span>...</span></li>';
+		 																	}   
+		 																	
+		 																		if(nownum > (Nowpage-4) && nownum < Nowpage){
+		 																			str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>'; 
+		 																		}  
+		 																	
+		 																		if(nownum == Nowpage){
+		 																		str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>';  
+		 																		} 
+		 																	
+		 																		if(nownum < (Nowpage + 4) && nownum > Nowpage){
+		 																			str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>'; 
+		 																		}  
+		 																
+		 																		if(nownum == (Nowpage + 4)){
+		 																		
+		 																		str += '<li class="disabled"><span>...</span></li>';
+		 																		}   
+		 													}
+		 													
+		 												if(nownum > (page-2)){
+		 													var Nowpage = parseInt(Nowpage);
+		 													if(nownum == Nowpage){
+		 																str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>';
+		 														}else{
+		 																str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li> ';
+		 														}   
+		 												
+		 													}     
+		 
+		 												}
+		 											}else{
+		 												
+		 												for(var i=0;i<page;i++){
+		 													var nownum = i+1;
+		 													if(nownum<3){
+		 														str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li>';  
+		 													}
+		 												
+		 													if(nownum == (page-10) && nownum != Nowpage){
+		 														str += '<li class="disabled"><span>...</span></li>';   
+		 													}else if(nownum == (page-10) && nownum == Nowpage){
+		 														str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>';   
+		 													}
+		 													
+		 													if(nownum > (page-10)){
+		 														if(nownum == Nowpage){
+		 															str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li> ';   
+		 														}else{
+		 															str += '<li ><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>';   
+		 														}
+		 													}
+		 													
+		 													
+		 												}
+		 									
+		 													
+		 											}
+		 										}else{
+		 											for(var i=0;i<page;i++){
+		 												var nownum = i+1;
+		 												if(nownum == Nowpage){
+		 													str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';  
+		 												}else{
+		 													str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';  
+		 												}
+		 											}
+		 										}
+		 										
+		 					
+		 								
+		 										if(Nowpage == page){
+		 											str += '<li id="prevbtn" class="disabled"><span>»</span></li> ';
+		 										}else{
+		 											str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nextpage+',0);"><span>»</span></a></li>';
+		 										}
+		 									
+		 										str += '</ul>'
+		 										+'</div>'
+		 										+'</div>'
+		 									
+		 										$("#modalbody").find("div").remove();
+		 										$("#modalbody").append(str); 
+		 										
+		 									}
+		 							else{
+		 								
+		 										$("#componentempty").css("display","block");
+		 
+		 										$("#orderlist").find("tr").remove();
+		 							
+		 							}
+		 							
+		 						},
+		 						error : function() {
+		 							alert('获取列表失败。');
+		 						}
+		 			});
+		 		
+	 }
+	 
+ </script>
+
+</div>
+
+
+{/block}
+

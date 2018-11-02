@@ -1,0 +1,206 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<!-- datepicker statr -->
+
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+
+<style type="text/css">
+.textwidth{
+width:500px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.nav-tabs {
+border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+color: #555;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+background-color: #FFFFFF;
+border-color: #FFFFFF;
+color: #FFFFFF;
+border-radius: 0;
+background-clip: padding-box;
+}
+.panel-body {
+  padding-bottom: 20px;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <header class="main-box-header clearfix">
+		   <div class="pull-left">
+			  <h1><span>{$current|default=''}</span>公众号</h1>
+		   </div>
+		</header>
+         </div>
+	  <div class="panel-body">
+	
+	        <form id="form" method="post" onsubmit="return checkform();" class="form-horizontal" enctype="multipart/form-data" method="post">	
+	    
+	
+		      <div class="main-box-body clearfix">
+                 <div class="form-group" {eq name="$wechat.apiur|default='0'" value="1" }style="display:none;"{/eq}>
+					<label class="col-lg-2 control-label">接口地址：</label>
+					<div class="col-lg-10 col-sm-10">
+                       <input readonly type="text" class="form-control textwidth"  placeholder="请先以下信息保存后显示" value="{$wxlist.apiurl|default=''}" >
+					</div>
+			    </div>
+			  
+
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">公众号名称：</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="wxname" id="wxname" value="{$wxlist.wxname|default=''}" />
+					</div>
+			    </div>
+			   
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">公众号原始id：</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="wxid" id="wxid" value="{$wxlist.wxid|default=''}" />
+					</div>
+			    </div>
+			    
+                <div class="form-group">
+					<label class="col-lg-2 control-label">关注引导地址：</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" placeholder="关注引导地址" name="url" id="url" value="{$wxlist.url|default=''}" />
+					</div>
+			    </div>
+			    
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">微信号：</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="weixin" id="weixin" value="{$wxlist.weixin|default=''}" />
+					</div>
+			    </div>
+			    
+			     <div class="form-group">
+					<label class="col-lg-2 control-label">头像地址：</label>
+					<div class="col-lg-10 col-sm-10">
+	                      {:widget('common/Form/show',array(array('type'=>'picture','name'=>'headImg'),$picdata))}			
+					</div>
+			    </div>
+			    
+			     <div class="form-group">
+					<label class="col-lg-2 control-label">AppID：</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="appid" id="appid" value="{$wxlist.appid|default=''}" />
+					</div>
+			    </div>
+			    
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">AppSecret：</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="appsecret" id="appsecret" value="{$wxlist.appsecret|default=''}" />
+					</div>
+			    </div>
+			    
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">公众号二维码：</label>
+					<!--<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="qr" id="qr" value="{$wxlist.qr|default=''}" />
+					</div>-->
+					<div class="col-lg-10 col-sm-10">
+	                      {:widget('common/Form/show',array(array('type'=>'picture','name'=>'ewm'),$picewm))}	
+					</div>
+					
+			    </div>
+			    
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">微信号类型：</label>
+					<div class="col-lg-10 col-sm-10">
+					   <select name="type" class="form-control textwidth">
+                           <option value="1" 
+                            {eq name="$wxlist.type|default=''" value="1" }
+		                     selected 
+		                    {/eq}
+                           >订阅号</option>
+                           <option value="2" 
+                            {eq name="$wxlist.type|default=''" value="2" }
+		                     selected 
+		                    {/eq}
+                           >认证订阅号</option>
+                           <option value="3"
+                            {eq name="$wxlist.type|default=''" value="3" }
+		                     selected 
+		                    {/eq}
+                           >服务号</option>
+                           <option value="4" 
+                            {eq name="$wxlist.type|default=''" value="4" }
+		                     selected 
+		                    {/eq}
+                           >认证服务号</option>
+                       </select>
+					</div>
+			    </div>
+			    
+			     <div class="form-group">
+					<label class="col-lg-2 control-label">是否默认公众号：</label>
+					<div class="col-lg-10 col-sm-10">
+					  <input type="radio" name="is_default" value="0" 
+					  {eq name="$wxlist.is_default|default='0'" value="0" }
+                       checked 
+                      {/eq}
+					  /> 否
+                      &nbsp;<input type="radio" name="is_default" value="1" 
+                      {eq name="$wxlist.is_default|default=''" value="1" }
+                       checked 
+                      {/eq}
+                      /> 是               
+					</div>
+			    </div>      
+
+			                            
+			  <div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">	<!--   target-form="form-horizontal" -->	
+				    <input type="hidden" name="watchId" id="watchId" value="{$wxlist.id|default=''}" />			  
+					<button class="btn btn-success submit-btn" type="submit">确 定</button>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+				</div>
+			 </div>
+		 
+		
+		      </div>
+
+		
+		     </form>
+		
+		
+	  </div>
+</div>	
+					
+
+
+<script type="text/javascript">
+//检查表单的必填项
+function checkform(){
+
+
+
+}
+
+</script>
+
+
+</div>
+
+</div>
+
+{/block}
+

@@ -1,0 +1,428 @@
+{extend name="public/base" /}
+{block name="body"}
+<style type="text/css">
+.imgclass > td > p>img{
+width:50px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+
+.wi80-BFB {
+width: 80%;
+}
+.viplist {
+border: 1px solid #999;
+height: 150px;
+overflow: auto;
+}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header clearfix">
+		  <div class="pull-left">
+			  <h1>用户列表</h1>
+			  <a class="btn btn-primary" href="{:url('addGoods')}">添加会员</a>
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+		
+	        <section class="navbar navbar-default main-box-header clearfix">
+	       <!--   <div class="pull-left">
+	          <button class="btn btn-primary" onclick="loadexcel();">导出列表</button>
+	         </div> -->
+	         <div class="pull-right">
+			   <form class="form-inline" method="get" role="form">
+			      <div class="form-group">
+                       <label class="control-label" for="input-mobile">手机号码：</label>
+                        <input type="text" name="mobile" value="" placeholder="手机号码" id="mobile" class="form-control">
+                   </div>
+				  &nbsp;&nbsp;&nbsp;
+				  <div class="form-group">
+				    <label>email：</label>
+				    <input type="text" class="form-control" style="width:200px;" id="email" name="email" placeholder="请输入email">
+				  </div>
+			    <button class="btn btn-primary" type="submit">搜索</button>
+			    <button type="button" onclick="sendMessage();" class="btn btn-primary">
+			       <i class="fa"></i> 发送站内信
+			    </button>
+			    <button type="button" onclick="showmail();" class="btn btn-primary">
+			       <i class="fa"></i> 发送邮箱
+			    </button>
+			  </form>
+			 </div>
+		   </section>
+
+		     <div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>
+		     
+			  <div class="table-responsive">
+			  
+				  <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					        <th></th>
+					        <th class="text-center">ID</th>
+					        <th class="text-center">会员昵称</th>
+					        <th class="text-center">会员等级</th>
+					        <th class="text-center">累计消费</th>
+					        <th class="text-center">邮件地址</th>
+					        <th class="text-center">一级下线数</th>
+					        <th class="text-center">二级下线数</th>
+					        <th class="text-center">三级下线数</th>
+					        <th class="text-center">手机号码</th>
+					        <th class="text-center">积分</th>
+					        <th class="text-center">注册日期</th>
+					        <th class="text-center">操作</th> 
+					    </tr>
+				    </thead>
+				   <tbody>
+				        {volist name="list" id="vo"}
+					    <tr class="imgclass">
+					     <td class="text-center">
+					        <input type="checkbox" name="goodsids" class="bagcheck" value="{$vo.uid}"/>
+					     </td>
+						  <td class="text-center">{$vo.uid}</td>
+						  <td class="text-center">{$vo.nickname}</td>
+						  <td class="text-center">会员等级</td>
+						  <td class="text-center">累计消费</td>
+						  <td class="text-center">{$vo.email}</td>
+						  <td class="text-center">一级下线数</td>
+						  <td class="text-center">二级下线数</td>
+						  <td class="text-center">三级下线数</td>
+						  <td class="text-center">{$vo.mobile}</td>
+						  <td class="text-center">{$vo.score}</td>
+						  <td class="text-center">注册日期</td>
+						  <td class="text-center">
+	                        <a href="" data-toggle="tooltip" title="" class="btn btn-info" data-original-title="查看详情">
+	                           <i class="fa fa-eye"></i>
+	                        </a>
+                            <a href="" data-toggle="tooltip" title="" class="btn btn-info" data-original-title="收货地址">
+                               <i class="fa fa-home"></i>
+                            </a>
+                            <a href="" data-toggle="tooltip" title="" class="btn btn-info" data-original-title="账户">
+                               <i class="glyphicon glyphicon-yen"></i>
+                            </a>
+                            <a href="" id="button-delete6" data-toggle="tooltip" title="" class="btn btn-danger" data-original-title="删除">
+                               <i class="fa fa-trash-o"></i>
+                            </a>
+                                  
+					 	  </td>
+						</tr>
+                     {/volist}
+				    </tbody>
+				  </table> 
+		            <div class="row">
+                        <div class="col-sm-4 text-left"></div>
+                        <div class="col-sm-8 text-right">{$page}</div>
+                    </div>
+			  </div>
+		
+		 <footer class="main-box-footer clearfix">
+			<div class="pull-left">
+		    	<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+				<button class="btn btn-primary" onclick="delbag(0);" target-form="ids">删 除</button>
+			</div>
+		</footer>
+		</div>
+					
+	</div>					
+    
+</div>
+
+ <script type="text/javascript">
+ $(function(){
+   var email = "{$_GET['email']|default=''}";
+   $('#email').val(email);
+   var mobile = "{$_GET['mobile']|default=''}";
+   $('#mobile').val(mobile);
+ }) 
+
+
+//删除 
+ function delbag(id){
+    var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+     	   var ids=[];
+ 	    	if(id){
+ 	    		var Ids=[];
+ 	    		ids.push(id);
+ 	    	}else{
+ 	    		
+ 	        	 var roleids = document.getElementsByName("goodsids");
+ 	    		 for ( var j = 0; j < roleids.length; j++) {
+ 	    		    if (roleids.item(j).checked == true) {
+ 	    		    	ids.push(roleids.item(j).value);
+ 	    		    }
+ 	    		 }
+ 	    	}
+ 		
+ 	    	if(!ids.length){
+ 	    		alert("至少选择一条。");
+ 	    		 return false; 
+ 	    	}
+
+     		 $.post("{:url('delGoods')}",{'goodsId':ids},function(data){
+ 				if(data){
+ 					alert(data);
+ 				}else{
+ 					window.location.href=window.location.href;
+ 				}
+ 			}); 
+      
+ }
+//全选
+ function allcheck(){			
+ 	if ($('.check-all').is(":checked")) {	
+ 		$('.bagcheck').prop("checked","checked");
+ 	}else{
+ 		$('.bagcheck').prop("checked",false);
+ 	}
+
+ }
+  
+ </script>
+  
+</div>
+
+
+
+<div class="modal fade" id="sendMail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">发送邮件</h4>
+       </div>
+       <div class="modal-body">
+	
+		  <div class="row">
+			    <div class="col-sm-12 col-md-12">
+				     <div class="ner-reac ol_box_4">
+			        <div class="box-ct">
+			            <div class="box-header">
+			                <!-- <a href="" class="box-close"></a> -->
+			            </div>
+			            <form action="/index.php/Admin/User/doSendMail" method="post" onsubmit="return checkForm()">
+			                <table width="90%" border="0" cellspacing="0" cellpadding="0">
+			     
+			                 <tbody>
+			                    <tr class="postmessage" style=" height:32px">
+			                        <td></td>
+			                        <td>
+			                          <input id="allvip" type="radio" checked="checked" name="type">
+			                          <label for="allvip" class="allvip">发送给以下会员</label>         
+			                        </td>
+			                    </tr>
+			                    <tr>
+			                    	<td align="right" valign="top">会员列表：</td>
+			                    	<td>
+			                            <div class="wi80-BFB re-no viplist">
+			                                <input type="hidden" name="user[]" value="2584">
+			                                    <p>
+			                                    <span>ID:2584</span>&nbsp;
+			                                    <span>昵称:511482696@qq.com</span>&nbsp;
+			                                    <span>邮箱:511482696@qq.com</span>
+			                                    </p>  
+			                             </div>
+			                        </td>
+			                    </tr>
+			                     <tr>
+			                        <td><div>&nbsp;</div></td>
+			                        <td><div>&nbsp;</div></td>
+			                    </tr>
+			                    <tr>
+			                        <td align="right" valign="top">邮箱标题：</td>
+			                        <td><input name="title" id="title" maxlength="100" placeholder="邮箱标题"></td>
+			                    </tr>
+			                    <tr>
+			                        <td><div>&nbsp;</div></td>
+			                        <td><div>&nbsp;</div></td>
+			                    </tr>
+			                    <tr>
+			                        <td align="right" valign="top">邮件内容：</td>
+			                        <td><textarea class="he110 wi80-BFB re-no" name="text" id="text" placeholder="邮件内容" maxlength="100"></textarea></td>
+			                    </tr>
+			                  
+			                </tbody>
+			              </table>
+			            </form>
+			        </div>
+    </div>
+			    </div>
+		  </div> 
+				   
+       </div>
+       <div style="clear:both;"></div>
+      <div class="modal-footer">
+         <input type="hidden" id="thisshowsendId" value="" />
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" onclick="setsend();" class="btn btn-primary">发送</button>
+      </div>
+    </div>
+           
+    </div>
+   
+      <script type="text/javascript">
+
+	     //发送邮件
+		 function showmail(){	
+	    
+				 $('#sendMail').modal('show');  
+
+		  }	
+	     
+	      //发货
+		  function setsend(){	
+			  var orderid = $("#thisshowsendId").val();
+			  var expressid = $("#expressid").val();
+		      var url = "{:url('changesend')}";	
+		   		 $.ajax({
+		   		        url : url,
+		   		        dataType : "json", 
+		   		        type : "post",
+		   		        data : {'id':orderid,'expressid':expressid},
+		   		      
+		   		        success: function(msg){
+		   	                if(msg.code){
+		   	                	window.location.href=window.location.href;
+		   	                }else{
+		   	                	alert(msg.data);
+		   	                }
+		   		        },
+		   		        error : function() {
+		   		        	alert('获取数据失败。');
+		   		        }
+		   		  });
+		   		$('#sendModal').modal('hide')
+		  }	
+  
+      </script>
+      
+  </div>
+
+
+
+<div class="modal fade" id="sendMsg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">发送站内信</h4>
+       </div>
+       <div class="modal-body">
+	
+		  <div class="row">
+			    <div class="col-sm-12 col-md-12">
+				    <div class="ner-reac ol_box_4">
+				        <div class="box-ct">
+				            <div class="box-header">
+				                <!-- <a href="" class="box-close"></a> -->
+				            </div>
+				            <form action="/index.php/Admin/User/doSendMessage" method="post" onsubmit="return checkForm()">
+				                <table width="90%" border="0" cellspacing="0" cellpadding="0">
+				                    <input name="call_back" type="hidden" value="call_back">
+				                    <tbody>
+					                    <tr class="postmessage" style=" height:32px">
+					                        <td></td>
+					                        <td>
+					                            <input id="allvip" type="radio" checked="checked" name="type" value="0"><label for="allvip" class="allvip">发送给以下会员</label>                
+					                            <input id="someonevip" type="radio" name="type" value="1"><label for="someonevip">发送给全部会员</label>
+					                        </td>
+					                    </tr>
+					                    <tr>
+					                    	<td align="right" valign="top">会员列表：</td>
+					                    	<td>
+					                            <div class="wi80-BFB re-no viplist">
+					                                <input type="hidden" name="user[]" value="2575">
+					                                    <p><span>2575</span>&nbsp;<span>A粤（鸿粤网络，新丰同城）</span></p><input type="hidden" name="user[]" value="2576">
+					                                    <p><span>2576</span>&nbsp;<span>hou</span></p><input type="hidden" name="user[]" value="2577">
+					                                    <p><span>2577</span>&nbsp;<span>袁学飞</span></p><input type="hidden" name="user[]" value="2578">
+					                                    <p><span>2578</span>&nbsp;<span>sImple</span></p><input type="hidden" name="user[]" value="2579">
+					                                    <p><span>2579</span>&nbsp;<span>电商平台、APP定制02885758275</span></p><input type="hidden" name="user[]" value="2580">
+					                                    <p><span>2580</span>&nbsp;<span>Forest～π_π</span></p><input type="hidden" name="user[]" value="2581">
+					                                    <p><span>2581</span>&nbsp;<span>T_T</span></p><input type="hidden" name="user[]" value="2582">
+					                                    <p><span>2582</span>&nbsp;<span>囧</span></p><input type="hidden" name="user[]" value="2583">
+					                                    <p><span>2583</span>&nbsp;<span>施好好</span></p><input type="hidden" name="user[]" value="2584">
+					                                    <p><span>2584</span>&nbsp;<span>511482696@qq.com</span></p>                            </div>
+					                        </td>
+					                    </tr>
+					                   <tr>
+					                        <td><div>&nbsp;</div></td>
+					                        <td><div>&nbsp;</div></td>
+					                    </tr>
+					                    <tr>
+					                        <td align="right" valign="top">发送内容：</td>
+					                        <td><textarea class="wi80-BFB" name="text" id="text" placeholder="发送内容" maxlength="100"></textarea></td>
+					                    </tr>
+					                 
+					                </tbody>
+				               </table>
+				             </form>
+				           </div>
+	               </div>
+			    </div>
+		  </div> 
+				   
+       </div>
+       <div style="clear:both;"></div>
+      <div class="modal-footer">
+         <input type="hidden" id="thisshowsendId" value="" />
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" onclick="sendmsg();" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+           
+    </div>
+   
+      <script type="text/javascript">
+
+	     //发送邮件
+		 function sendMessage(){	
+	    
+				 $('#sendMsg').modal('show');  
+
+		  }	
+	     
+	      //发信息
+		  function sendmsg(){	
+			  var orderid = $("#thisshowsendId").val();
+			  var expressid = $("#expressid").val();
+		      var url = "{:url('changesend')}";	
+		   		 $.ajax({
+		   		        url : url,
+		   		        dataType : "json", 
+		   		        type : "post",
+		   		        data : {'id':orderid,'expressid':expressid},
+		   		      
+		   		        success: function(msg){
+		   	                if(msg.code){
+		   	                	window.location.href=window.location.href;
+		   	                }else{
+		   	                	alert(msg.data);
+		   	                }
+		   		        },
+		   		        error : function() {
+		   		        	alert('获取数据失败。');
+		   		        }
+		   		  });
+		   		$('#sendModal').modal('hide')
+		  }	
+  
+      </script>
+      
+  </div>
+
+
+
+
+{/block}
+

@@ -1,0 +1,95 @@
+{extend name="public/base"/}
+{block name="body"}
+<style type="text/css">
+.table tbody>tr>td {
+padding: 6px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">
+	    <header class="main-box-header clearfix">
+		  <div class="pull-left">
+			  <h1>分组成员</h1>
+			 
+		  </div>
+		</header>
+	 <div class="main-box-body clearfix">
+	       <section class="navbar navbar-default main-box-header clearfix">
+	           
+		         <div class="pull-right form-inline">
+				  
+				     <a class="btn btn-primary" href="javascript:history.go(-1);">返回</a>
+				   
+				 </div>
+		    </section>
+			<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>
+		     
+			  <div class="table-responsive">			  
+				  <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					        <th class="text-center">用户Id</th>
+					  
+					        <th class="text-center">姓名</th>
+					      
+					   
+					        <th class="text-center">手机号码</th>
+					    
+					        <th class="text-center">注册时间</th>
+					        <th class="text-center">状态</th>
+					       
+					      
+					    </tr>
+				    </thead>
+				   <tbody>
+				      {volist name="list" id="vo"}
+					    <tr class="imgclass">
+					     
+						  <td class="text-center">{$vo.uid}</td>
+						
+						  <td class="text-center">{$vo.nickname}</td>
+						
+						  <td class="text-center">{$vo.mobile}</td>
+					
+						  <td class="text-center">{$vo.reg_time}</td>
+						  
+						  <td class="text-center">
+						   {switch name="$vo.status" }
+									{case value="5"}意向{/case}
+									{case value="4"}拒绝{/case}
+									{case value="3"}无人接听{/case}
+									{case value="2"}接通后挂断{/case}
+									{case value="1"}未接听/挂断/关机/欠费{/case}
+									{default /}
+										未拨打
+								{/switch}
+					      </td>		
+						 
+						</tr>
+                      {/volist}
+				    </tbody>
+				  </table> 
+		           <div class="row">
+                        <div class="col-sm-4 text-left">
+                           <div class="pull-left">
+						    	
+						   </div>	
+                        	
+                        </div>
+                        <div class="col-sm-8 text-right">{$page}</div>
+                    </div>
+			  </div>
+			
+	   </div>
+  </div>
+</div>
+	
+
+</div>
+
+{/block}

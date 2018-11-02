@@ -1,0 +1,373 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<script src="__PUBLIC__/plugs/echarts/echarts.min.js"></script>
+
+<!-- <script src="__PUBLIC__/plugs/highcharts/js/highcharts.js"></script>
+ -->
+<script src="__PUBLIC__/plugs/highcharts/highcharts.js"></script>
+<script src="__PUBLIC__/plugs/highcharts/modules/series-label.js"></script>
+<script src="__PUBLIC__/plugs/highcharts/modules/exporting.js"></script>
+<script src="__PUBLIC__/plugs/highcharts/modules/export-data.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/controller.css"/>
+
+<!--<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/nosetbottom_pz.css"/>-->
+
+<style>
+	.c_entrancedata li i img{
+		width: 70px;
+	}
+	
+	.c_entrancedata li {
+		text-align: center;
+	}
+	
+	.c_entrancedata li p {
+		margin-top: 10px;
+	}
+	
+</style>
+
+<div class="row">
+	
+  <div class="col-lg-12">
+	  <div class="panel panel-default">
+  	  <div class="panel-body" style="padding:15px;">
+  			<div class="panel-top">
+  				<span class="panel-title"><i class="icon iconfont icon-icon- c_reboticon"></i>机器人概况</span>
+  			</div>
+  			<ul class="c_survey clearfix">
+  				<li>
+  					<p class="c_surveyicon"><i class="icon iconfont icon-ziyuan" style="font-size:33px"></i></p>
+  					<p>总分发机器人数</p>
+  					<p class="c_surveycount">
+  						<span>{$user_data['find_distribution_robot_count']}</span>个 
+  						<!--<a href="javascript:;">查看></a>-->
+						</p>
+  				</li>
+  				<li>
+  					<p class="c_surveyicon"><i class="icon iconfont icon-icon-" style="font-size:46px"></i></p>
+  					<p>当前运行机器人数</p>
+  					<p class="c_surveycount">
+  						<span>{$user_data['run_robot_count']}</span>个 
+  						<!--<a href="javascript:;">查看></a>-->
+  					</p>
+  				</li>
+  				<li>
+  					<p class="c_surveyicon"><i class="icon iconfont icon-jine" style="font-size:39px"></i></p>
+  					<p>机器人剩余量</p>
+  					<p class="c_surveycount">
+  						<span>{$user_data['usable_robot_cnt']}</span>个 
+  						<!--<a href="javascript:;">查看></a>-->
+  					</p>
+  				</li>
+  				<li>
+  					<p class="c_surveyicon"><i class="icon iconfont icon-kehu"></i></p>
+  					<p>当前运行客户数</p>
+  					<p class="c_surveycount">
+  						<span>{$user_data['run_customer_count']}</span>个 
+  						<!--<a href="javascript:;">查看></a>-->
+						</p>
+  				</li>
+  				<li>
+  					<p class="c_surveyicon"><i class="icon iconfont icon-renwu1" style="font-size:30px"></i></p>
+  					<p>当前运行任务数</p>
+  					<p class="c_surveycount">
+  						<span>{$user_data['run_task_count']}</span>个 
+  						<!--<a href="javascript:;">查看></a>-->
+  					</p>
+  				</li>
+  				<li>
+  					<p class="c_surveyicon"><i class="icon iconfont icon-shuju" style="font-size:31px"></i></p>
+  					<p>机器人使用率</p>
+  					<p class="c_surveycount"><span>{$user_data['robot_usage_rate']}</span>%</p>
+  				</li>
+  			</ul>
+  	  </div>
+	</div>
+	
+		<div class="c_taskdata">
+			<!--快捷操作-->
+			<div class="panel panel-default c_quickbox c_linestate">
+					<div class="panel-body">
+						<div class="panel-top">
+							<span class="panel-title"><i class="icon iconfont icon-kuaijiecaozuo"></i>快捷操作</span>
+						</div>
+						<!--常用功能快捷入口-->
+						<div class="c_entrance">
+							<p class="c_entrancetype">常用功能快捷入口</p>
+							<ul class="c_entrancedata clearfix">
+								<li>
+									<i><img src="__PUBLIC__/images/controll/shangjialiebiao.png"></i>
+									<!--<div class="c_entrancedata_r">-->
+										<p>招商列表</p>
+										<a href="{:url('user/manager/index')}">去设置</a>
+									<!--</div>-->
+								</li>
+									<li>
+									<i><img src="__PUBLIC__/images/controll/xianluguanli.png"></i>
+									<!--<div class="c_entrancedata_r">-->
+										<p>线路管理</p>
+										<a href="{:url('user/device/lines')}">去使用</a>
+									<!--</div>-->
+								</li>
+								<!--<li>-->
+								<!--	<i><img src="__PUBLIC__/images/controll/duanxintongdao.png"></i>-->
+								<!--	<div class="c_entrancedata_r">-->
+								<!--		<p>短信通道</p>-->
+								<!--		<a href="{:url('user/sms/channel')}">去使用</a>-->
+								<!--	</div>-->
+								<!--</li>-->
+								<li>
+									<i><img src="__PUBLIC__/images/controll/jiqirenguanli.png"></i>
+									<!--<div class="c_entrancedata_r">-->
+										<p>机器人管理</p>
+										<a href="{:url('user/device/robot_distribution')}">去使用</a>
+									<!--</div>-->
+								</li>
+								<!--<li>-->
+								<!--	<i><img src="__PUBLIC__/images/controll/gongzhonghaopeizhi.png"></i>-->
+								<!--	<div class="c_entrancedata_r">-->
+								<!--		<p>公众号配置</p>-->
+								<!--		<a href="{:url('user/weixin/index')}">去使用</a>-->
+								<!--	</div>-->
+								<!--</li>-->
+								<!--<li>-->
+								<!--	<i><img src="__PUBLIC__/images/controll/quanxianfenlei.png"></i>-->
+								<!--	<div class="c_entrancedata_r">-->
+								<!--		<p>菜单管理</p>-->
+								<!--		<a href="{:url('user/menu/index')}">去设置</a>-->
+								<!--	</div>-->
+								<!--</li>-->
+								<!--<li>-->
+								<!--	<i><img src="__PUBLIC__/images/controll/jueseguanli.png"></i>-->
+								<!--	<div class="c_entrancedata_r">-->
+								<!--		<p>角色管理</p>-->
+								<!--		<a href="{:url('user/role/index')}">去设置</a>-->
+								<!--	</div>-->
+								<!--</li>-->
+							</ul>
+						</div>
+						<!--其他功能快捷入口-->
+						<!--<div class="c_entrance c_entrance_t">-->
+						<!--	<p class="c_entrancetype">其他功能快捷入口</p>-->
+						<!--	<ul class="c_entrancedata clearfix">-->
+						<!--		<li>-->
+						<!--			<i><img src="__PUBLIC__/images/controll/xianluguanli.png"></i>-->
+						<!--			<div class="c_entrancedata_r">-->
+						<!--				<p>线路管理</p>-->
+						<!--				<a href="{:url('user/device/lines')}">去使用</a>-->
+						<!--			</div>-->
+						<!--		</li>-->
+								<!--<li>-->
+								<!--	<i><img src="__PUBLIC__/images/controll/duanxintongdao.png"></i>-->
+								<!--	<div class="c_entrancedata_r">-->
+								<!--		<p>短信通道</p>-->
+								<!--		<a href="{:url('user/sms/channel')}">去使用</a>-->
+								<!--	</div>-->
+								<!--</li>-->
+						<!--		<li>-->
+						<!--			<i><img src="__PUBLIC__/images/controll/jiqirenguanli.png"></i>-->
+						<!--			<div class="c_entrancedata_r">-->
+						<!--				<p>机器人管理</p>-->
+						<!--				<a href="{:url('user/device/robot_distribution')}">去使用</a>-->
+						<!--			</div>-->
+						<!--		</li>-->
+						<!--		<li>-->
+						<!--			<i><img src="__PUBLIC__/images/controll/gongzhonghaopeizhi.png"></i>-->
+						<!--			<div class="c_entrancedata_r">-->
+						<!--				<p>公众号配置</p>-->
+						<!--				<a href="{:url('user/weixin/index')}">去使用</a>-->
+						<!--			</div>-->
+						<!--		</li>-->
+						<!--	</ul>-->
+						<!--</div>-->
+					</div>
+			</div>	
+			
+			<!--线路状况-->
+			<div class="panel panel-default c_linestate" style="width:51%;float:right;height:315px;">
+			  <div class="panel-body">
+					<div class="panel-top">
+						<span class="panel-title"><i class="icon iconfont icon-weibiaoti--"></i>线路状况</span>
+						<div class="pull-right c_linebutton">
+							<a href="javascript:;" class="active">当天</a>
+							<a href="javascript:;" >7天</a>
+							<a href="javascript:;" >30天</a>
+						</div> 
+					</div>
+					<div class="c_linedata">
+						<div class="table-responsive">		
+							<table class="table table-bordered table-hover"> 
+									<thead class="ant-table-thead">
+										<tr>
+											<th>线路商名称</th>
+											<th>应答率</th>
+											<th>接通率</th>
+											<th>通话时长</th>
+											<th>通话计费</th>
+										</tr>
+									</thead>
+									<tbody class="ant-table-tbody" id="datadisplay">
+									</tbody>		
+							</table>
+						</div>
+					</div>
+					
+			  </div>
+			  
+			</div>
+		</div>
+			
+		
+	</div>
+ 
+  
+</div>
+	
+<!-- 用户协议提示 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">用户协议</h4>
+				</div>
+				<div class="modal-body">
+					  <div>
+							<p><b>用户业务承诺书</b></p> 
+						
+					  <p>
+							为保证平台健康、稳定运行，所有平台使用方需知悉并确认，一旦平台发现使用方利用平台进行违法行为，平台有权立即停止服务，不退还所有已付款项，
+并立即向有关机关报案。承诺内容包含但不限于如下：
+						</p>
+						<p>
+							一、使用平台进行外呼业务，遵守国家有关法律、法规和各行政规章制度。不开展任何违法、违规业务。
+							</p>
+							<p>
+							二、不利用平台开展各种形式违反社会公德和商业操守的外呼业务。
+						</p>
+						<p>
+							三、不利用提供的平台资源从事危害国家安全、泄露国家机密等违法犯罪行为。
+						</p>
+						<p>
+							四、不利用平台传播妨碍社会治安和宣传封建迷信、淫秽黄色等信息；窃取、泄露国家秘密、情报或者军事机密；煽动民族仇恨、民族歧视，破坏民族团结；组织邪教活动、联络邪教组织成员破坏国家法律、行政法规实施。
+						</p>
+						<p>
+							五、不利用平台进行窃取、诈骗、敲诈勒索。
+							</p>
+							<p>
+							六、用户明确表示拒绝后，不得继续向其发起呼叫。
+						</p>
+						<p>
+							七、规范外呼时段、频率行为等，不得对用户正常生活造成影响。
+						</p>
+						
+	        	</div>
+				</div>
+				<div class="modal-footer">
+					
+					<div class="checkbox" style="float:left;">
+						<label>
+							<input type="checkbox" value="1" name="isagreeshow" id="isagreeshow"> 不再显示
+						</label>
+					</div>
+					
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					
+				</div>
+    </div>
+  </div>
+	
+	<script type='text/template' id='line_template'>
+		<tr>
+			<td>{%line_name%}</td>
+			<td>{%answer_rate%}%</td>
+			<td>{%connect_rate%}%</td>
+			<td>{%call_duration%}分钟</td>
+			<td>{%call_money%}元</td>
+		</tr>
+	</script>
+	<script type="text/javascript">
+		get_lines_details(1);
+		$('.c_linebutton > a').click(function(){
+			if($(this).hasClass('active') === false){
+				$(this).addClass('active').siblings().removeClass('active');
+				var duration = $(this).data('type');
+				if(duration == 1){
+					get_lines_details(1);
+				}else if(duration == 2){
+					get_lines_details(7);
+				}else if(duration == 3){
+					get_lines_details(30);
+				}
+			}
+		});
+		//获取线路详情
+		function get_lines_details(duration)
+		{
+			var url = '{:url("get_member_lines_details_api")}';
+			$.ajax({
+				type:'GET',
+				dataType:'json',
+				data:{
+					duration:duration
+				},
+				url:url,
+				success:function(result){
+					if(result.code === 0){
+						var htmls = '';
+						$.each(result.data, function(index, object){
+							var html = $('#line_template').html();
+									html = html.replace('{%line_name%}', object.name);
+									html = html.replace('{%answer_rate%}', object.answer_rate);
+									html = html.replace('{%call_duration%}', object.call_duration);
+									html = html.replace('{%call_money%}', object.call_money);
+									html = html.replace('{%connect_rate%}', object.connect_rate);
+									htmls += html;
+						});
+						$('#datadisplay').html(htmls);
+					}
+					console.log(result);
+				},
+				error:function(){
+					alert('获取线路数据失败');
+				}
+			});
+		}
+		$('#myModal').on('hidden.bs.modal', function (e) {
+			
+		  var isagreeshow =	$("#isagreeshow").prop('checked');
+			
+			if(isagreeshow){
+				 	
+				 	$.ajax({
+				 		type: "POST",
+				 		dataType:'json',
+				 		url: "{:url('changeShow')}",
+				 		cache: false,
+				 		data:{},
+				 		success: function(res) {
+
+				 			console.log(res);
+				 
+				 		},
+				 		error: function(data) {
+				 		 // alert("获取数据失败");
+				 		}
+				 	});
+			}
+		 
+			
+		})
+			
+	</script>
+	 
+	
+	
+</div>
+	
+	
+
+{/block}

@@ -1,0 +1,262 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+.textwidth{
+	  width:250px;
+}
+.add_yuyin{height:.85rem;border-top:1px solid #e5e5e5;margin-left:.28rem;line-height: .85rem;width:100%;;float:left;}
+.luzhiyy{position:relative;font-size:.3rem;color:#666}
+.luzhiyy::after{position:absolute;right:.25rem;top:.28rem;width:.3rem;height:.3rem;content:"";background:url("../images/icon.png") no-repeat -5.78rem -3.59rem;background-size:14.57rem 4.86rem;}
+.luzhiyy s{display: inline-block;width:.48rem;height:.48rem;background:url("../images/icon.png") no-repeat -5.59rem -2.86rem;background-size:14.57rem 4.86rem;vertical-align: middle;margin-right:.24rem;}
+.tijaobtn{width:90%;height:.8rem;background-color:#f16461;text-align: center;line-height: .8rem;color:#fff;margin:0rem auto;display: block;border-radius: 6px;font-size:.3rem;}
+.tijaobtn[disabled]{background-color:#f4cac9;}
+.r_yuyin{color:#999999;height:.4rem;line-height:.4rem;padding:0 .1rem;    background-color: #95ce73;
+    border: 1px solid #368e42;border-radius: 6px;max-width: 75%;min-width: 18%;position: relative;float:right;}
+.r_yuyin s{width:.4rem;height:.4rem;position:absolute;right:.2rem;top:.09rem;background:url("../images/icon.png") no-repeat -7.11rem -3.62rem;background-size:14.57rem 4.86rem;}
+ .deleteicon{width:.55rem;height:.5rem;background:url("../images/icon.png") no-repeat -6.17rem -3.41rem;background-size:14.57rem 4.86rem;margin-top:.12rem;margin-left:.1rem;float:left;}
+
+.luyin_dialog{position: absolute;z-index: 500;top:0;left:0;bottom:0;right:0;background: url("../images/luyinbg.jpg") no-repeat center center;background-size: cover;display: none;}
+.r_yuyin i{    float: right;
+    color: #ffffff;
+    font-size: 21px;
+    font-weight: 600;
+	}
+.header_img {
+   font-size:30px;
+}
+.audio-c{
+ width: 100%;
+    background-color: #6b9cb6;
+    text-align: center;
+	padding-top: 5px;
+
+}
+.info{
+	display:block;
+	float:left;
+	width:27%;
+	background-color:#fff;
+	margin-right:7px;
+
+}
+.info h4{
+    font-weight: bold;
+    background-color: #6b9cb6;
+    color: #fff;
+    padding: 5px;
+    margin-top: 0px;
+	width:100%
+
+}
+.item{
+	border-bottom:2px solid #ccc;
+	
+	padding:5px;
+
+}
+.active{
+
+    background-color: green;
+	color:white;
+}
+
+.tip{
+	font-size:12px;
+}
+.popover-content{
+	color:#008cee; 
+	text-align: right;
+	margin-right: 50px;
+}
+</style>
+<link href="__STATIC__/css/chat.css" rel="stylesheet" type="text/css">
+
+<script src="__STATIC__/js/audio.js"></script>
+<div class="row">
+<div class="containerss">
+       <div class="info" >
+
+	
+		<h4><a href="javascript:history.go(-1);" style="color:white;text-decoration:none;">《返回</a><br/><br/>客户信息</h4>
+		<div style="margin-top: 10px;font-size: 13px;">
+			姓名：<span class="record" style="font-size: 13px;">{$memberInfo.nickname}</span>
+		</div>
+		<div style="margin-top: 10px;font-size: 13px;">
+			性别：<span class="iparea" style="font-size: 13px;">{$memberInfo.sex}</span>
+		</div>
+		<div style="margin-top: 10px;font-size: 13px;">
+			号码:<span id="v_state" style="font-size: 10px;">{$memberInfo.mobile}</span>
+		</div>
+
+		<h4>通话结果</h4>
+		<div style="margin-top: 10px;font-size: 13px;">
+			拨打时间：<span class="record" style="font-size: 13px;">{$memberInfo.last_dial_time}</span>
+		</div>
+
+		<div style="margin-top: 10px;font-size: 13px;">
+			通话时长：<span class="iparea" style="font-size: 13px;">{$memberInfo.duration}秒</span>
+		</div>
+
+		<div style="margin-top: 10px;font-size: 13px;">
+			拨打状态:<span id="v_state" style="font-size: 10px;">{$memberInfo.status}</span>
+		</div>
+		
+		<h4 >客户意向评估等级</h4>
+
+		<div class="item {$memberInfo.level == 5?'active' : ''}" data-v="5">
+			A类<span class="tip" >(较强)</span></div>
+
+		<div class="item {$memberInfo.level == 4?'active' : ''}" data-v="4">
+			B类<span class="tip">(一般)</span>
+		</div>
+
+		<div class="item {$memberInfo.level == 3?'active' : ''}" data-v="3">
+			C类<span class="tip">(很少)</span>
+		</div>
+		<div class="item {$memberInfo.level == 2?'active' : ''}" data-v="2">
+			D类<span class="tip">(待观察)</span>
+		</div>
+		<div class="item {$memberInfo.level == 1?'active' : ''}" data-v="1">
+			E类<span class="tip">(无意向)</span>
+		</div>
+		<h5 style="text-align:left;background-color:#ccc;padding-left: 27px;">*点击上面等级可以修改</h5>
+	   </div>
+        <div id="chatcontent" class="content chat-block" tabindex="0" >
+			<div class="audio-c">
+			<audio src="/{$memberInfo.record_path}" controls="controls"></audio>
+			</div>
+			{volist name="bills" id="vo"}
+				{if condition="$vo['role'] eq 0"}
+					<div class="jimi_lists clearfix">
+					  <div class="header_img  icon iconfont icon-zuoxi1"></div> 
+						<table class="msg" cellspacing="0" cellpadding="0">
+							<tbody><tr>
+							<td></td>
+							<!-- <td class="time">{$vo.create_time|format_date}</td> -->
+							<td></td>
+						</tr><tr><td class="lt"></td><td class="tt"></td><td class="rt"></td></tr>
+							<tr><td class="lm"><span></span></td><td class="mm"><span class="wel"><span class="visitor"><p>{$vo.message}</p></span></span></td><td class="rm"></td></tr>
+							<tr><td class="lb"></td><td class="bm"></td><td class="rb"></td></tr><tr><td></td></tr>
+							</tbody>
+						</table>
+					</div>
+				{else /}
+					 <div class="customer_lists clearfix">
+						<div class="header_img jimi3 icon iconfont icon-gerenkehuguanli" >
+						  
+						</div>
+						<table class="msg" cellspacing="0" cellpadding="0">
+							<tbody>
+								<tr>
+									<td></td>
+									<!-- <td class="time">{$vo.create_time|format_date}</td> -->
+									<td></td>
+								</tr>
+								<tr>
+								<td class="lt"></td>
+								<td class="tt"></td>
+								<td class="rt"></td>
+								</tr>
+								
+								<tr>
+									<td class="lm"></td>
+									
+									{switch name="$vo.status" }
+											{case value="1"}
+											   <td class="mm">
+											      {$vo.message}
+												 </td>
+											{/case}
+											{default /}
+												<td class="mm">
+												{$vo.message}
+													<!-- <div class="r_yuyin" style="width:46%" data-time="{$vo.duration}">{$vo.duration}'' -->
+														<!-- <audio preload="auto" hidden="true"> -->
+															<!-- <source src="{$vo.path}" type="audio/mpeg"> -->
+														<!-- </audio> -->
+														<!-- <i class="icon iconfont icon-yinliang"></i> -->
+													<!-- </div> -->
+											
+													
+												</td>
+									{/switch}
+								
+									<td class="rm"><span></span></td>
+								</tr>
+								<tr>
+									<td class="lb"></td>
+									<td class="bm"></td>
+									<td class="rb"></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+					
+					{switch name="$vo.status" }
+							{case value="1"}
+							   {notempty name="$vo.hit_keyword"}
+										<div class="customer_lists clearfix">
+											 <div class="session-item-left">
+													<div class="ant-popover-placement ant-popover-placement-left">
+															<div class="popover-content">【{$vo.hit_keyword}】<br></div>
+													</div>
+											 </div>
+										</div>
+								 {/notempty}
+							{/case}
+							{default /}
+					{/switch}
+				
+				{/if}
+			{/volist}
+			
+            
+            <!-- <script> -->
+			 <!-- $(function () { -->
+            <!-- var dshiqi = null; -->
+
+            <!-- //录音播放 -->
+            <!-- $("td").on("click", ".r_yuyin", function () { -->
+                <!-- //先暂停其他的 -->
+				<!-- console.log($(".bofang").html()); -->
+				<!-- //$(".bofang").parent().siblings().find("audio")[0].pause(); -->
+                <!-- //$(this).parent(".add_yuyin").siblings().find("audio")[0].pause(); -->
+               <!-- // $(this).parent(".add_yuyin").siblings().find("i").removeClass("bofang"); -->
+                <!-- let audio = $(this).find("audio")[0], -->
+                    <!-- time = $(this).data("time"); -->
+                <!-- if (audio.paused) { -->
+                    <!-- audio.play(); //audio.play();// 这个就是播放  -->
+                    <!-- $(this).find("i").addClass("bofang"); -->
+                    <!-- dshiqi = setTimeout(function () { //dshiqi是外层定义好的一个变量！ -->
+                        <!-- $(this).find("i").removeClass("bofang"); //播放完毕去除动画 -->
+                    <!-- }, time * 1000) -->
+                <!-- } else { -->
+                    <!-- audio.pause(); // 这个就是暂停 -->
+                    <!-- $(this).find("i").removeClass("bofang"); -->
+                    <!-- clearTimeout(dshiqi); -->
+                <!-- } -->
+            <!-- }) -->
+			<!-- }); -->
+			<!-- </script> -->
+        </div>
+    </div>
+</div>
+<script>
+	
+	$('.item').click(function(){	
+		 var level = $(this).attr('data-v');
+		
+		 $.post("{:url('changeLevel')}/id/{$Request.param.id}",{'level':level},function(res){
+	  		if (res.code == 0){	
+				
+			}
+			alert(res.msg);
+		});
+		 $(".active").removeClass("active");
+		 $(this).addClass("active");
+	});
+</script>
+{/block}
+

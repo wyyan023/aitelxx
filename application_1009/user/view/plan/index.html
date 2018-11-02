@@ -1,0 +1,375 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+.table tbody>tr>td {
+   padding: 6px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+
+.messageinfo{
+ text-align:right;
+ 
+}
+.infotable tr td{
+ padding:5px;
+}
+.textwidth{
+	width:250px;
+}
+
+</style>
+
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header clearfix">
+		  <div class="pull-left">
+				<h1>我的任务</h1>
+				
+				<a class="btn btn-primary" href="{:url('addPlan')}"><i class="fa fa-plus-circle fa-lg"></i>添  加</a>
+				
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+		
+		
+			<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>
+			<div class="table-responsive">
+			
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							
+							<th class="text-center">编号</th>
+							<th class="text-center">任务名称</th>
+							<th class="text-center">场景话术</th>
+							<th class="text-center">呼叫方式</th>
+							<th class="text-center">人工座席</th>
+							<th class="text-center">呼叫间隔时间</th>
+							<th class="text-center">状态</th>
+							<th class="text-center">创建时间</th>
+						
+							
+								<th class="text-center">操作</th> 
+							
+						</tr>
+					</thead>
+					<tbody>
+							{volist  name="list" id="vo"}
+									<tr>
+										
+								
+										<td class="text-center">{$vo.uuid}</td>
+										<td class="text-center">
+											{$vo.name}
+										</td>
+										<td class="text-center">
+											{$vo.scenarios}
+										</td>
+										<td class="text-center">{$vo.phone}</td>
+										<td class="text-center">{$vo.bridge|default= '无'}</td>
+										<td class="text-center">{$vo.call_pause_second}</td>
+										<td class="text-center">
+											{switch name="$vo.start" }
+												{case value="1"}
+														<a href="javascript:void(0);" onclick="setstatus({$vo.uuid},0);">启用</a>
+												{/case}
+												{default /}
+														<a href="javascript:void(0);" onclick="setstatus({$vo.uuid},1);">禁用</a>
+												
+											{/switch}
+												
+										</td>
+										<td class="text-center">
+											{$vo.create_datetime}
+										</td>	
+									
+										
+											<td class="text-center">
+												<a href="{:url('editPlan',array('id'=>$vo.uuid))}" >编辑</a>
+													 &nbsp;&nbsp;
+												<a href="javascript:void(0);" onclick="delPlan('{$vo.uuid}');">删除</a>
+											</td>
+																		
+										
+									</tr>
+						{/volist}
+					</tbody>
+				</table>
+					{$page}
+			</div>
+				     
+		</div>
+					
+	</div>					
+    
+
+
+</div>
+
+ <script type="text/javascript">
+ //设置状态
+  function setstatus(id,status){			
+  	 var url = "{:url('setstatus')}";	
+  	 $.ajax({
+  	        url : url,
+  	        dataType : "json", 
+  	        type : "post",
+  	        data : {'pId':id,'status':status},
+  	        success: function(data){
+  	        	if (data.code) {
+ 		    		 alert(data.msg);
+ 		    	}else{
+ 		    		 location.reload();
+ 		    	}
+  	        },
+  	        error : function() {
+  	        	alert('失败。');
+  	        }
+  	  });
+  }
+ 
+  
+  //删除
+  function delPlan(id){
+  
+  	 var r=confirm('确认删除?');
+      	if (!r) 
+            return; 
+ 
+      	 var ids=[];
+     	if(id){
+     		ids.push(id);
+     	}else{
+     		
+         	 var roleids = document.getElementsByName("customerIds");
+     		 for ( var j = 0; j < roleids.length; j++) {
+     		    if (roleids.item(j).checked == true) {
+     		    	ids.push(roleids.item(j).value);
+     		    }
+     		 }
+     	}
+ 		
+     	if(!ids.length){
+     		alert("至少选择一条。");
+     		 return false; 
+     	}
+   		 $.post("{:url('delPlan')}",{'id':ids},function(data){
+ 				if(data){ 
+ 					alert(data);
+ 				}else{
+ 					window.location.href=window.location.href;
+ 				}
+ 		}); 
+  }
+ 
+ </script>
+  
+</div>
+
+
+
+
+
+
+<div class="modal fade" id="checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">添加拨打计划</h4>
+       </div>
+       <div class="modal-body pagelists">
+				 
+          	
+	        <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+	      
+					     <div class="form-group">
+								<label class="col-lg-4 control-label">计划名称：</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="name" id="name" />
+								</div>
+					    </div>
+					    
+					    <div class="form-group">
+								<label class="col-lg-4 control-label">开始时间：</label>
+								<div class="col-lg-8 col-sm-8">
+								    <input type="text" class="form-control textwidth" id="startDate" name="startDate" value="" readonly="">
+								   
+								   	<script>
+											$('#startDate').fdatepicker({
+												format: 'hh:ii',
+												pickTime: true
+											});
+								    </script>	
+								</div>
+					    </div>
+					    
+							<div class="form-group" id="tplContent">
+								<label class="col-lg-4 control-label">结束时间：</label>
+								<div class="col-lg-8 col-sm-8">
+									  	<input type="text" class="form-control textwidth" id="endTime" name="endTime" value="" readonly="">
+									  	<script>
+									  	$('#endTime').fdatepicker({
+									  		format: 'hh:ii',
+									  		pickTime: true
+									  	});
+									  </script>	
+								</div>
+							</div>
+
+							
+							<div class="form-group">
+								<label class="col-lg-4 control-label">主叫号码：</label>
+								<div class="col-lg-8 col-sm-8">
+									
+									<select class="form-control textwidth" id="simId" name="simId">
+										    <option value=" ">请选择</option>
+								
+										
+									</select>
+								
+								</div>
+							</div>
+							
+			
+					    <div class="form-group" style="text-align: center;">
+								  <input type="hidden" name="planId" id="planId" value="">
+									<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						 </div>
+		
+			
+		     </form>
+				 
+					
+       </div>
+       <div style="clear:both"></div>
+      
+			
+	 
+	 </div>
+           
+    </div>
+   
+      <script type="text/javascript">
+	      	
+	      function showModal(id){
+				
+					 
+					 if(id){
+						    var url = "{:url('user/Plan/getPlanInfo')}";	
+							 $.ajax({
+									url : url,
+									dataType : "json", 
+									type : "post",
+									data : {'id':id},
+									success: function(data){	
+										
+											 $("#name").val(data.name);
+											 $("#startDate").val(data.start);
+											 $("#endTime").val(data.end);
+											 $("#simId").val(data.sim_id);
+											 $("#planId").val(data.id);
+											 //document.getElementById('planId').value = data.id;
+													 
+											 $('#checkpage').modal('show')
+									},
+									error : function() {
+										alert('审核信息失败。');
+									}
+								});
+						
+					 }
+					 else{
+
+               $('#checkpage').modal('show');
+							 
+					 }
+					
+
+	      }
+	     
+			 
+			 //检查表单的必填项
+				function checkform(){
+
+						var name = $("#name").val();
+						if(!name){
+							alert("计划名称不能为空"); 
+							return false; 
+						}
+						
+					  var starttime = $("#startDate").val();
+					 	var endtime = $("#endtime").val();
+					 
+					 if(!starttime){
+					 	alert("开始时间不能为空"); 
+					 	return false; 
+					 }
+					 
+					 if(!starttime){
+					  alert("结束时间不能为空"); 
+					  return false; 
+					 }
+					 	
+					if(endtime < starttime){
+						alert("“结束时间”不能小于“开始时间”"); 
+						return false; 
+					}
+					 	  	
+						
+				   var planId = $("#planId").val();
+	
+					 var href = "{:url('user/Plan/addPlan')}";
+           if(planId){
+						   href = "{:url('user/Plan/editPlan')}";
+					 }
+	
+					 
+					 $.ajax({
+							 type: "POST",
+							 dataType:'json',
+							 url: href,
+							 cache: false,
+							 data: $("#form").serialize(),
+							 success: function(data) {
+								if (data.code == 0) {
+									 // alert(data.msg);
+										$('#checkpage').modal('hide');
+									 location.reload();
+								}else{
+									 alert(data.msg);
+
+								}
+						
+							 },
+							 error: function(data) {
+								 alert("提交失败");
+							 }
+					 })  
+				}
+
+
+	    
+      </script>
+      
+   
+  </div>
+
+
+
+{/block}
+

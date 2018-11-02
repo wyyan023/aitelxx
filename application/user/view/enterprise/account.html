@@ -1,0 +1,1204 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<script type="text/javascript" href="__PUBLIC__/plugs/bootstrap/popover.js"></script>
+
+<link href="/public/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="/public/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="/public/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/enterpriseA.css"/>
+
+<div class="row">
+			<div class="col-lg-12">
+						<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist" style="margin-bottom: 20px;">
+					<!--<li role="presentation" class="active">-->
+					<!--	 <a href="#home" aria-controls="home" role="tab" data-toggle="tab">企业账户</a>-->
+					<!--	 <i></i>-->
+					<!--</li>-->
+					<li role="presentation" class='active'>
+						<a href="#home" aria-controls="home" role="tab" data-toggle="tab">消费统计</a>
+						<i></i>
+					</li>
+					<li role="presentation">
+						<a href="#Consumption" aria-controls="Consumption" role="tab" data-toggle="tab">消耗记录</a>
+						<i></i>
+					</li>
+					<li role="presentation">
+						<a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">订购充值</a>
+						<i></i>
+					</li>
+					<li role="presentation">
+						<a href="#rechargerecord" aria-controls="rechargerecord" role="tab" data-toggle="tab">充值记录</a>
+						<i></i>
+					</li>
+				</ul>
+
+				<div class="main-box clearfix">
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane e_setdatabg active" id="home">
+					  <div class="e_setmargin clearfix">
+					  	<div role="tabpanel" class="tab-pane" id="statistics">
+					  		<!--消费统计-->
+								<div class="main-context">
+										<div class="table-responsive">
+												<section class="navbar main-box-header clearfix">
+													<div class="clearfix">
+														<div class="form-inline pull-left" method="get" role="form">
+															<div class="form-group">
+																<label class="statusSelect">时间范围:</label>
+																<div class="col-lg-9 col-sm-9">
+																	<div class="col-lg-12 col-sm-12">
+																		<input type="text" style="width:135px;" class="form-control" id="startshow" name="startshow" value="" />
+																	</div>
+																	<script>
+																	$('#startshow').fdatepicker({
+																		format: 'yyyy-mm-dd ',
+																		// pickTime: true
+																	});
+																	</script>
+
+																</div>
+															</div>
+															至
+															<div class="form-group">
+
+																<div class="col-lg-9 col-sm-9">
+																	<div class="col-lg-12 col-sm-12">
+																		<input type="text"   style="width:135px;" class="form-control" id="endshow" name="endshow" value="" />
+																	</div>
+
+																	<script>
+																		$('#endshow').fdatepicker({
+																			format: 'yyyy-mm-dd ',
+																		// 	pickTime: true
+																		});
+																	</script>
+
+																</div>
+
+															</div>
+
+															<div class="form-group">
+																<label class="statusSelect">账户名称：</label>
+																<!--<select style="width:100px;" name="status" id="member_id" class="form-control">-->
+																<!--	<option value=" " selected="">全部</option>-->
+																<!--	{volist name='user_list' id='user'}-->
+																<!--	<option value="{$user.id}">{$user.username}</option>-->
+																<!--	{/volist}-->
+																<!--</select>-->
+																<input type="text" style="width:135px;" class="form-control" id="" placeholder="请输入账户名称" />
+														</div>
+															<span class="btn btn-primary" type="button" onclick="get_consumption_statistics(1)">查询</span>
+
+														</div>
+													</div>
+
+												</section>
+											<table class="table table-bordered table-hover e_layout">
+													<thead class="ant-table-thead">
+														<tr>
+															<th>用户名</th>
+															<th>角色</th>
+															<th>余额</th>
+															<th>机器人数量</th>
+															<th>日期</th>
+															<th>呼叫次数</th>
+															<th>接通次数</th>
+															<th>计费时长(分钟)</th>
+															<!--<th>通话时长</th>-->
+															<th>识别次数</th>
+															<th>费用</th>
+														</tr>
+													</thead>
+
+													<tbody class="ant-table-tbody" id="datadisplay">
+
+													</tbody>
+													<tbody class="ant-table-tbody" id="today_statistics" style='border-top:0px;'>
+
+
+													</tbody>
+											</table>
+
+											<div id="statpage">
+
+											</div>
+										</div>
+										<div class="component-page-empty" id="statdesempty">
+											<!--<div class="empty-tip line">暂无数据</div>-->
+										</div>
+
+								</div>
+
+					</div>
+
+
+
+					  </div>
+    				 <!-- <div class="my-header fl con-padding">-->
+    					<!--	<div class="my-title"><i class="icon iconfont icon-zhanghuzonglan"></i>账户总览 </div>-->
+    					<!--	<div class="my-detail">			    -->
+    					<!--		<div class="ant-avatar">-->
+    					<!--			<img class="img-circle" id="headImg" src="__PUBLIC__/images/default_avatar.jpg" />-->
+    					<!--		</div>-->
+    					<!--		<div class="my-detail-info">-->
+    					<!--			<div class="my-detail-info-item">-->
+    					<!--				<p id="adminUser">元</p>-->
+    					<!--				<p><i class="icon iconfont icon-zhanghao"></i>客户名称</p>-->
+    					<!--			 </div>-->
+    					<!--			 <div class="my-detail-info-item">-->
+    					<!--				 <p class="version" id="adminmoney"></p>-->
+    					<!--				 <p><i class="icon iconfont icon-yue"></i>余额</p>-->
+    					<!--			 </div>-->
+    					<!--			 <div class="my-detail-info-item">-->
+    					<!--				 <p>专业版</p>-->
+    					<!--				 <p class="version"><i class="icon iconfont icon-version"></i>版本</p>-->
+    					<!--			 </div>-->
+    					<!--		</div>-->
+    					<!--	</div>-->
+    					<!--</div>-->
+    					<!--<div class="seat-wrap seatwidth fl">-->
+    					<!--	<div class="my-title"><i class="icon iconfont icon-zuoxi"></i>坐席</div>-->
+    					<!--	<div class="seat-num seat-numright">-->
+    					<!--	  <div class="e_shownum">-->
+    					<!--	    <div class="e_shownumleft">-->
+    					<!--	      <p>1</p>-->
+    					<!--	      <p>AI坐席</p>-->
+    					<!--	    </div>-->
+    					<!--	    <div class="e_shownumright">剩余可用：1个</div>-->
+    					<!--	  </div>-->
+    					<!--		 <button type="button" onclick="alert('待开发');" class="btn btn-size-default">-->
+    					<!--			购买更多并发<i class="icon iconfont icon-jiantou"></i>-->
+    					<!--		 </button>-->
+    					<!--	</div>-->
+    					<!--	<div class="seat-num">-->
+    					<!--	  <div class="e_shownum">-->
+    					<!--	    <div class="e_shownumleft">-->
+    					<!--	      <p>2</p>-->
+    					<!--	      <p>人工坐席</p>-->
+    					<!--	    </div>-->
+    					<!--	    <div class="e_shownumright">剩余可用：1个</div>-->
+    					<!--    </div>-->
+    					<!--		<button type="button" onclick="alert('待开发');" class="btn btn-size-default">-->
+    					<!--			购买更多并发<i class="icon iconfont icon-jiantou"></i>-->
+    					<!--		</button>-->
+      			<!--		</div>-->
+      			<!--	</div>-->
+
+						<!--<div class="seat-wrap e_seatother con-padding">-->
+						<!--		  <div class="my-title"><i class="icon iconfont icon-goumaijilu"></i>购买记录</div>-->
+						<!--		  <div class="table-responsive">					 -->
+						<!--			 <table class="table table-hover"> -->
+						<!--				<thead class="ant-table-thead">-->
+						<!--					<tr>-->
+						<!--						<th><span>机器人数量</span></th>-->
+						<!--						<th><span>机器人剩余数量</span></th>-->
+						<!--						<th><span>服务周期</span></th>-->
+						<!--						<th><span>操作</span></th>-->
+						<!--					</tr>-->
+						<!--				</thead>-->
+						<!--					<tbody class="ant-table-tbody">-->
+						<!--						<tr class="ant-table-row">-->
+						<!--							<td><span id="robotNum"></span>个</td>-->
+						<!--							<td id="surplus"></td>-->
+
+						<!--							<td id="expirydate">-->
+
+						<!--							</td>-->
+						<!--							<td>-->
+						<!--							 <div style="max-width: 190px;">-->
+						<!--								  <button type="button" class="btn btn-size-default" title="温馨提示"-->
+						<!--													data-container="body" data-toggle="popover" data-placement="left"-->
+						<!--													data-content="如需购买或延期，请联系您的销售经理">-->
+						<!--											更多...-->
+						<!--									</button>-->
+													<!-- 	 <a href="#" data-toggle="popover" title="Example popover">延 期</a> -->
+						<!--							 </div>-->
+						<!--							</td>-->
+						<!--						</tr>-->
+						<!--					</tbody>		-->
+						<!--			 </table>-->
+						<!--		</div>-->
+						<!--	</div>-->
+
+							<!-- <div class="sms-wrap">
+								 <div class="my-title">话费</div>
+									<div class="table-responsive">
+										 <table class="table table-hover">
+											<thead class="ant-table-thead">
+												<tr>
+													<th><span>线路名</span></th>
+													<th><span>线路别名</span></th>
+													<th><span>费率类型</span></th>
+													<th><span>计费周期</span></th>
+													<th><span>价格</span></th>
+													<th><span>余额</span></th>
+													<th><span>操作</span></th>
+												</tr>
+											</thead>
+												<tbody class="ant-table-tbody">
+													<tr class="ant-table-row">
+														<td>2个</td>
+														<td>2018-08-31 19:12:57</td>
+														<td>2018-08-29至2018-09-29</td>
+														<td>2个</td>
+														<td>2018-08-31 19:12:57</td>
+														<td>2018-08-29至2018-09-29</td>
+														<td style="max-width: 190px;">
+																<button type="button" class="btn btn-size-default">通话详单</button>
+																<button type="button" class="btn btn-size-default">余额转移</button>
+														</td>
+													</tr>
+												</tbody>
+
+										 </table>
+									</div>
+							 </div> -->
+							<!--
+								 <div class="sms-wrap">
+										<div class="my-title">短信</div>
+										<div class="table-responsive">
+											 <table class="table table-hover">
+												<thead class="ant-table-thead">
+													<tr>
+														<th><span>余量</span></th>
+														<th><span>操作</span></th>
+													</tr>
+												</thead>
+													<tbody class="ant-table-tbody">
+														<tr class="ant-table-row">
+															<td style="width: 80%;">
+																<div>0条</div>
+															</td>
+															<td>
+															 <div style="max-width: 190px;">
+																 <button type="button" class="btn btn-size-default"><span>消耗详单</span></button>
+															 </div>
+															</td>
+														</tr>
+													</tbody>
+											 </table>
+										</div>
+								 </div>
+								 -->
+					</div>
+
+
+					<div role="tabpanel" class="tab-pane" id="profile">
+
+						<div class="main-context">
+
+								<div class="table-responsive">
+									<section class="navbar main-box-header clearfix">
+											<div class="clearfix">
+												<div class="form-inline pull-left" method="get" role="form">
+
+													<div class="form-group">
+														<label class="statusSelect">时间范围:</label>
+														<div class="col-lg-9 col-sm-9">
+															<div class="col-lg-12 col-sm-12">
+																<input type="text" style="width:135px;" class="form-control" id="startDate" name="startDate" value="" />
+															</div>
+															<script>
+															$('#startDate').fdatepicker({
+																format: 'yyyy-mm-dd  hh:ii:ss',
+																pickTime: true
+															});
+															</script>
+
+														</div>
+													</div>
+													至
+													<div class="form-group">
+
+														<div class="col-lg-9 col-sm-9">
+															<div class="col-lg-12 col-sm-12">
+																<input type="text" style="width:135px;" class="form-control" id="endTime" name="endTime" value="" />
+															</div>
+
+															<script>
+																$('#endTime').fdatepicker({
+																	format: 'yyyy-mm-dd hh:ii:ss',
+																	pickTime: true
+																});
+															</script>
+
+														</div>
+
+													</div>
+
+													<span class="btn btn-primary" type="button" onclick="searchdata(1,1);">查询</span>
+
+												</div>
+												<span class="btn btn-primary pull-right" type="button" style='display:none;'>导出数据</span>
+											</div>
+
+										</section>
+									<table class="table table-bordered table-hover e_layout" id="profileTable">
+											<thead class="ant-table-thead">
+												<tr>
+													<th>充值人</th>
+													<th>充值前余额</th>
+													<th>充值后余额</th>
+													<th>充值时间</th>
+													<th>充值金额</th>
+												</tr>
+											</thead>
+
+											<tbody class="ant-table-tbody" id="depositlist">
+
+
+											</tbody>
+											<tbody class="ant-table-tbody" id="deposit_summary">
+
+
+											</tbody>
+									</table>
+									<div id="modalpagybody"></div>
+
+								</div>
+								<div class="component-page-empty" id="desempty" style="display:none;">
+									<div class="empty-tip line">暂无数据</div>
+								</div>
+
+						</div>
+
+					</div>
+
+
+					<div role="tabpanel" class="tab-pane" id="Consumption">
+
+							<div class="main-context">
+
+									<div class="table-responsive">
+											<section class="navbar main-box-header clearfix">
+
+												<div class="clearfix">
+													<div class="form-inline pull-left" method="get" role="form">
+
+														<div class="form-group">
+															<label class="statusSelect">时间范围:</label>
+															<div class="col-lg-9 col-sm-9">
+																<div class="col-lg-12 col-sm-12">
+																	<input type="text" style="width:167px;" class="form-control" id="startTime" name="startTime" value="" />
+																</div>
+																<script>
+																$('#startTime').fdatepicker({
+																	format: 'yyyy-mm-dd  hh:ii:ss',
+																	pickTime: true
+																});
+																</script>
+
+															</div>
+														</div>
+														至
+														<div class="form-group">
+
+															<div class="col-lg-9 col-sm-9">
+																<div class="col-lg-12 col-sm-12">
+																	<input type="text" class="form-control" id="endDate" name="endDate" value="" />
+																</div>
+
+																<script>
+																	$('#endDate').fdatepicker({
+																		format: 'yyyy-mm-dd hh:ii:ss',
+																		pickTime: true
+																	});
+																</script>
+
+															</div>
+
+														</div>
+
+														<div class="form-group">
+																<label class="guanliyuan_pz">管理员：</label>
+																<input type="text" class="form-control" style="width:120px;" id="ownerps" name="ownerps" placeholder="请输入管理员">
+														</div>
+
+														<span class="btn btn-primary" type="button" onclick="orderRecharge(1,1);">搜索</span>
+														<span class="btn btn-primary" type="button" >重置</span>
+
+
+													</div>
+													<!--<span class="btn btn-primary pull-right" type="button">导出数据</span>									-->
+												</div>
+
+											</section>
+
+										<table class="table table-bordered table-hover">
+												<thead class="ant-table-thead">
+													<tr>
+														<th>账户</th>
+														<th>来源于</th>
+														<th>被叫号码</th>
+														<th>消费金额</th>
+														<th>通话计费单价(分钟)</th>
+														<th>机器人月租</th>
+														<th>语音识别计费单价</th>
+														<th>识别次数</th>
+														<th>通话时间长</th>
+														<th>创建时间</th>
+													</tr>
+												</thead>
+
+												<tbody class="ant-table-tbody" id="orderlist">
+
+												</tbody>
+										</table>
+										<div id="modalbody"></div>
+									</div>
+									<div class="component-page-empty" id="componentempty">
+										<div class="empty-tip line">暂无数据</div>
+									</div>
+							</div>
+					</div>
+
+					<!--充值记录-->
+
+					<div role="tabpanel" class="tab-pane" id="rechargerecord">
+							<div class="main-context">
+									<div class="table-responsive">
+										<div class="l-btn">
+											<section class="navbar main-box-header clearfix">
+												<div class="clearfix">
+													<div class="form-inline pull-left" method="get" role="form">
+
+														<div class="form-group">
+															<label class="statusSelect">时间范围:</label>
+															<div class="col-lg-9 col-sm-9">
+																<div class="col-lg-12 col-sm-12">
+																	<input type="text" style="width:135px;" class="form-control" id="rechargerecord_startDate" name="startDate" value="" />
+																</div>
+																<script>
+																$('#rechargerecord_startDate').fdatepicker({
+																	format: 'yyyy-mm-dd  hh:ii:ss',
+																	pickTime: true
+																});
+																</script>
+
+															</div>
+														</div>
+														至
+														<div class="form-group">
+
+															<div class="col-lg-9 col-sm-9">
+																<div class="col-lg-12 col-sm-12">
+																	<input type="text" style="width:135px;" class="form-control" id="rechargerecord_endTime" name="endTime" value="" />
+																</div>
+
+																<script>
+																	$('#rechargerecord_endTime').fdatepicker({
+																		format: 'yyyy-mm-dd hh:ii:ss',
+																		pickTime: true
+																	});
+																</script>
+
+															</div>
+
+														</div>
+														<div class="form-group">
+																<label class="statusSelect">账户名称：</label>
+																<!--<select style="width:100px;" name="status" id="rechargerecord_member_id" class="form-control">-->
+																<!--	<option value="" selected="">全部</option>-->
+																<!--	{volist name='user_list' key="user_key" id='user'}-->
+																<!--		{if $user_key != 1}-->
+																<!--			<option value="{$user.id}">{$user.username}</option>-->
+																<!--		{/if}-->
+																<!--	{/volist}-->
+																<!--	</select>-->
+																<input type="text" style="width:135px;" class="form-control" id="account" placeholder="请输入账户名称"/>
+														</div>
+														<span class="btn btn-primary" type="button" onclick="get_recharge_record_datas(1);">查询</span>
+
+													</div>
+												</div>
+
+											</section>
+											<!--<span class="btn btn-primary" type="button" >刷新</span>-->
+											<!--<span class="btn btn-primary" type="button" >返回</span>-->
+										</div>
+										<table class="table table-bordered table-hover">
+												<thead class="ant-table-thead">
+													<tr>
+														<th>子账户</th>
+														<th>充值时间</th>
+														<th>充值金额</th>
+														<th>充值前余额</th>
+														<th>充值后余额</th>
+														<th>备注</th>
+													</tr>
+												</thead>
+												<tbody class="ant-table-tbody" id="recharge_recordlist">
+												</tbody>
+												<tbody class="ant-table-tbody" id="recharge_record_summary">
+												</tbody>
+										</table>
+										<div id="statpage"></div>
+							</div>
+					</div>
+	      </div>
+		</div>
+	</div>
+</div>
+<script type="text/html" id="disnote">
+  <div class="e_shownote">
+		<p>{{datatext}}</p>
+	</div>
+</script>
+
+ <script type="text/javascript">
+
+ var despage = 1;
+ 	var page = 1;
+ $(function(){
+
+   userInfo();
+
+	 orderRecharge(page,0);
+
+	 searchdata(despage,0);
+
+	 $("[data-toggle='popover']").popover();
+
+ })
+
+	function userInfo(){
+
+		var url = "{:url('getInformation')}";
+		$.ajax({
+			url : url,
+			dataType : "json",
+			type : "post",
+			data : {},
+			success: function(data){
+				if(data.code=="0"){
+
+					var mresult = data.data.mresult;
+					$("#adminUser").text(mresult.username);
+					if(mresult.headImg){
+						$("#headImg").attr(mresult.headImg);
+					}
+					if(mresult.money){
+				   	$("#adminmoney").text(mresult.money);
+					}
+					$("#robotNum").text(mresult.robot_cnt);
+					$("#surplus").text(mresult.rnum);
+					$("#expirydate").text(mresult.create_time + " 至 " + mresult.expiry_date);
+
+				}else{
+					console.log(data.msg);
+				}
+
+
+
+			},
+			error: function() {
+				console.log('获取列表失败。');
+			}
+		});
+
+	}
+ </script>
+	<script id='recharge_tepmate' type='text/tepmate'>
+		<tr class="itemId{%id%}" alt="{%id%}">
+			<td>{%recharge_member_name%}</td>
+	    <td>{%defore_balance%}元</td>
+	    <td>{%balance%}元</td>
+	    <td>{%create_time%}</td>
+	    <td>{%menoy%}元</td>
+		</tr>
+	</script>
+	<script type='text/tepmtate' id='recharge_record_template'>
+		<tr>
+			<td>{%member_name%}</td>
+			<td>{%create_time%}</td>
+			<td>{%menoy%}元</td>
+			<td>{%defore_balance%}元</td>
+			<td>{%balance%}元</td>
+			<td>{%remak%}</td>
+		</tr>
+	</script>
+	<script id='recharge_statistics_tepmate' type='text/tepmate'>
+		<tr>
+			<td colspan="4">总充值金额</td>
+			<td>{%deposit_summary%}</td>
+		</tr>
+	</script>
+	<script id='consumption_tatistics' type='text/tepmate'>
+		<tr>
+			<td>{%member_name%}</td>
+			<td>{%role_name%}</td>
+			<td>{%user_money%}</td>
+			<td>{%robot_cnt%}</td>
+			<td>{%date%}</td>
+			<td>{%call_count%}</td>
+			<td>{%connect_count%}</td>
+			<td>{%charging_duration%}</td>
+			<td>{%distinguish_count%}次</td>
+			<td>{%money%}元</td>
+		</tr>
+	</script>
+
+	<script type="text/javascript">
+	//消费统计筛选
+	window.consumption_statistics_args = {
+		start_time:'',
+		end_time:'',
+		member_id:'',
+		page:1
+	};
+	//分页
+	function fenye(total_page,now_page,show=5){
+		if(show > total_page){
+			show = total_page;
+		}
+		//判断show是奇数还是偶数
+		if((show % 2) === 0){
+			var pre = (show / 2) - 1;
+			var next = show / 2;
+		}else{
+			var pre = (show - 1)/2;
+			var next = pre;
+
+		}
+		//设置上一页的起点
+		var star = now_page - pre;
+		//设置下一页的终点
+		var end = now_page + next;
+		//判断是否存在起点和终点是否存在溢出
+		if(end > total_page){
+			star = star + (total_page - end);
+			end = total_page;
+		}
+		if(star < 1){
+			end = end + (1 - star);
+			star = 1;
+		}
+
+		var fenye_html = "";
+		if(total_page > 1){
+			fenye_html = '<ul class="pagination">';
+
+			if(now_page > 1){
+				fenye_html += '<li data-page="'+(now_page - 1)+'" title="'+(now_page - 1)+'"><a href="javascript:void(0);"> << </a></li>';
+			}
+			for(star; star <= end; star++ ){
+				if(star == now_page){
+					fenye_html += '<li class="active" title="'+star+'"><a href="javascript:void(0);">'+star+'</a></li>';
+				}else{
+					fenye_html += '<li data-page="'+star+'" title="'+star+'"><a href="javascript:void(0);">'+star+'</a></li>';
+				}
+			}
+			if(now_page < total_page){
+				fenye_html += '<li data-page="'+(now_page + 1)+'" title="'+(now_page + 1)+'"><a href="javascript:void(0);"> >> </a></li>';
+			}
+			fenye_html += '</ul>';
+		}else{
+			fenye_html = '<ul class="pagination">';
+			fenye_html += '<li class="active" title="1"><a href="javascript:void(0);">1</a></li>';
+			fenye_html += '</ul>';
+		}
+
+		$('#statpage').html(fenye_html);
+
+		$('.pagination>li[data-page]').unbind('click');
+		$('.pagination>li[data-page]').click(function(){
+			var page = $(this).data('page');
+			$(this).siblings('li').removeClass('active');
+			$(this).addClass('active');
+			// search = {
+			// 	'startshow' : $('#startshow').val(),
+			// 	'endshow' : $('#endshow').val()
+			// };
+			// var companyName = $('#companyName option:selected').text();
+			// if(companyName == "全部"){
+			// 	companyName = 0
+			// }else{
+			// 	search['companyName'] = 1;
+			// }
+			// get_consumption_statistics(page,search);
+			get_consumption_statistics(page);
+		});
+
+	}
+
+	//消费统计搜索
+	function Consumption_search(){
+		var startshow = $('#startshow').val();
+		var endshow = $('#endshow').val();
+		var companyName = $('#companyName option:selected').text();
+		var search = {
+			'startshow' : startshow,
+			'endshow' : endshow
+		};
+		if(companyName == "全部"){
+			companyName = 0
+		}else{
+			search['companyName'] = 1;
+		}
+		//调用获取消费统计数据的方法
+		get_consumption_statistics(1,search);
+
+	}
+  // 订购充值 的搜索
+	var startDate,endTime,personal,status;
+  function recharge(page){
+			console.log(startDate);
+			console.log(endTime);
+		 	var url = "{:url('getConsume')}";
+		 	$.ajax({
+ 				url : url,
+ 				dataType : "json",
+ 				type : "post",
+ 				data : {
+					'page':page,
+					'startDate':startDate,
+					'endTime':endTime
+				},
+ 				success: function(data){
+ 					console.log(data);
+          if(data.code == 0){
+						 var htmls = '';
+						 $.each(data.data.list, function(index, object){
+						 	var html = $('#recharge_tepmate').html();
+						 			// html = html.replace('{%member_name%}', object.member_name);
+						 			html = html.replace('{%recharge_member_name%}', object.recharge_member_name);
+						 			html = html.replace('{%menoy%}', object.menoy);
+						 			// html = html.replace('{%remak%}', object.remak);
+						 			html = html.replace('{%balance%}', object.balance);
+						 			html = html.replace('{%defore_balance%}', object.defore_balance);
+						 			html = html.replace('{%create_time%}', object.create_time);
+						 			htmls += html;
+						 });
+						 $('#depositlist').html(htmls);
+						 var recharge_statistics = $('#recharge_statistics_tepmate').html();
+						 		 recharge_statistics = recharge_statistics.replace('{%deposit_summary%}', data.data.income + '元');
+						 $('#deposit_summary').html(recharge_statistics);
+					}else{
+						$("#desempty").css("display","block");
+
+						$("#depositlist").find("tr").remove();
+					}
+
+ 				},
+ 				error : function() {
+ 					alert('获取列表失败。');
+ 				}
+		 		});
+
+
+  }
+
+  //获取订购充值列表
+  function searchdata(page,type){
+
+  		if(type == 1){
+  			startDate = $("#startDate").val();
+  			endTime = $("#endTime").val();
+  			personal = $("#Personal").val();
+  			status = $("#status").val();
+  		}
+
+	    recharge(page);
+ }
+
+	get_consumption_statistics();
+	//获取消费统计数据 ConsumptionStatistics
+	function get_consumption_statistics(page)
+	{
+		var url = '{:url("get_consumption_statistics_api")}';
+		if(page == null || page == ''){
+			page = 1;
+		}
+		var data = {};
+		data.page = parseInt(page);
+		data.start_time = $('#startshow').val();
+		data.end_time = $('#endshow').val();
+		data.member_id = $('#member_id').val();
+		$.ajax({
+			type:"POST",
+			dataType:'json',
+			data:data,
+			url:url,
+			success:function(result){
+				console.log(result);
+				if(result.code === 0){
+					var htmls = '';
+					$.each(result.data.data, function(index, object){
+						var html = $('#consumption_tatistics').html();
+								html = html.replace('{%call_count%}', object.call_count);
+								html = html.replace('{%connect_count%}', object.connect_count);
+								html = html.replace('{%connect_duration%}', object.connect_duration);
+								html = html.replace('{%charging_duration%}', object.charging_duration);
+								html = html.replace('{%member_name%}', object.member_name);
+								html = html.replace('{%date%}', object.date);
+								html = html.replace('{%money%}', object.money);
+								html = html.replace('{%role_name%}', object.role_name);
+					 			html = html.replace('{%user_money%}', object.user_money);
+					 			html = html.replace('{%robot_cnt%}', object.robot_cnt);
+								html = html.replace('{%distinguish_count%}', object.distinguish_count);
+						htmls += html;
+					});
+					var summary_html = '';
+					summary_html +=  '<tr>';
+					summary_html +=  '<td colspan="8">汇总</td>';
+					summary_html +=  '<td>'+result.data.summary_distinguish_count+'次</td>';
+					summary_html +=  '<td>'+result.data.summary_consumption+'元</td>';
+					summary_html +=  '</tr>';
+					htmls += summary_html;
+					$('#datadisplay').html(htmls);
+					var total_page = Math.ceil(result.data.count/10);
+					console.log(total_page);
+					fenye(total_page,page);
+				}
+			},
+			error:function(){
+				alert('获取数据失败');
+			}
+		});
+	}
+	get_today_consumption_statistics();
+	//获取今天的消费统计
+	function get_today_consumption_statistics()
+	{
+		var url = '{:url("enterprise/get_today_consumption_statistic_api")}';
+		$.ajax({
+			type:"GET",
+			data:{},
+			dataType:"json",
+			url:url,
+			success:function(result){
+				console.log(result);
+				if(result.code == 0){
+					var summary_html = '';
+					summary_html +=  '<tr>';
+					summary_html +=  '<td colspan="8">今日汇总</td>';
+					summary_html +=  '<td>'+result.data.distinguish_count+'次</td>';
+					summary_html +=  '<td>'+result.data.cost+'元</td>';
+					summary_html +=  '</tr>';
+					$('#today_statistics').html(summary_html);
+				}
+			},
+			error:function(){
+				alert('今天的消费统计获取失败');
+			}
+		});
+	}
+
+
+ 	//获取等待列表
+ 	var startTime,endDate,ownerps;
+ 	function orderRecharge(page,type){
+
+ 		if(type == 1){
+ 			startTime = $("#startTime").val();
+ 			endDate = $("#endDate").val();
+ 			ownerps = $("#ownerps").val();
+ 		}
+
+ 		consumption(page);
+  }
+  get_recharge_record_datas(1);
+	//获取充值记录
+	function get_recharge_record_datas(page)
+	{
+		if(page == null || page == ''){
+			page = 1;
+		}
+		var start_time = $('#rechargerecord_startDate').val();
+		var end_time = $('#rechargerecord_endTime').val();
+		var member_id = $('#rechargerecord_member_id').val();
+		console.log(start_time);
+		console.log(end_time);
+		console.log(member_id);
+		var url = '{:url("get_recharge_record_api")}';
+		$.ajax({
+			type:'POST',
+			dataType:'json',
+			data:{
+				start_time:start_time,
+				end_time:end_time,
+				member_id:member_id,
+				page:page
+			},
+			url:url,
+			success:function(result){
+				if(result.code === 0){
+					var htmls = '';
+					$.each(result.data.list, function(index, object){
+						var html = $('#recharge_record_template').html();
+								html = html.replace('{%member_name%}', object.member_name);
+								html = html.replace('{%create_time%}', object.date);
+								html = html.replace('{%defore_balance%}', object.defore_balance);
+								html = html.replace('{%balance%}', object.balance);
+								html = html.replace('{%remak%}', object.remak);
+								html = html.replace('{%menoy%}', object.menoy);
+						htmls += html;
+					});
+					// recharge_record_summary
+					var recharge_record_summary_html = '';
+					recharge_record_summary_html += '<tr>';
+						recharge_record_summary_html += '<td colspan="5">充值金额汇总</td>';
+						recharge_record_summary_html += '<td>'+result.data.summary_money+'元</td>';
+					recharge_record_summary_html += '</tr>';
+					$('#recharge_record_summary').html(recharge_record_summary_html);
+					$('#recharge_recordlist').html(htmls);
+				}else{
+					alert('获取充值记录失败');
+				}
+			},
+			error:function(){
+				alert('获取充值记录失败');
+			}
+		})
+	}
+
+	function consumption(page){
+
+ 		var url = "{:url('getorderRecharge')}";
+ 		$.ajax({
+ 			url : url,
+ 			dataType : "json",
+ 			type : "post",
+ 			data : {
+				'page':page,
+				'startTime':startTime,
+				'endDate':endDate,
+				'ownerps':ownerps,
+				},
+
+ 			success: function(data){
+ 				console.log(data);
+				if(data.code == 0){
+					var total = data.data.total;
+					var Nowpage = data.data.Nowpage;
+					var page = data.data.page;
+					var Nowpage = parseInt(Nowpage);
+
+					var data = data.data.list;
+					if(data.length > 0){
+
+								$("#componentempty").css("display","none");
+
+								$("#orderlist").find("tr").remove();
+
+								for(var i=0;i<data.length;i++){
+
+									var id = data[i].id;
+									var musername = data[i].musername;
+									var ausername = data[i].ausername;
+									var owner = data[i].owner;
+									var member_id = data[i].member_id;
+									var mobile = data[i].mobile;
+									var duration = data[i].duration;
+									var money = data[i].money;
+									var time_price = data[i].time_price;
+									var month_price = data[i].month_price;
+									var asr_price = data[i].asr_price;
+									var create_time = data[i].create_time;
+									var asr_cnt = data[i].asr_cnt;
+									var member_name = data[i].member_name;
+
+									var string = '<tr class="itemId'+id+'" alt="'+id+'">'
+										+'<td>'+ausername+'</td>'
+										+'<td>'+member_name+'</td>'
+										+'<td>'+mobile+'</td>'
+										+'<td>'+money+'（元）</td>'
+										+'<td>'+time_price+'</td>'
+										+'<td>'+month_price+'</td>'
+										+'<td>'+asr_price+'</td>'
+										+'<td>'+asr_cnt+'</td>'
+										+'<td>'+duration+'</td>'
+										+'<td>'+create_time+'</td>'
+										string += '</tr>';
+										$("#orderlist").append(string);
+
+								}
+
+								var prepage = Nowpage-1;
+								var nextpage = Nowpage+1;
+
+								var str = '<div class="row">'
+								+'<div class="col-sm-3 text-left">'
+
+								+'<table class="table table-bordered table-hover" style="margin-bottom: 0px; ">'
+								+'<tbody><tr>'
+								+'<td class="text-center">总消费金额：'
+								+'</td>'
+								+'<td class="text-center">'+total+'&nbsp;元'
+								+'</td>'
+
+								+'</tr> '
+								+'</tbody></table>'
+
+								+'</div>'
+								+'<div class="col-sm-9 text-right">'
+								+'<ul class="pagination">';
+
+								if(Nowpage == 1){
+									str += '<li id="prevbtn" class="disabled"><span>«</span></li> ';
+								}else{
+									str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+prepage+',0);"><span>«</span></a></li> ';
+								}
+
+								if(page > 10){
+
+									if(Nowpage < 7){
+										for(var i=0;i<page;i++){
+											var nownum = i+1;
+											if(nownum < 9){
+												if(nownum == Nowpage){
+													str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';
+												}else{
+													str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';
+												}
+											}
+
+											if(nownum == 9 && nownum != Nowpage){
+												str += '<li class="disabled"><span>...</span></li>';
+											}else if(nownum == 9){
+												str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li> ';
+											}
+
+												if(nownum > (page-2)){
+													if(nownum == Nowpage){
+														str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';
+													}else{
+														str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';
+													}
+												}
+
+										}
+									}else if(Nowpage > 6 && Nowpage < (page-6)){
+										for(var i=0;i<page;i++){
+											var nownum = i+1;
+											var Nowpage = parseInt(Nowpage);
+											if(nownum < 3){
+												str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';
+											}
+
+											if((nownum > Nowpage-5) && (nownum < Nowpage+5)){
+
+															if(nownum == (Nowpage-4)){
+																	str += '<li class="disabled"><span>...</span></li>';
+															}
+
+																if(nownum > (Nowpage-4) && nownum < Nowpage){
+																	str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>';
+																}
+
+																if(nownum == Nowpage){
+																str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>';
+																}
+
+																if(nownum < (Nowpage + 4) && nownum > Nowpage){
+																	str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>';
+																}
+
+																if(nownum == (Nowpage + 4)){
+
+																str += '<li class="disabled"><span>...</span></li>';
+																}
+											}
+
+										if(nownum > (page-2)){
+											var Nowpage = parseInt(Nowpage);
+											if(nownum == Nowpage){
+														str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>';
+												}else{
+														str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li> ';
+												}
+
+											}
+
+										}
+									}else{
+
+										for(var i=0;i<page;i++){
+											var nownum = i+1;
+											if(nownum<3){
+												str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li>';
+											}
+
+											if(nownum == (page-10) && nownum != Nowpage){
+												str += '<li class="disabled"><span>...</span></li>';
+											}else if(nownum == (page-10) && nownum == Nowpage){
+												str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>';
+											}
+
+											if(nownum > (page-10)){
+												if(nownum == Nowpage){
+													str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li> ';
+												}else{
+													str += '<li ><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+'</a></li>';
+												}
+											}
+
+
+										}
+
+
+									}
+								}else{
+									for(var i=0;i<page;i++){
+										var nownum = i+1;
+										if(nownum == Nowpage){
+											str += '<li class="active"><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';
+										}else{
+											str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nownum+',0);">'+nownum+' </a></li> ';
+										}
+									}
+								}
+
+
+
+								if(Nowpage == page){
+									str += '<li id="prevbtn" class="disabled"><span>»</span></li> ';
+								}else{
+									str += '<li><a href="javascript:void(0);" onclick="orderRecharge('+nextpage+',0);"><span>»</span></a></li>';
+								}
+
+								str += '</ul>'
+								+'</div>'
+								+'</div>'
+								// $("#modalbody").find("div").remove();
+								$("#modalbody").html(str);
+					}else{
+						$('#modalbody').html('');
+						$("#componentempty").css("display","block");
+
+						$("#orderlist").find("tr").remove();
+					}
+				}else{
+					$("#componentempty").css("display","block");
+
+					$("#orderlist").find("tr").remove();
+				}
+ 			},
+ 			error : function() {
+ 				alert('获取列表失败。');
+ 			}
+ 		});
+
+	 }
+
+	function displaynote(data) {
+	   var note = $(data).siblings('.e_shownote');
+	   if(note.length > 0) {
+	     $(note).remove();
+	   } else {
+	     $('.e_shownote').remove();
+	     var $tem = $('#disnote').html();
+  	   $tem = $tem.replace("{{datatext}}" , $(data).siblings('p').text());
+       $(data).parent().append($tem);
+	   }
+
+	 }
+ </script>
+
+</div>
+
+
+{/block}

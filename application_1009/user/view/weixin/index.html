@@ -1,0 +1,153 @@
+{extend name="public/base" /}
+{block name="body"}
+<style type="text/css">
+.imgclass > td > p>img{
+width:50px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+
+.wi80-BFB {
+width: 80%;
+}
+.viplist {
+border: 1px solid #999;
+height: 150px;
+overflow: auto;
+}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header clearfix">
+		  <div class="pull-left">
+			  <h1>公众号列表</h1>
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+		
+	       <section class="navbar navbar-default main-box-header clearfix">
+	          <a href="{:url('add')}">
+                <button type="button" class="btn btn-info">
+                                                              添加公众号
+                  <i class="ace-icon fa fa-plus bigger-110"></i>
+                </button>
+              </a>
+		   </section>
+
+		     <div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>
+		     
+			  <div class="table-responsive">
+			  
+				  <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					        <th></th>
+					        <th class="text-center">公众号</th>
+					        <th class="text-center">状态</th>
+					        <th class="text-center">创建时间</th>
+					        <th class="text-center">操作</th> 
+					    </tr>
+				    </thead>
+				   <tbody>
+				        {volist name="list" id="vo"}
+					    <tr class="imgclass">
+					     <td class="text-center">
+					        <input type="checkbox" name="goodsids" class="bagcheck" value="{$vo.id}"/>
+					     </td>
+						  <td class="text-center">{$vo.wxname}</td>
+						  <td class="text-center">
+						  	  {switch name="$vo.status" }
+							    {case value="1"}
+                                  <a href="javascript:void(0);" onclick="setstatus('{$vo.id}',0);">启用</a>
+							    {/case}
+							    {default /}
+                                  <a href="javascript:void(0);" onclick="setstatus('{$vo.id}',1);">停用</a>
+							   {/switch}
+						  </td>
+						  <td class="text-center">{$vo.create_time}</td>
+						 
+						  <td class="text-center">
+	                        <a href="{:url('edit',['id'=>$vo.id])}" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="编辑">
+	                           <i class="fa fa-pencil"></i>
+	                        </a>
+                            <a href="javascript:void(0);" id="button-delete6" data-toggle="tooltip" onclick="delweixin({$vo.id})" class="btn btn-danger" data-original-title="删除">
+                               <i class="fa fa-trash-o"></i>
+                            </a>
+                                  
+					 	  </td>
+						</tr>
+                     {/volist}
+				    </tbody>
+				  </table> 
+		            <div class="row">
+                        <div class="col-sm-4 text-left"></div>
+                        <div class="col-sm-8 text-right">{$page}</div>
+                    </div>
+			  </div>
+		
+		</div>
+					
+	</div>					
+    
+</div>
+
+ <script type="text/javascript">
+ $(function(){
+   var email = "{$_GET['email']|default=''}";
+   $('#email').val(email);
+   var mobile = "{$_GET['mobile']|default=''}";
+   $('#mobile').val(mobile);
+ }) 
+
+//删除 
+ function delweixin(id){
+    var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+
+    	if(!id){
+    		alert("至少选择一条。");
+    		 return false; 
+    	}
+
+   		 $.post("{:url('delWeixin')}",{'id':id},function(data){
+			if(data){
+				alert(data);
+			}else{
+				window.location.href=window.location.href;
+			}
+		}); 
+ }
+ 
+ //设置状态
+   function setstatus(id,status){			
+   	 var url = "{:url('setstatus')}";	
+   	 $.ajax({
+   	        url : url,
+   	        dataType : "json", 
+   	        type : "post",
+   	        data : {'id':id,'status':status},
+   	        success: function(msg){
+   	        	if(msg.key > 0){
+   		        	alert(msg.msg);
+   	            }else{
+   	            	location.reload();
+   	            }  
+   	        },
+   	        error : function() {
+   	        	alert('获取页面列表失败。');
+   	        }
+   	  });
+   }
+ </script>
+  
+</div>
+
+
+{/block}
+

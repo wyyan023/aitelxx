@@ -1,0 +1,186 @@
+{extend name="public/base" /}
+{block name="body"}
+<style type="text/css">
+.table tbody>tr>td {
+padding: 6px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header clearfix">
+		  <div class="pull-left">
+			  <h1>评论管理列表</h1>
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+             <section class="navbar navbar-default main-box-header clearfix">
+		         <div class="pull-right">
+				   <form class="form-inline" method="get" role="form">
+					  <div class="form-group">
+					    <label>评论内容 ：</label>
+					    <input type="text" class="form-control" style="width:200px;" id="content" name="content" placeholder="请输入评论内容">
+					  </div>&nbsp;&nbsp;&nbsp;
+					  <div class="form-group">
+					    <label>用户名 ：</label>
+					    <input type="text" class="form-control" style="width:200px;" id="userName" name="userName" placeholder="请输入用户名">
+					  </div>
+				    <button class="btn btn-primary" type="submit">搜索</button>
+				  </form>
+				 </div>
+		   </section>
+		     <div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>
+		     
+			  <div class="table-responsive">			  
+				  <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					        <th></th>
+					        <th class="text-center">用户名称</th>
+					        <th class="text-center">评论内容</th>
+					        <th class="text-center">商品</th>
+					        <th class="text-center">显示</th>
+					        <th class="text-center">评论时间</th>
+					        <th class="text-center">ip地址</th>
+					        <th class="text-center">操作</th> 
+					    </tr>
+				    </thead>
+				   <tbody>
+				       {volist name="list" id="vo"}
+					    <tr class="imgclass">
+					      <td class="text-center">
+					        <input type="checkbox" name="commentids" class="commentcheck" value="{$vo.comment_id}"/>
+					      </td>
+						  <td class="text-center">{$vo.username}</td>
+						  <td class="text-center">{$vo.content}</td>
+						  <td class="text-center">{$vo.content_name}</td>
+						  <td class="text-center">
+						    {switch name="$vo.is_show" }
+							    {case value="0"}
+							     <img style="width:24px" src="__IMG__/cancel.png" />
+							    {/case}
+							    {default /}
+							      <img style="width:24px" src="__IMG__/yes.png" />
+							{/switch}
+						  </td>
+						  <td class="text-center">{$vo.play_time}</td>	
+						  <td class="text-center">{$vo.ip_address}</td>			 
+						  <td class="text-center">
+
+                             <a href="{:url('replyComment',['id'=>$vo.comment_id])}" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="回复评论">
+                                <i class="fa fa-eye"></i>
+                             </a>
+                             <a class="btn btn-danger" data-toggle="tooltip" title="删除" href="javascript:void(0)" onclick="delcomment({$vo.comment_id})">
+                                <i class="fa fa-trash-o"></i>
+                             </a>
+					 	  </td>
+						</tr>
+                      {/volist}
+				    </tbody>
+				  </table> 
+		           <div class="row">
+                        <div class="col-sm-4 text-left"></div>
+                        <div class="col-sm-8 text-right">{$page}</div>
+                    </div>
+			  </div>
+	          <footer class="main-box-footer clearfix">
+				<div class="pull-left">
+			    	<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+					<button class="btn btn-primary" onclick="delcomment(0);" target-form="ids">删 除</button>
+					<button class="btn btn-primary" onclick="changecomment(1);" target-form="ids">显示</button>
+					<button class="btn btn-primary" onclick="changecomment(0);" target-form="ids">隐藏</button>
+				</div>
+			</footer>
+		</div>
+					
+	</div>					
+    
+</div>
+
+ <script type="text/javascript">
+ $(function(){
+  var content = "{$_GET['content']|default=''}";
+  $('#content').val(content);
+  var userName = "{$_GET['userName']|default=''}";
+  $('#userName').val(userName);
+}) 
+//删除
+ function delcomment(id){
+    var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+
+     	 var ids=[];
+    	if(id){
+    		ids.push(id);
+    	}else{
+    		
+        	 var roleids = document.getElementsByName("commentids");
+    		 for ( var j = 0; j < roleids.length; j++) {
+    		    if (roleids.item(j).checked == true) {
+    		    	ids.push(roleids.item(j).value);
+    		    }
+    		 }
+    	}
+		
+    	if(!ids.length){
+    		alert("至少选择一条。");
+    		 return false; 
+    	}
+
+    	
+    	  
+  		 $.post("{:url('delComment')}",{'comment_id':ids},function(data){
+				if(data){
+					alert(data);
+				}else{
+					window.location.href=window.location.href;
+				}
+			}); 
+ }
+//全选
+ function allcheck(){			
+ 	if ($('.check-all').is(":checked")) {	
+ 		$('.commentcheck').prop("checked","checked");
+ 	}else{
+ 		$('.commentcheck').prop("checked",false);
+ 	}
+
+ }
+ 
+ //修改状态
+   function changecomment(status){
+	   
+     	 var ids=[];
+       	 var roleids = document.getElementsByName("commentids");
+   		 for ( var j = 0; j < roleids.length; j++) {
+   		    if (roleids.item(j).checked == true) {
+   		    	ids.push(roleids.item(j).value);
+   		    }
+   		 }
+    
+    	if(!ids.length){
+    		alert("至少选择一条。");
+    		 return false; 
+    	}
+
+  		 $.post("{:url('changeComment')}",{'comment_id':ids,'status':status},function(data){
+				if(data){
+					alert(data);
+				}else{
+					window.location.href=window.location.href;
+				}
+			}); 
+ }
+ </script>
+  
+</div>
+
+{/block}
+

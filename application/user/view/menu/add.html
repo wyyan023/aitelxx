@@ -1,0 +1,211 @@
+{extend name="public/base" /}
+{block name="body"}
+
+
+<style type="text/css">
+.textwidth{
+width:250px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.nav-tabs {
+border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+color: #555;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+background-color: #FFFFFF;
+border-color: #FFFFFF;
+color: #FFFFFF;
+border-radius: 0;
+background-clip: padding-box;
+}
+.field-status{
+    float: left;
+}
+
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+         <header class="main-box-header clearfix">
+		   <div class="pull-left">
+			  <h1><span>{$current|default=''}</span>后台菜单页面</h1>
+		   </div>
+		 </header>
+         </div>
+	  <div class="panel-body">
+	
+      
+      <form method="post" id="form" class="form form-horizontal">
+			<div class="form-group">
+				<label class="col-lg-2 control-label"><span style="color:red">*</span>标题</label>
+				<div class="col-lg-10">
+				   
+					<input type="text" class="form-control" name="title" id="title" value="{$info.title|default=''}" style="width: 80%">
+					<span class="help-block">（用于后台显示的配置标题）</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">小图标</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" name="icon" id="inputicon" value="{$info.icon|default=''}" style="width: 80%">
+					<span class="help-block">（用于显示在菜单左侧，不填则不显示）</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">排序</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" name="sort" id="sort" value="{$info.sort|default=0}" style="width: 60%">
+					<span class="help-block">（用于分组显示的顺序）</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">链接</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" name="url" id="url" value="{$info['url']|default=''}" style="width: 80%">
+					<span class="help-block">（U函数解析的URL或者外链）</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">上级菜单</label>
+				<div class="col-lg-10">
+					<select name="pid" id="pid" class="form-control" style="width: 50%">
+						{volist name="Menus" id="menu"}
+						<option value="{$menu['id']}" {if $info['pid'] == $menu['id']}selected{/if}>{$menu.title_show}</option>
+						{/volist}
+					</select>
+					<span class="help-block">（所属的上级菜单）</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">分组</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" name="group" id="group" value="{$info['group']|default=''}" style="width: 50%">
+					<span class="help-block">（用于左侧分组二级菜单）</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">是否隐藏</label>
+				<div class="col-lg-1">
+					<select name="hide" id="hide" class="form-control">
+						<option value="0" >否</option>
+						<option value="1" {if isset($info['hide']) && $info['hide']==1}selected{/if}>是
+					</option>
+				</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-lg-2 control-label">仅开发者模式可见</label>
+				<div class="col-lg-1">
+					<select name="is_dev" id="is_dev" class="form-control">
+						<option value="0" >否</option>
+						<option value="1" {if isset($info['is_dev']) && $info['is_dev']==1}selected{/if}>是
+					</option>
+				</select>
+			</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-lg-2 control-label">菜单类型</label>
+				<div class="col-lg-2">
+					<select name="type" id="thistype" class="form-control">
+						<option value="admin" >后台</option>
+						<option value="user" {if isset($info['type']) && $info['type']=='user'}selected{/if}>用户
+					</option>
+				</select>
+			</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-lg-2 control-label">说明</label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" id="remark" name="tip" value="{$info.tip|default=''}" style="width: 60%;">
+					<span class="help-block">（菜单详细说明）</span>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">
+					<input type="hidden" name="id" value="{$info['id']|default=''}">
+					<span class="btn btn-success submit-btn" onclick="checkform();" type="submit">确 定</span>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+				</div>
+			</div>
+		</form>
+		
+		
+		
+	  </div>
+</div>	
+					
+
+
+<script type="text/javascript">
+
+//检查表单的必填项
+function checkform(){
+
+	  var title = $("#title").val();
+	  if(!title){
+		  alert("标题名称不能为空"); 
+		  return false; 
+	  }
+	
+	  var reg = /^[0-9]+$/;
+	  var sort = $("#sort").val();
+	  if (!reg.test(sort)) { 
+	  	    alert("排序不能为空并且必须是正整数"); 
+	        return false; 
+	  }
+	  
+    /*  var url = $("#url").val();
+	  if(!url){
+		  alert("链接不能为空"); 
+		  return false; 
+	  }*/
+	  
+
+		 var href = window.location.href;
+		 
+		 $.ajax({
+		     type: "POST",
+		     dataType:'json',
+		     url: href,
+		     cache: false,
+		     data: $("#form").serialize(),
+		     success: function(data) {
+		    	if (data.code) {
+		    		 alert(data.msg);
+		    		 location.reload();
+		    	}else{
+		    		 alert(data.msg + ' 页面即将自动跳转~');
+		    		 location.href = "{:url('User/Menu/index')}";
+		    	}
+			
+		     },
+		     error: function(data) {
+		    	 alert("提交失败");
+		     }
+		 }) 
+
+}
+</script>
+
+
+</div>
+
+</div>
+
+{/block}
+

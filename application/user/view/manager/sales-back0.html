@@ -1,0 +1,633 @@
+{extend name="public/base" /}
+{block name="body"}
+<link href="__PUBLIC__/plugs/icheck/skins/all.css" rel="stylesheet">
+<style type="text/css">
+.table tbody>tr>td {
+padding: 12px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+
+.messageinfo{
+ text-align:right;
+ 
+}
+.infotable tr td{
+ padding:5px;
+}
+.form-group {
+    margin-bottom: 10px;
+}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header n_head_box n_head_box_b clearfix">
+		  <div class="pull-left">
+			  <span class="n_panel_title"><i class="icon iconfont icon-zhuanshuxiaoshourenyuan"></i>销售人员管理</span>
+		  </div>
+		</header>
+		
+		<div class="main-box-body clearfix">
+		
+	        <section class="navbar main-box-header clearfix">
+	         <div  class="pull-left">
+			   <form class="form-inline"  method="get" role="form">
+			     
+				  <div class="form-group">
+				    <label>用户名 ：</label>
+				    <input type="text" class="form-control" id="keyword" name="keyword" placeholder="请输入用户名">
+				  </div>
+			    <button class="btn btn-primary" type="submit">搜索</button>
+			  </form>
+			 </div>
+			 <a class="btn btn-primary pull-right"  href="javascript:void(0);" onclick="addNew();">添加销售人员</a>
+		   </section>
+
+		     <!--<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>-->
+		     
+			  <div class="table-responsive">
+			  
+				 <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					        <th class="text-center"></th>
+					        <th class="text-center">名称</th>
+					       
+					        <th class="text-center">手机号码</th>
+					        <th class="text-center">邮箱</th>
+							<th class="text-center">绑定微信</th>
+							<th class="text-center">分配人数</th>
+							
+					        <th class="text-center">注册时间</th>
+							<th class="text-center">最后登录时间</th>
+					        <th class="text-center">状态</th>
+					     
+					        <th class="text-center">操作</th> 
+					    </tr>
+				    </thead>
+				   <tbody>
+					{volist name="list" id="vo"}
+						<tr>
+						<td class="text-center">
+						<input type="checkbox" name="adminids" class="admincheck" value="{$vo.id}"/>
+						</td>
+						<td class="text-center">{$vo.username}</td>
+					  
+						<td class="text-center">{$vo.mobile}</td>
+						   
+						<td class="text-center">{$vo.email}</td>
+						<td class="text-center">{$vo.wxname}</td>
+						<td class="text-center">{$vo.num}</td>
+						<td class="text-center">{$vo.create_time}</td>
+						<td class="text-center">{$vo.last_login_time}</td>
+						<td class="text-center">
+							{switch name="$vo.status" }
+							  {case value="1"}
+								 <a href="javascript:void(0);" onclick="setstatus({$vo.id},0);">开启</a>
+							  {/case}
+							  {default /}
+								  <a href="javascript:void(0);" onclick="setstatus({$vo.id},1);">关闭</a>
+							{/switch}
+						  
+						  </td>
+						  
+						
+						 
+						  <td class="text-center">
+						 <!-- <a href="javascript:void(0);" -->
+							<!--{if condition="$vo.open_id eq ''"}-->
+							<!-- onclick="getQRUrl({$vo.id});">-->
+							<!--	绑定微信-->
+							<!--{else /}-->
+							<!-- onclick="removeBinding({$vo.id});">-->
+							<!--	解绑微信-->
+							<!--{/if}-->
+							<!--</a>-->
+							<a href="javascript:void(0);" onclick="">分配机器人</a>
+							<a href="javascript:void(0);" onclick="resetPwd({$vo.id});">重置密码</a>
+						    <a  href="javascript:void(0);" onclick="getSale({$vo.id});">编辑</a>
+					        <a href="javascript:void(0);" onclick="delAdmin({$vo.id});">删除</a>	
+							<a href="{:url('myCustomer',array('id'=>$vo.id))}">我的客户</a>
+					 	  </td>
+						</tr>
+				       {/volist}
+				    </tbody>
+				  </table>
+				 <div class="row">
+                        <div class="col-sm-4 text-left">
+                           <div class="pull-left">
+						    
+						   </div>	
+                        	
+                        </div>
+                        <div class="col-sm-8 text-right">{$page}</div>
+                    </div>
+			  </div>
+			  
+		
+		<footer class="main-box-footer clearfix">
+			<div class="pull-left">
+		    	<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+				<button class="btn btn-primary" onclick="delAdmin(0);" target-form="ids">删 除</button>
+				<button class="btn btn-primary" onclick="setstatus(0,1);" target-form="ids">开启</button>
+		        <button class="btn btn-primary" onclick="setstatus(0,0);" target-form="ids">关闭</button>
+			</div>
+		</footer>
+		</div>
+					
+	</div>					
+    
+
+
+</div>
+
+<script src="__PUBLIC__/plugs/icheck/icheck.js"></script>
+ <script type="text/javascript">
+
+
+ $(function(){
+		var keyword = "{$_GET['keyword']|default=''}";
+		$('#keyword').val(keyword);
+		 
+})
+
+
+//设置状态
+ function setstatus(id,status){			
+	 
+    var ids;
+  	if(id){
+  		var Ids=[];
+  		Ids.push(id);
+  		ids = Ids;
+  	}else{
+  		 var IdsVal = [];
+      	 var roleids = document.getElementsByName("adminids");
+  		 for ( var j = 0; j < roleids.length; j++) {
+  		    if (roleids.item(j).checked == true) {
+  		    	IdsVal.push(roleids.item(j).value);
+  		    }
+  		 }
+  		 ids = IdsVal;
+  	}
+	
+  	if(!ids.length){
+ 		alert("至少选择一条。");
+ 		 return false; 
+ 	}
+	 
+ 	 var url = "{:url('setstatus')}";	
+ 	 $.ajax({
+ 	        url : url,
+ 	        dataType : "json", 
+ 	        type : "post",
+ 	        data : {'arrayIds':ids,'status':status},
+ 	        success: function(data){
+ 	        	if (data.code) {
+		    		 alert(data.msg);
+		    	}else{
+		    		 location.reload();
+		    	}
+ 	        },
+ 	        error : function() {
+ 	        	alert('获取页面列表失败。');
+ 	        }
+ 	  });
+ }
+
+ 
+//删除Items
+ function delAdmin(id){
+    var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+     	   var ids;
+ 	    	if(id){
+ 	    		var Ids=[];
+ 	    		Ids.push(id);
+ 	    		ids = Ids;
+ 	    	}else{
+ 	    		 var IdsVal = [];
+ 	        	 var roleids = document.getElementsByName("adminids");
+ 	    		 for ( var j = 0; j < roleids.length; j++) {
+ 	    		    if (roleids.item(j).checked == true) {
+ 	    		    	IdsVal.push(roleids.item(j).value);
+ 	    		    }
+ 	    		 }
+ 	    		 ids = IdsVal;
+ 	    	}
+ 		
+ 	    	if(!ids.length){
+ 	    		alert("至少选择一条。");
+ 	    		 return false; 
+ 	    	}
+ 	    	
+     		 $.post("{:url('delAdmin')}",{'admin_id':ids},function(data){
+     			if (data.code) {
+		    		 alert(data.msg);
+		    	}else{
+		    		 location.reload();
+		    	}
+ 				
+ 			}); 
+     
+
+ }
+ 
+ 
+ //开通人口座机
+ 
+  function setopenTsr(id,status){			
+	 
+    var ids;
+  	if(id){
+  		var Ids=[];
+  		Ids.push(id);
+  		ids = Ids;
+  	}
+  	else{
+  		 var IdsVal = [];
+      	 var roleids = document.getElementsByName("adminids");
+  		 for ( var j = 0; j < roleids.length; j++) {
+  		    if (roleids.item(j).checked == true) {
+  		    	IdsVal.push(roleids.item(j).value);
+  		    }
+  		 }
+  		 ids = IdsVal;
+  	}
+	
+  	if(!ids.length){
+ 		alert("至少选择一条。");
+ 		 return false; 
+ 	}
+	 
+ 	 var url = "{:url('setopenTsr')}";	
+ 	 $.ajax({
+ 	        url : url,
+ 	        dataType : "json", 
+ 	        type : "post",
+ 	        data : {'arrayIds':ids,'status':status},
+ 	        success: function(data){
+ 	        	if (data.code) {
+		    		 alert(data.msg);
+		    	}else{
+		    		 location.reload();
+		    	}
+ 	        },
+ 	        error : function() {
+ 	        	alert('获取页面列表失败。');
+ 	        }
+ 	  });
+ }
+
+ 
+//全选
+ function allcheck(){			
+ 	if ($('.check-all').is(":checked")) {	
+ 		$('.admincheck').prop("checked","checked");
+ 	}else{
+ 		$('.admincheck').prop("checked",false);
+ 	}
+
+ }
+ 
+ function getQRUrl(id){
+	$('#sale_id').val(id);
+	$.ajax({
+		 type: "POST",
+		 dataType:'json',
+		 url:  "{:url('user/manager/getQRUrl')}",
+		 cache: false,
+		 data: {id:id},
+		 
+		 success: function(res) {
+			if (res.code == 0){
+				$('#qr_img').attr('src', res.data);
+				<!-- var html = ""; -->
+				
+				<!-- var elem = document.getElementById("fans-list"); -->
+				<!-- elem.innerHTML = ""; -->
+				
+				<!-- for(var i=0; i<res.data.length;i++){ -->
+					<!-- var fans = res.data[i]; -->
+				
+					<!-- var elDiv=document.createElement("div"); -->
+					<!-- elDiv.className="row wx-record"; -->
+					<!-- elDiv.innerHTML = '<img src="'+fans.head_pic+'" /> <span>'+fans.nickname+'</span>'; -->
+					
+					<!-- var elInput=document.createElement("input"); -->
+					<!-- elInput.className="icheckbox_square-blue"; -->
+					<!-- elInput.setAttribute('type','checkbox'); -->
+					<!-- elInput.setAttribute('name','wx_nickname'); -->
+					<!-- elInput.setAttribute('value',fans.id); -->
+					
+					<!-- elDiv.append(elInput); -->
+					<!-- $('#fans-list').append(elDiv); -->
+					<!-- if (open_id && open_id == fans.id){ -->
+						<!-- $(elDiv).iCheck('check'); -->
+					<!-- } -->
+				<!-- } -->
+				
+			  <!-- $('#fans-list input').iCheck({ -->
+				<!-- checkboxClass: 'icheckbox_square-blue', -->
+				<!-- radioClass: 'iradio_square-green', -->
+				<!-- increaseArea: '20%' -->
+			  <!-- }); -->
+			  
+				<!-- $('#fans-list input').on('ifChecked', function(event){ -->
+					<!-- var currId = $(this).val(); -->
+					 <!-- $("#fans-list input").each(function(){ -->
+						<!-- if (currId != $(this).val()){ -->
+							<!-- $(this).iCheck('uncheck'); -->
+						<!-- } -->
+					  <!-- }); -->
+			
+				 <!-- }); -->
+		
+				
+				$('#wx_binding').modal('show');
+			}
+			else{
+				alert(res.msg);
+			 }
+		 },
+		 error: function(data) {
+			 alert("提交失败");
+		 }
+	 }) 
+ }
+ 
+ function removeBinding(id){
+	 $.ajax({
+				 type: "POST",
+				 dataType:'json',
+				 url:  "{:url('user/manager/removeBinding')}",
+				 cache: false,
+				 data: {id:id},
+				 success: function(res) {
+					if (res.code == 0) {
+						 location.href = "{:url('User/manager/sales')}";
+					}else{
+					 alert(res.msg);
+						
+					}
+				 },
+				 error: function(data) {
+					 alert("提交失败");
+				 }
+			 }) 
+ 
+ }
+ 
+	
+ </script>
+ <style>
+  .wx-record{
+	 margin: 5px 20px;
+  
+  }
+  .wx-record span{
+	 padding-right:15px;
+  
+  }
+  .wx-record img{
+	width:20px;
+  
+  }
+  </style>
+ <div class="modal fade" id="wx_binding" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								 <span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">绑定微信</h4>
+				 </div>
+				 <div class="modal-body">
+							<form id="wx_binding_form" method="post" class="form-horizontal" enctype="multipart/form-data" method="post">
+						         
+									<div class="form-group">
+										<label class="col-lg control-label" style="padding-top: 0px;    padding-left: 10px;" >打开微信扫描下方二维码绑定微信，获取意向客户实时推送</label>
+										
+									</div>
+									<div class="form-group">
+										<div style="text-align:center;" >
+											<img style="width:200px;" id="qr_img" src="" />
+										</div>
+										
+									</div>
+								 	<input type="hidden" name="sale_id" id="sale_id" value="" />
+							</form>
+				  <br/>
+				 </div>
+				 <div style="clear:both;"></div>
+				<div class="modal-footer">
+				
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+		
+				</div>
+			</div>
+						 
+			</div>
+	</div>
+<div class="modal fade" id="add_sales" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								 <span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">添加销售人员</h4>
+				 </div>
+				 <div class="modal-body">
+							<form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" method="post">
+						         
+									<div class="form-group">
+										<label class="col-lg-2 control-label">用户名：</label>
+										<div class="col-lg-10 col-sm-10">
+												 <input type="text" name="username" style="width:auto;" class="form-control" id="username" value="" />
+										</div>
+									</div>
+								 
+									<div class="form-group">
+										<label class="col-lg-2 control-label">真实姓名：</label>
+										<div class="col-lg-10 col-sm-10">
+												<input type="text"  style="width: auto;" class="form-control" name="realname" id="realname" value="" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-2 control-label">邮箱：</label>
+										<div class="col-lg-10 col-sm-10">
+												<input type="text"  style="width: auto;" class="form-control" name="email" id="email" value="" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-2 control-label">性别：</label>
+										<div class="col-lg-10 col-sm-10">
+												 &nbsp;<input type="radio" name="sex" value="0" checked> 男
+												&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="sex" value="1"> 女
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-lg-2 control-label">手机号：</label>
+										<div class="col-lg-10 col-sm-10">
+												<input type="text" style="width: auto;" class="form-control" placeholder="请输入手机号" name="mobile" id="mobile" value="" />
+										</div>
+									</div>
+							
+									<div class="form-group" id="password_group">
+										<label class="col-lg-2 control-label">密码：</label>
+										<div class="col-lg-10 col-sm-10">
+												<input type="password"  style="width: auto;" class="form-control" name="password" id="password" value="" />
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-lg-2 control-label">备注：</label>
+										<div class="col-lg-8 col-sm-8">
+												<textarea class="form-control textwidth" id="remark" name="remark"></textarea>
+										</div>
+									</div>
+								 	<input type="hidden" name="id" id="id" value="" />
+							</form>
+				  <br/>
+				 </div>
+				 <div style="clear:both;"></div>
+				<div class="modal-footer">
+				
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" onclick="save();" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+						 
+			</div>
+		 
+    <script type="text/javascript">
+		
+	     //保存页面
+		 function addNew(uid){	
+			
+			 $('#add_sales').modal('show');
+		 }	
+		 
+		 
+		 function save(){
+		 	
+		 	  var username = $("#username").val();
+		 	  var realname = $("#realname").val();
+		 	  var mobile = $("#mobile").val();
+		 	 var password = $("#password").val();
+			 
+			 
+		 	  
+		 	  var mobileREa = /^1[3|4|5|6|7|8]\d{9}$/;
+		 	  // var matrix = mobileREa.test(mobile);
+		 	  
+		 	 // var reg = /^((\+?86)|(\(\+86\)))?\d{3,4}-\d{7,8}(-\d{3,4})?$|^((\+?86)|(\(\+86\)))?1\d{10}$/;
+		 	  if (!mobileREa.test(mobile)) { 
+		 	  	 alert("手机号码格式不正确"); 
+		 	     return false; 
+		 	  } 
+
+			if(username==''){
+		 		  alert("用户名不能为空"); 
+		 		  return false; 
+		 	  }
+			  
+			 if(password==''){
+		 		  alert("密码不能为空"); 
+		 		  return false; 
+		 	  }
+			  
+		 	  if(mobile==''){
+		 		  alert("手机号码不能为空"); 
+		 		  return false; 
+		 	  }
+		
+			 $.ajax({
+				 type: "POST",
+				 dataType:'json',
+				 url:  "{:url('user/manager/saveSale')}",
+				 cache: false,
+				 data: $("#form").serialize(),
+				 success: function(res) {
+					if (res.code == 0) {
+						 location.href = "{:url('User/manager/sales')}";
+					}else{
+					 alert(res.msg);
+						
+					}
+				 },
+				 error: function(data) {
+					 alert("提交失败");
+				 }
+			 }) 
+		 		 
+		   $('#add_sales').modal('hide');
+
+		 }
+		 
+
+		function getSale(id){
+			$.ajax({
+				 type: "POST",
+				 dataType:'json',
+				 url:  "{:url('user/manager/getSale')}",
+				 cache: false,
+				 data: {id:id},
+				 success: function(res) {
+					if (res.code == 0){
+						$('#password_group').hide();
+						$('#username').val(res.data.username);
+						$('#realname').val(res.data.realname);
+						$('#email').val(res.data.email);
+						$('#mobile').val(res.data.mobile);
+						$('#password').val('nothink');
+						$('#remark').val(res.data.remark);
+						$('#id').val(id);
+						$('#add_sales').modal('show');
+					}
+					else{
+						alert(res.msg);
+					 }
+				 },
+				 error: function(data) {
+					 alert("提交失败");
+				 }
+			 }) 
+		}
+		
+		function resetPwd(id){
+			$.ajax({
+				 type: "POST",
+				 dataType:'json',
+				 url:  "{:url('user/manager/resetPwd')}",
+				 cache: false,
+				 data: {id:id},
+				 success: function(res) {
+					if (res.code == 0){
+						alert(res.msg);
+					}
+					else{
+						alert(res.msg);
+					 }
+				 },
+				 error: function(data) {
+					 alert("提交失败");
+				 }
+			 }) 
+		
+		}
+		
+    </script>
+      
+</div>
+</div>
+
+{/block}
+

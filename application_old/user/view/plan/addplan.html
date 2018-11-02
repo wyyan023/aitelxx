@@ -1,0 +1,388 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<!-- datepicker statr -->
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+
+<style type="text/css">
+.textwidth{
+	width:250px;
+}
+.nav-tabs {
+    background: #ffffff;
+}
+.nav-tabs {
+   border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+	color: #555;
+	cursor: default;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+	background-color: #FFFFFF;
+	border-color: #FFFFFF;
+	color: #FFFFFF;
+	border-radius: 0;
+	background-clip: padding-box;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+          <header class="main-box-header clearfix">
+						 <div class="pull-left">
+							<h1><span>{$current|default=''}</span>页面</h1>
+						 </div>
+					</header>
+         </div>
+	  <div class="panel-body">
+		  
+	 <form id="form" method="post" onsubmit="return checkform();" class="form-horizontal" enctype="multipart/form-data" method="post">	
+	    
+	    <div class="tab-content">
+		  <div role="tabpanel" class="tab-pane active" id="home">
+	
+		      <div class="main-box-body clearfix">
+		      
+			    <div class="form-group" style="margin-top:20px;">
+						<label class="col-lg-2 control-label">任务名称：</label>
+						<div class="col-lg-10 col-sm-10">
+							 <input type="text" class="form-control textwidth" name="name" id="name" value="{$list.name|default=''}" />
+						</div>
+			    </div>
+					
+			{notempty name="adminlist"}
+					<div class="form-group">
+							<label class="col-lg-2 control-label">任务所属人：</label>
+							<div class="col-lg-10 col-sm-10">
+								<select name="member_id" id="member_id" class="form-control textwidth">
+									<option value="">请选所属人</option>
+									{volist name="adminlist" id="item"}
+									<option value="{$item['id']}" 
+											{eq name="$list.member_id|default=''" value="$item.id" }
+																selected 
+											{/eq}>
+										{$item['username']}
+									</option>
+									{/volist}
+								</select>
+							</div>
+					</div>
+			{/notempty}
+						<div class="form-group">
+								<label class="col-lg-2 control-label">最大并发呼叫：</label>
+								<div class="col-lg-10 col-sm-10">
+									<input type="number" class="form-control textwidth" name="maximumcall" id="maximumcall" value="{$list.maximumcall|default='1'}" />
+								</div>
+							</div>
+					{eq name="$show|default=0" value="1" }
+							<div class="form-group">
+								<label class="col-lg-2 control-label">是否启动任务：</label>
+								<div class="col-lg-10 col-sm-10 margintop">
+										<input id="start" name="start"
+										{eq name="$list.start|default='0'" value="0" }
+												checked
+										{/eq}
+										value="0" alt="关闭" type="radio">关闭  &nbsp; &nbsp;
+										<input name="start"
+										 {eq name="$list.start|default='0'" value="1" }
+												checked
+										 {/eq}
+										value="1" alt="开启" type="radio">开启
+								</div>
+							</div>
+							
+						
+					
+							<div class="form-group">
+								 <label class="col-lg-2 control-label">CPS：</label>
+								 <div class="col-lg-10 col-sm-10">
+									<input type="number" class="form-control textwidth" name="call_per_second" id="call_per_second" value="{$list.call_per_second|default=''}" />
+									<div class="help-block">每秒最大发起多少个呼叫</div>
+								 </div>
+							</div>
+			
+						
+							<div class="form-group">
+								<label class="col-lg-2 control-label">呼叫暂停时间(单位秒):</label>
+								<div class="col-lg-10 col-sm-10">
+									 <input type="number" class="form-control textwidth" name="call_pause_second" id="call_pause_second" value="{$list.call_pause_second|default=''}" />
+									 <div class="help-block">每呼叫一个号码暂停一下（用于解决GOIP设备 1个端口时候 呼叫太快很多呼叫失败的问题</div>
+								</div>
+							</div>
+							
+								
+							<div class="form-group">
+							<label class="col-lg-2 control-label">号码最大回收次数:</label>
+							<div class="col-lg-10 col-sm-10">
+								 <input type="number" class="form-control textwidth" name="recycle_limit" placeholder="请输入号码最大回收次数" id="recycle_limit" value="{$list.recycle_limit|default=''}" />
+							</div>
+						</div>
+						
+							
+							<div class="form-group">
+							<label class="col-lg-2 control-label">缓存号码数量:</label>
+							<div class="col-lg-10 col-sm-10">
+								<input type="number" class="form-control textwidth" name="cache_number_count" id="cache_number_count" autocomplete="false" value="{$list.cache_number_count|default=''}">
+								<div class="help-block">每次从数据库读取多少个号码到待呼队列</div>
+							</div>
+						</div>
+						 
+							 
+							<div class="form-group">
+								<label class="col-lg-2 control-label">是否随机分配号码：</label>
+								<div class="col-lg-10 col-sm-10 margintop">
+										<input id="random_assignment_number" name="random_assignment_number"
+										{eq name="$list.random_assignment_number|default='0'" value="0" }
+											checked
+										{/eq}
+										value="0"  type="radio">否  &nbsp; &nbsp;
+										<input name="random_assignment_number" 
+										{eq name="$list.random_assignment_number|default='0'" value="1" }
+											checked
+										{/eq}
+										value="1"  type="radio">是
+								</div>
+							 </div>
+							
+							<div class="form-group">
+							<label class="col-lg-2 control-label">应答后转接目的分机:</label>
+							<div class="col-lg-10 col-sm-10">
+								
+								<select name="destination_extension" id="destination_extension" class="form-control textwidth">
+									<option value="">请选择场景</option>
+									{volist name="scenarioslist" id="item"}
+										<option value="{$item['id']}"
+												{eq name="$list.destination_extension|default=''" value="$item.id" }
+																	selected 
+												{/eq}>
+											{$item['name']}
+										</option>
+									{/volist}
+								</select>
+								<!--
+									<input type="text" class="form-control textwidth" name="destination_extension" id="destination_extension" autocomplete="false" value="{$list.destination_extension|default=''}">
+									<div class="help-block">越高排序越靠前</div>-->
+							</div>
+						</div>
+							
+							<div class="form-group">
+								<label class="col-lg-2 control-label">外呼比率:</label>
+								<div class="col-lg-10 col-sm-10">
+									<input type="number" class="form-control textwidth" name="scheduling_policy_ratio" id="scheduling_policy_ratio" autocomplete="false" value="{$list.scheduling_policy_ratio|default=''}">
+									<div class="help-block">呼叫并发等于空闲数量乘以外呼比率，机器人不要设置。</div>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-lg-2 control-label">调度队列:</label>
+								<div class="col-lg-10 col-sm-10">
+									<input type="text" class="form-control textwidth" name="scheduling_queue" id="scheduling_queue" autocomplete="false" value="{$list.scheduling_queue|default=''}">
+									<div class="help-block">根据这个队列确定空闲坐席,如果为空，会使用maximumcall作为任务的最大并发。没有队列的，不要设置</div>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-lg-2 control-label">是否忽略早期媒体:</label>
+								<div class="col-lg-10 col-sm-10">
+										<input name="_ignore_early_media" id="_ignore_early_media" autocomplete="false" type="text" class="form-control textwidth"  value="{$list._ignore_early_media|default=''}">
+										<div class="help-block">注意：请不要设置,除非你很懂freeswitch.可以自己设置其他值</div>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-lg-2 control-label">始发变量:</label>
+								<div class="col-lg-10 col-sm-10">
+										<input name="originate_variables" id="originate_variables" autocomplete="false" type="text" class="form-control textwidth"  value="{$list.originate_variables|default=''}">
+										<div class="help-block">用于自定于呼出参数，需要用{}包围参数。</div>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-lg-2 control-label">拨号超时:</label>
+								<div class="col-lg-10 col-sm-10">
+										<input name="_originate_timeout" id="_originate_timeout" autocomplete="false" type="number" class="form-control textwidth" value="{$list._originate_timeout|default=''}">
+										<div class="help-block"></div>
+								</div>
+							</div> 
+							
+						
+		      {/eq}
+				 
+			    <div class="form-group">
+						<label class="col-lg-2 control-label">应答后转接目的拨号方案:</label>
+						<div class="col-lg-10 col-sm-10">
+							  <input type="text" class="form-control textwidth" name="destination_dialplan" id="destination_dialplan" autocomplete="false" value="{$list.destination_dialplan|default=''}">
+								<div class="help-block">XML</div>
+						</div>
+				 </div>
+			    
+			  <div class="form-group">
+					<label class="col-lg-2 control-label">应答后转接目的上下文:</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="destination_context" id="destination_context" autocomplete="false" value="{$list.destination_context|default=''}">
+						<div class="help-block"></div>
+					</div>
+				</div>
+			
+	       <div class="form-group">
+					<label class="col-lg-2 control-label">拨号串格式:</label>
+					<div class="col-lg-10 col-sm-10">
+					 <input type="text" class="form-control textwidth" name="dial_format" id="dial_format" autocomplete="false" value="{$list.dial_format|default=''}">
+						
+							<div class="help-block">%s 匹配电话号码直接使用ip:sofia/external/%s@ip:port网关方式:sofia/gateway/网关名字/%s如果GOIP注册方式：user/用户名</div>
+					</div>
+				 </div>
+		
+         <div class="form-group">
+         	<label class="col-lg-2 control-label">域名:</label>
+         	<div class="col-lg-10 col-sm-10">
+         		<input type="text" class="form-control textwidth" name="domain" id="domain" autocomplete="false" value="{$list.domain|default=''}">
+         			<div class="help-block">用于支持多租户</div>
+         	</div>
+         </div>
+		
+			    
+					
+					<div class="form-group">
+						<label class="col-lg-2 control-label">呼叫通知类型：</label>
+						<div class="col-lg-10 col-sm-10 margintop">
+								<input id="call_notify_type" name="call_notify_type"
+								{eq name="$list.call_notify_type|default='0'" value="0" }
+									checked
+								{/eq}
+								value="0" type="radio">不通知  &nbsp; &nbsp;
+								<input name="call_notify_type" 
+								  {eq name="$list.call_notify_type|default='0'" value="1" }
+								  	checked
+								  {/eq}
+								value="1" type="radio">呼叫失败通知   &nbsp; &nbsp;
+							  <input name="call_notify_type"
+								{eq name="$list.call_notify_type|default='0'" value="2" }
+									checked
+								{/eq}
+								value="2" type="radio">呼叫成功和失败都通知
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-lg-2 control-label">呼叫通知URL：</label>
+						<div class="col-lg-10 col-sm-10 margintop">
+							   <input id="call_notify_url" name="call_notify_url" type="text" autocomplete="false" class="form-control textwidth" value="{$list.call_notify_url|default=''}">
+						     <div class="help-block">如果配置了URL，呼叫结束会根据call_notify_type配置调用这个URL</div>
+						</div>
+					</div>
+			
+					<div class="form-group">
+						<label class="col-lg-2 control-label">主叫号码:</label>
+						<div class="col-lg-10 col-sm-10">
+								<input name="_origination_caller_id_number" id="_origination_caller_id_number" autocomplete="false" type="text" class="form-control textwidth"  value="{$list._origination_caller_id_number|default=''}">
+								<div class="help-block">设置透传号码，就是送给网关的callerid,可以通过这个参数配合GOIP实现，控制使用那些端口呼出。</div>
+						</div>
+					</div>
+		
+					<div class="form-group">
+						<label class="col-lg-2 control-label">备注：</label>
+						<div class="col-lg-10 col-sm-10">
+							<textarea name="remark" id="remark" style="width: 70%;">{$list.remark|default=""}</textarea>
+						</div>
+			    </div>
+			
+			 
+			  <div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">	<!--   target-form="form-horizontal" -->	
+				  <input type="hidden" name="taskId" id="taskId" value="{$list.uuid|default=''}" />	
+					<button class="btn btn-success submit-btn" type="submit">确 定</button>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+				</div>
+			</div>
+		 
+		
+		      </div>
+		  </div>
+
+		</div>
+		
+		 </form>
+
+	  </div>
+</div>	
+					
+	
+		
+
+<script type="text/javascript">
+
+//检查表单的必填项
+function checkform(){
+
+	  var name = $("#name").val();
+ 	  if(!name){
+		  alert("任务名称不能为空"); 
+		  return false; 
+	  }
+		
+		var member_id = $("#member_id").val();
+		if(!member_id){
+			alert("任务所属人不能为空"); 
+			return false; 
+		}
+// 		
+// 		var extension = $("#destination_extension").val();
+// 		if(!extension){
+// 			alert("应答后转接目的分机不能为空"); 
+// 			return false; 
+// 		}
+// 		
+		var dialplan = $("#destination_dialplan").val();
+		if(!dialplan){
+			alert("应答后转接目的拨号方案不能为空"); 
+			return false; 
+		}
+		
+		var dial_format = $("#dial_format").val();
+		if(!dial_format){
+			alert("拨号串格式不能为空"); 
+			return false; 
+		}
+		
+		var context = $("#destination_context").val();
+		if(!context){
+			alert("应答后转接目的上下文不能为空"); 
+			return false; 
+		}
+		
+
+//  
+//       var reg = /^\d+(\.\d+)?$/;
+//       var cache_number_count = $("#cache_number_count").val();
+// 
+//       if (!reg.test(level) || level<1) { 
+//   	    alert("缓存号码数量只能是正整数"); 
+//         return false; 
+//       }   
+//       
+      
+}
+</script>
+
+
+</div>
+
+</div>
+
+{/block}
+

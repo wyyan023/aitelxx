@@ -1,0 +1,381 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<!-- datepicker statr -->
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugs/webuploader/webuploader.custom.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/webuploader/webuploader.css">
+
+<style type="text/css">
+.textwidth{
+width:250px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.nav-tabs {
+border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+color: #555;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+background-color: #FFFFFF;
+border-color: #FFFFFF;
+color: #FFFFFF;
+border-radius: 0;
+background-clip: padding-box;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+             <header class="main-box-header clearfix">
+		   <div class="pull-left">
+			  <h1><span>{$current|default=''}</span>页面</h1>
+		   </div>
+		</header>
+         </div>
+	  <div class="panel-body">
+		  
+	 <form id="form" method="post" onsubmit="return checkform();" class="form-horizontal" enctype="multipart/form-data" method="post">	
+	    
+	    <div class="tab-content">
+		  <div role="tabpanel" class="tab-pane active" id="home">
+	
+		      <div class="main-box-body clearfix">
+		      
+			    <div class="form-group" style="margin-top:20px;">
+					<label class="col-lg-2 control-label">标题：</label>
+					<div class="col-lg-10 col-sm-10">
+					   <input type="text" class="form-control textwidth" name="title" id="title" value="{$doclist.title|default=''}" />
+					</div>
+			    </div>
+			    
+			    <div class="form-group">
+				 <label class="col-lg-2 control-label">栏目：</label>
+				  <div class="col-lg-10 col-sm-10">
+					<select name="category" id="category" class="form-control textwidth">
+						<option value="">请选择栏目</option>
+						{volist name="cate_list" id="item"}
+						<option value="{$item['id']}" 
+						  {eq name="$doclist.category_id|default=''" value="$item.id" }
+				                  selected 
+				          {/eq}>
+						   {$item['title_show']}
+						</option>
+						{/volist}
+					</select>
+				   </div>
+			    </div>
+	
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">作者：</label>
+					<div class="col-lg-10 col-sm-10">
+					   <input type="text" class="form-control textwidth" name="author" id="author" value="{$doclist.author|default=''}" />
+					</div>
+			    </div>
+
+				<div class="form-group">
+					<label class="col-lg-2 control-label">标签:</label>
+					<div class="col-lg-10 col-sm-10">
+					   <input type="text" class="form-control textwidth" name="Label" id="Label" value="{$rescon.tags|default=''}" />
+					   <div class="help-block">用逗号隔开，如：刘德华，周润发，李嘉欣</div>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-lg-2 control-label">关键字:</label>
+					<div class="col-lg-10 col-sm-10">
+					   <input type="text" class="form-control textwidth" name="keyword" placeholder="请输入您关键字用于微信自动回复" id="keyword" value="{$doclist.keyword|default=''}" />
+					   <div class="help-block">用逗号隔开，</div>
+					</div>
+				</div>
+				
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">封面图片：</label>
+					<div class="col-lg-10 col-sm-10">
+	                      {:widget('common/Form/show',array(array('type'=>'picture','name'=>'cover'),$picdata))}			
+					</div>
+			    </div>
+			   
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">外链:</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="link" id="link" autocomplete="false" value="{$doclist.external_link|default=''}">
+						<div class="help-block">0-非外链，大于0-外链ID,需要函数进行链接与编号的转换</div>
+					</div>
+				</div>
+			   
+			     <div class="form-group">
+					<label class="col-lg-2 control-label">是否允许分享：</label>
+					<div class="col-lg-10 col-sm-10 margintop">
+                       <input id="is_share" name="is_share" 
+                        {eq name="$doclist.is_share|default='0'" value="0" }
+		                    checked
+		                {/eq} value="0" alt="关闭" type="radio">不允许  &nbsp; &nbsp;
+					   <input name="is_share" 
+					    {eq name="$doclist.is_share|default='0'" value="1" }
+		                    checked
+		                {/eq} value="1" alt="开启" type="radio">允许
+					</div>
+			    </div>
+			    
+			     <div class="form-group">
+					<label class="col-lg-2 control-label">是否允许评论：</label>
+					<div class="col-lg-10 col-sm-10 margintop">
+                       <input id="is_comment" name="is_comment" 
+                        {eq name="$doclist.is_comment|default='0'" value="0" }
+		                    checked
+		                {/eq} value="0" alt="关闭" type="radio">不允许  &nbsp; &nbsp;
+					   <input name="is_comment" 
+					    {eq name="$doclist.is_comment|default='0'" value="1" }
+		                    checked
+		                {/eq} value="1" alt="开启" type="radio">允许
+					</div>
+			    </div>
+			    
+			     <div class="form-group">
+					<label class="col-lg-2 control-label">评论是否需要审核：</label>
+					<div class="col-lg-10 col-sm-10 margintop">
+					<input name="is_examine" 
+					    {eq name="$doclist.is_examine|default='1'" value="1" }
+		                    checked
+		                {/eq} value="1" alt="关闭" type="radio">不需要
+                       <input id="is_examine" name="is_examine" 
+                        {eq name="$doclist.is_examine|default='0'" value="0" }
+		                    checked
+		                {/eq} value="0" alt="开启" type="radio">需要  &nbsp; &nbsp;
+					   
+					</div>
+			    </div>
+			   
+			   <div class="form-group">
+					<label class="col-lg-2 control-label">推荐位:</label>
+					<div class="col-lg-10 col-sm-10">
+						<select class="form-control textwidth" name="position" id="position">
+							<option value="1" 
+							{eq name="$doclist.position|default=''" value="1" }
+				                  selected 
+				            {/eq}>首页推荐</option>
+							<option value="2"
+							{eq name="$doclist.position|default=''" value="2" }
+				                  selected 
+				            {/eq}>列表推荐</option>
+						</select>
+						<div class="help-block">多个推荐则将其推荐值相加</div>
+					</div>
+				</div>
+	
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">可见性:</label>
+					<div class="col-lg-10 col-sm-10">
+						<select class="form-control textwidth" name="display" id="display">
+							<option value="0"  
+							{eq name="$doclist.display|default=''" value="0" }
+				                  selected 
+				            {/eq}>不可见</option>
+							<option value="1"  
+							{eq name="$doclist.display|default=''" value="1" }
+				                  selected 
+				            {/eq}>所有人可见</option>
+						</select>
+						<div class="help-block"></div>
+					</div>
+				</div>
+			    
+			   <div class="form-group">
+					<label class="col-lg-2 control-label">优先级:</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="level" id="level" autocomplete="false" value="{$doclist.level|default='0'}">
+					    <div class="help-block">越高排序越靠前</div>
+					</div>
+				</div>
+			    
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">评论数:</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="comment" id="comment" autocomplete="false" value="{$doclist.comment|default=''}">
+					    <div class="help-block"></div>
+					</div>
+				</div>
+			    
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">浏览量:</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="view" id="view" autocomplete="false" value="{$doclist.view|default=''}">
+						<div class="help-block"></div>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-lg-2 control-label">点赞数:</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" name="praise" id="praise" autocomplete="false" value="{$doclist.praise|default=''}">
+						<div class="help-block"></div>
+					</div>
+				</div>
+			  
+			   <div class="form-group">
+						<label class="col-lg-2 control-label">创建时间:</label>
+						<div class="col-lg-10 col-sm-10">
+							<div class="input-group textwidth">
+								<input type="text" class="form-control" id="create_time" name="create_time" value="{$doclist.create_time|default=$create_time}" readonly="" size="10">
+								<span class="input-group-addon"><i class="fa fa-th"></i></span>
+							</div>
+							<script>
+							$('#create_time').fdatepicker({
+								format: 'yyyy-mm-dd hh:ii:ss',
+								pickTime: true,
+							});
+							</script>							
+							<div class="help-block"></div>
+						</div>
+				</div>
+				  
+				  
+			     <div class="form-group">
+						<label class="col-lg-2 control-label">截至时间:</label>
+						<div class="col-lg-10 col-sm-10">
+							<div class="input-group textwidth">
+								<input type="text" class="form-control textwidth" id="deadline" name="deadline" value="{$doclist.deadline|default=$create_time}" readonly="" size="15">
+								<span class="input-group-addon"><i class="fa fa-th"></i></span>
+							</div>
+							<script>
+							$('#deadline').fdatepicker({
+								format: 'yyyy-mm-dd hh:ii:ss',
+								pickTime: true
+							});
+							</script>								
+				       </div>
+				</div>
+	                
+
+	              <div class="form-group">
+					<label class="col-lg-2 control-label">描述:</label>
+					<div class="col-lg-10 col-sm-10">
+							<textarea class="form-control" name="description" id="description">{$doclist.description|default=''}</textarea>
+							<div class="help-block"></div>
+					</div>
+				 </div>
+				 
+				 	{eq name="$doclist.type|default=$type" value="2" }
+						 <div class="form-group">
+							<label class="col-lg-2 control-label">视频链接:</label>
+							<div class="col-lg-10 col-sm-10">
+								<input type="text" class="form-control" name="videoLink" id="videoLink" autocomplete="false" value="{$doclist.video_link|default=''}">
+							    <div class="help-block">视频链接地址，支持mp4</div>
+							</div>
+						 </div>
+				    {/eq}
+
+			    <div class="form-group">
+					<label class="col-lg-2 control-label">内容：</label>
+					<div class="col-lg-10 col-sm-10">
+					  <textarea name="content" id="content" style="width: 100%;height:200px;">{$rescon.content|default=""}</textarea>
+					</div>
+			    </div>
+			 
+			  <div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">	<!--   target-form="form-horizontal" -->	
+				    <input type="hidden" name="docId" id="docId" value="{$doclist.id|default=''}" />	
+				    <input type="hidden" name="contentType" id="contentType" value="{$doclist.type|default=$type}" />	
+					<button class="btn btn-success submit-btn" type="submit">确 定</button>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+				</div>
+			</div>
+		 
+		
+		      </div>
+		  </div>
+
+		</div>
+		
+		 </form>
+
+	  </div>
+</div>	
+					
+	
+					
+<!-- 样式文件 -->
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/umeditor/themes/default/css/umeditor.css">
+<!-- 配置文件 -->
+<script type="text/javascript" src="__PUBLIC__/plugs/umeditor/umeditor.config.js?vi=ddd"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__PUBLIC__/plugs/umeditor/umeditor.js"></script>
+
+<script type="text/javascript">
+   $(function(){
+        var um = UM.getEditor('content',{ 
+        	imageUrl: "{:url('upload/editor')}"
+        });
+    }); 
+</script>
+
+<script type="text/javascript">
+
+//检查表单的必填项
+function checkform(){
+
+	 
+/* 	  if(!mallOprice){
+		  alert("商品原价不能为空"); 
+		  return false; 
+	  }
+ */
+      var reg = /^\d+(\.\d+)?$/;
+      var level = $("#level").val();
+      var comment = $("#comment").val();
+      var view = $("#view").val();
+      
+      if (!reg.test(level) || level<1) { 
+  	    alert("优先级只能是正整数"); 
+        return false; 
+      }   
+      
+      if (!reg.test(comment) || comment<1) { 
+    	    alert("评论数只能是正整数"); 
+          return false; 
+        }   
+      
+      if (!reg.test(view) || view<1) { 
+    	    alert("浏览量只能是正整数"); 
+          return false; 
+       }   
+
+      if (Number(view)<Number(comment)) { 
+  	    alert("浏览量不能小于评论数"); 
+        return false; 
+      }   
+      
+      var create_time = $("#create_time").val();
+      var deadline = $("#deadline").val();
+      if (deadline<create_time) { 
+    	    alert("截至时间不能小于创建时间"); 
+          return false; 
+        }   
+     
+      
+}
+</script>
+
+
+</div>
+
+</div>
+
+{/block}
+

@@ -1,0 +1,316 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+.table tbody>tr>td {
+padding: 12px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+
+.messageinfo{
+ text-align:right;
+ 
+}
+.infotable tr td{
+ padding:5px;
+}
+
+.textwidth{
+	width:250px;
+}
+.n_panel_title i {
+  font-size: 21px;
+}
+</style>
+<div class="row">
+<div class="col-lg-12">
+	
+	<div class="main-box clearfix">	
+		<header class="main-box-header n_head_box_b n_head_box clearfix">
+		  <div class="pull-left">
+			  <span class="n_panel_title"><i class="icon iconfont icon-yuyinwangguan"></i>语音网关</span>
+		  </div>
+		  <button class="btn btn-primary pull-right" onclick="showModal(0);">添加</button>
+		</header>
+		
+		   
+		<div class="main-box-body clearfix">
+		
+		
+			<!--<div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>-->
+			<div class="table-responsive">
+			
+				<table class="table table-bordered table-hover">
+				<thead>
+						<tr>
+								<th class="text-center"></th>
+							<!--	<th class="text-center">用户</th>-->
+								<th class="text-center">设备名称</th>
+								<th class="text-center">设备支持数量</th>
+								<!-- <th class="text-center">类型</th> -->
+								<th class="text-center">描述</th>
+			
+								<th class="text-center">操作</th> 
+						</tr>
+					</thead>
+				<tbody>
+						{volist  name="list" id="vo"}
+							<tr>
+						    <td class="text-center">
+									<input type="checkbox" name="customerIds" class="customerIds" value="{$vo.id}"/>
+								</td>
+						
+								<td class="text-center">{$vo.name}</td>
+								<td class="text-center">
+									{$vo.number}
+								</td>
+								<!-- <td class="text-center"> -->
+									
+								<!-- </td> -->
+								<td class="text-center">
+									{$vo.desc}
+								</td>	
+								<td class="text-center">
+									  <a href="{:url('simPage',['id'=>$vo.id])}">绑定号码</a>
+										&nbsp;
+										<a href="javascript:void(0);" onclick="showModal({$vo.id});">编辑</a>
+											 &nbsp;
+										<a href="javascript:void(0);" onclick="delDevice('{$vo.id}');">删除</a>
+								</td>
+							</tr>
+								{/volist}
+					</tbody>
+				</table>
+					<div class="row">
+						<div class="col-sm-4 text-left">
+								<div class="pull-left">
+										<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+										<button class="btn btn-primary" onclick="delDevice(0);" target-form="ids">删 除</button>
+								</div>	
+											
+						</div>
+						<div class="col-sm-8 text-right">{$page}</div>
+					</div>
+			</div>
+				     
+		</div>
+					
+	</div>					
+    
+
+
+</div>
+
+ <script type="text/javascript">
+ 
+ //全选
+  function allcheck(){			
+  	if ($('.check-all').is(":checked")) {	
+  		$('.customerIds').prop("checked","checked");
+  	}else{
+  		$('.customerIds').prop("checked",false);
+  	}
+  }
+  
+ 
+ //删除
+ function delDevice(id){
+ 
+ 	 var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+
+     	 var ids=[];
+    	if(id){
+    		ids.push(id);
+    	}else{
+    		
+        	 var roleids = document.getElementsByName("customerIds");
+    		 for ( var j = 0; j < roleids.length; j++) {
+    		    if (roleids.item(j).checked == true) {
+    		    	ids.push(roleids.item(j).value);
+    		    }
+    		 }
+    	}
+		
+    	if(!ids.length){
+    		alert("至少选择一条。");
+    		 return false; 
+    	}
+  		 $.post("{:url('delDevice')}",{'id':ids},function(data){
+				if(data){
+					alert(data);
+				}else{
+					window.location.href=window.location.href;
+				}
+		}); 
+ }
+
+
+ </script>
+  
+</div>
+
+
+
+<!-- 添加与编辑 -->
+
+<div class="modal fade" id="checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+		
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">×</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">编辑设备信息</h4>
+       </div>
+       <div class="modal-body pagelists">
+				 
+          	
+	        <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+	      
+					     <div class="form-group">
+								<label class="col-lg-4 control-label">设备名称：</label>
+								<div class="col-lg-8 col-sm-8">
+									 <input type="text" class="form-control textwidth" name="name" id="name" />
+								</div>
+					    </div>
+					    
+					    <div class="form-group">
+								<label class="col-lg-4 control-label">设备支持数量：</label>
+								<div class="col-lg-8 col-sm-8">
+								    <input type="text" class="form-control textwidth" id="number" name="number" value="" />
+							
+								</div>
+					    </div>
+					    <div class="form-group">
+								<label class="col-lg-4 control-label">网关账号：</label>
+								<div class="col-lg-8 col-sm-8">
+								    <input type="text" class="form-control textwidth" id="dial_format" name="dial_format" value="" />
+							
+								</div>
+					    </div>
+							
+							
+							<div class="form-group" id="tplContent">
+								<label class="col-lg-4 control-label">描述：</label>
+								<div class="col-lg-8 col-sm-8">
+									<textarea class="form-control textwidth" id="desc" name="desc"></textarea>
+								</div>
+							</div>
+
+
+					    <div class="form-group" style="text-align: center;">
+								  <input type="hidden" name="deviceId" id="deviceId" value="">
+									<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						 </div>
+		
+			
+		     </form>
+				 
+					
+       </div>
+       <div style="clear:both"></div>
+      
+			
+	 
+	 </div>
+           
+  </div>
+
+	<script type="text/javascript">
+			
+		function showModal(id){
+		
+			 
+			 if(id){
+				var url = "{:url('user/Device/getDeviceInfo')}";	
+				 $.ajax({
+					url : url,
+					dataType : "json", 
+					type : "post",
+					data : {'id':id},
+					success: function(data){
+						 $("#name").val(data.name);
+						 $("#number").val(data.number);
+						 $("#dial_format").val(data.dial_format);
+						  $("#type").val(data.type);
+						 $("#desc").val(data.desc);
+						 $("#deviceId").val(data.id);
+						 $('#checkpage').modal('show')
+					},
+					error : function() {
+						alert('审核信息失败。');
+					}
+				});
+				
+			 }
+			 else{
+				$('#checkpage').modal('show');
+			 }
+		}
+	 
+	 
+	 //检查表单的必填项
+		function checkform(){
+
+				var name = $("#name").val();
+				if(!name){
+					alert("设备名称不能为空"); 
+					return false; 
+				}
+				
+				var number = $("#number").val();
+			 if(!number){
+				alert("数量不能为空"); 
+				return false; 
+			 }
+		
+						
+				
+			 var deviceId = $("#deviceId").val();
+
+			 var href = "{:url('user/Device/addDevice')}";
+			 if(deviceId){
+					 href = "{:url('user/Device/editDevice')}";
+			 }
+
+			 
+			 $.ajax({
+					 type: "POST",
+					 dataType:'json',
+					 url: href,
+					 cache: false,
+					 data: $("#form").serialize(),
+					 success: function(data) {
+						if (data.code == 0) {
+							 // alert(data.msg);
+								$('#checkpage').modal('hide');
+							 location.reload();
+						}else{
+							 alert(data.msg);
+
+						}
+				
+					 },
+					 error: function(data) {
+						 alert("提交失败");
+					 }
+			 })  
+		}
+
+
+	
+	</script>
+	
+   
+</div>
+
+
+{/block}
+

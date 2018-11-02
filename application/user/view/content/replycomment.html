@@ -1,0 +1,168 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<style type="text/css">
+.textwidth{
+width:250px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.direct-chat-img {
+border-radius: 50%;
+float: left;
+width: 40px;
+height: 40px;
+}
+.direct-chat-text {
+border-radius: 5px;
+position: relative;
+padding: 5px 10px;
+background: #d2d6de;
+border: 1px solid #d2d6de;
+margin: 5px 0 0 50px;
+color: #444;
+}
+
+direct-chat-text:after, .direct-chat-text:before {
+position: absolute;
+right: 100%;
+top: 15px;
+border: solid transparent;
+border-right-color: #d2d6de;
+content: ' ';
+height: 0;
+width: 0;
+pointer-events: none;
+}
+.direct-chat-text:before {
+border-width: 6px;
+margin-top: -6px;
+}
+.direct-chat-text:after {
+border-width: 5px;
+margin-top: -5px;
+}
+.box-title{
+display: inline-block;
+font-size: 20px;
+margin: 0;
+line-height: 1;
+}
+.boxchag{
+border-radius: 5px;
+position: relative;
+padding: 5px 10px;
+background: #d2d6de;
+border: 1px solid #d2d6de;
+margin: 5px 54px 0px 0px;
+color: #444;
+}
+
+.threespan {
+position: absolute;
+left: 92%;
+top: 30px;
+border: solid transparent;
+border-right-color: #d2d6de;
+content: ' ';
+height: 0;
+width: 0;
+pointer-events: none;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="main-box clearfix">
+
+        <header class="main-box-header clearfix">
+		   <div class="pull-left">
+			  <h1>评论回复</h1>
+		   </div>
+		</header>
+		
+	   <div class="main-box-body clearfix">
+	
+	      <div class="main-box-body clearfix">
+	        <div class="box-header">
+                  <span class="box-title">用户评论</span>
+            </div>
+	      
+	         <div class="form-group">
+				<div class="col-lg-10 col-sm-10">
+                      <div class="direct-chat-msg">
+                          <div class="direct-chat-info clearfix">
+                              <span class="direct-chat-name pull-left"><!--用户名 --></span>
+                              <span class="direct-chat-timestamp pull-right">{$list.play_time}</span>
+                          </div>
+                          <img alt="貌美如花" src="{$list.user_logo}" class="direct-chat-img">
+                          <div class="direct-chat-text">{$list.content}</div>
+                      </div>
+				</div>
+		      </div>
+		      
+		    <div style="clear:both;"></div>
+		    <div class="box-header" style="margin:20px 0px 10px 0px;">
+                  <span class="box-title">该条评论的全部回复</span>
+            </div>
+	        {volist name="rpllist" id="vo"}
+	         <div class="form-group">
+				<div class="col-lg-10 col-sm-10">
+                      <div class="direct-chat-msg">
+                          <div class="direct-chat-info clearfix">
+                              <span class="direct-chat-name pull-left"><!--用户名 --></span>
+                              <span class="direct-chat-timestamp pull-left">{$vo.play_time}</span>
+                          </div>
+                           <img alt="貌美如花" src="{$vo.user_logo}" class="direct-chat-img" style="float: right;">
+                           <span class="glyphicon glyphicon-play threespan" style="color:#d2d6de;"></span>
+                          <div class="boxchag" style="">{$vo.content}</div>
+                      </div>
+				</div>
+		      </div>
+             {/volist}
+			    <div class="form-group">
+					<div class="col-lg-10 col-sm-10">
+                         <form method="post" onsubmit="return checkform();"  style="margin-top:10px;">
+                            <input type="hidden" name="parent_id" value="{$list.comment_id}">
+                            <input type="hidden" name="content_id" value="{$list.content_id}">                           
+                            <textarea class="form-control" rows="3" placeholder="请输入回复内容" id="contenttext" name="content"></textarea>                                
+		             	 	<div class="pull-right"  style="margin-top:10px;">
+		             		   <button type="submit" class="btn btn-primary margin">回复</button>
+		                	   <button class="btn btn-danger" onclick="javascript:history.back(-1);return false;">返 回</button>
+		                	</div>
+                         </form>    
+					</div>
+			    </div>
+
+		    
+          </div>
+      </div>  
+ 
+</div>	
+
+
+<script type="text/javascript">
+
+
+//检查表单的必填项
+function checkform(){
+
+	  var contenttext = $("#contenttext").val();
+	  if(!contenttext){
+		  alert("评论内容不能为空"); 
+		  return false; 
+	  }
+
+}
+
+</script>
+
+</div>
+
+</div>
+
+{/block}
+

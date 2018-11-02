@@ -1,0 +1,261 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<script src="__PUBLIC__/plugs/spectrum/spectrum.js"></script>
+<link href="__PUBLIC__/plugs/spectrum/spectrum.css" rel="stylesheet" type="text/css">
+
+<style type="text/css">
+.textwidth{
+width:500px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.nav-tabs {
+border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+color: #555;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+background-color: #FFFFFF;
+border-color: #FFFFFF;
+color: #FFFFFF;
+border-radius: 0;
+background-clip: padding-box;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <header class="main-box-header clearfix">
+		   <div class="pull-left">
+			  <h1><span>{$current|default=''}</span>模板记录</h1>
+		   </div>
+		</header>
+         </div>
+	  <div class="panel-body">
+	
+	        <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" method="post">		
+	    
+			    <div class="form-group" style="margin-top:20px;">
+					<label class="col-lg-2 control-label">模板：</label>
+					<div class="col-lg-10 col-sm-10">
+					    <select id="tp_id" name="tp_id" class="form-control textwidth">
+					        <option selected value="">请选择模板</option>
+  						   {volist name="tplist" id="vo"}
+						     <option 
+						       {eq name="$thistpl|default=''" value="$vo.id" }
+				                  selected 
+				               {/eq}
+						     value="{$vo.id}">{$vo.title}</option>
+						   {/volist}
+  					    </select>
+					</div>
+			    </div>
+			    
+			    	<div class="form-group">
+							<label class="col-lg-2 control-label">消息内容:</label>
+							<div class="col-lg-10 col-sm-10">
+								<input type="text" class="form-control textwidth" placeholder="" name="url" id="url" value="{$tplrclist.url|default=''}" />
+							</div>
+			      </div>
+			      
+			      <div class="form-group">
+							<label class="col-lg-2 control-label">详情URL：</label>
+							<div class="col-lg-10 col-sm-10">
+								<input type="text" class="form-control textwidth" placeholder="" name="url" id="url" value="{$tplrclist.url|default=''}" />
+							</div>
+			      </div>
+			       
+			     <div class="form-group" style="margin-top:20px;">
+					<label class="col-lg-2 control-label">公众号：</label>
+					<div class="col-lg-10 col-sm-10">
+					    <select id="wx_id" name="wx_id" class="form-control textwidth">
+					        <option selected value="">请选择公众号</option>
+  						   {volist name="wxlist" id="vo"}
+						     <option 
+						       {eq name="$tplrclist.wx_id|default=''" value="$vo.id" }
+				                  selected 
+				               {/eq}
+						     value="{$vo.id}">{$vo.wxname}</option>
+						   {/volist}
+  					    </select>
+					</div>
+			    </div>
+					 <div class="form-group">
+						<label class="col-lg-2 control-label">群发对象：</label>
+						<div class="col-lg-10 col-sm-10">
+							 <input type="radio" name="is_default" value="0" checked /> 全部
+	              <input type="radio" name="is_default" value="1" 
+	               {gt name="$tplrclist.group_id|default='0'" value="0" }
+	                 checked 
+	               {/gt}
+	                /> 按分组 
+	          		<input type="radio" name="is_default" value="2" 
+	                 {notempty name="$tplrclist.open_id"}
+			                 checked 
+			              {/notempty}
+	                /> 按粉丝 
+						</div>
+			     </div>
+			     
+			     <div class="form-group">
+					<label class="col-lg-2 control-label">分组id：</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" placeholder="分组id" name="group_id" id="group_id" value="{$tplrclist.group_id|default=''}" />
+					</div>
+			     </div>
+			    
+			     <div class="form-group">
+					<label class="col-lg-2 control-label">粉丝id：</label>
+					<div class="col-lg-10 col-sm-10">
+						<input type="text" class="form-control textwidth" placeholder="粉丝id" name="open_id" id="open_id" value="{$tplrclist.open_id|default=''}" />
+					</div>
+			     </div>
+			     
+			     
+			    	
+			    	
+			      
+			     <div class="form-group">
+			  
+					<label class="col-lg-2 control-label">模板内容字段颜色：</label>
+					<div class="col-lg-10 col-sm-10">
+					  <input type="hidden" id="buttonColor" name="color" value=""/>
+
+						<input class="px" style="width:50px;" type='text' id="custom" />
+						<span style="margin-left:5px;">显示效果：</span>
+						<input id="viewButton" type='button' value='' class='input3' style='width:50px;background: #3d810c;border: 1px solid #95B8E7;'/>
+					</div>
+			    </div>
+			  
+       
+			  <div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10">	<!--   target-form="form-horizontal" -->	
+				    <input type="hidden" name="tplRcId" id="tplRcId" value="{$tplrclist.id|default=''}" />			  
+			    	<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+					<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+				</div>
+			 </div>
+		 
+		
+		      </div>
+
+		
+		     </form>
+		
+		
+	  </div>
+</div>	
+		
+</div>		
+		
+
+
+<script type="text/javascript">
+$(function(){ 
+	var color = "{$tplrclist.color|default=''}";
+	if (color){
+		$("#buttonColor").val(color);
+	    $("#viewButton").css("background-color", color);
+		$("#custom").spectrum('set',color); 
+		
+	}else{
+		$("#buttonColor").val("#173177");
+		$("#viewButton").css("background-color", "#173177");
+	}
+})
+$("#tp_id").change(function(){
+	 var tpId =  $(this).val();
+	 $.ajax({
+ 		     type: "POST",
+ 		     dataType:'json',
+ 		     url: '{:url('getTmplMsg')}',
+ 		     cache: false,
+ 		     data: {'tpId':tpId},
+ 		     success: function(data) {
+ 		    	 	if (data.code == 1) {
+ 		    	   
+	 		    	}else{
+	 		    		 alert(data.msg);
+	 		    		
+	 		    	} 
+ 		     },
+ 		     error: function(data) {
+ 		    	 alert("提交失败");
+ 		     }
+ 		 })
+});
+//检查表单的必填项
+function checkform(){
+	 var tp_id = $("#tp_id").val();
+	 if (!tp_id) { 
+		 alert("请选择模板"); 
+	     return false; 
+	 }   
+	      
+	   
+      var wx_id = $("#wx_id").val();
+      if (!wx_id) { 
+    	  alert("请选择公众号"); 
+          return false; 
+       }   
+      
+      updata();
+
+}
+
+   function updata(){
+   	   var href = window.location.href;
+   		 $.ajax({
+   		     type: "POST",
+   		     dataType:'json',
+   		     url: href,
+   		     cache: false,
+   		     data: $("#form").serialize(),
+   		     success: function(data) {
+   		    	 if (data.code == 1) {
+   		    	     alert(data.msg + ' 页面即将自动跳转~');
+   		    	     location.href = data.url;
+   		    	}else{
+   		    		 alert(data.msg);
+   		    		 location.href = data.url;
+   		    	} 
+   		     },
+   		     error: function(data) {
+   		    	 alert("提交失败");
+   		     }
+   		 }) 
+   }
+   
+$("#custom").spectrum({
+	color: "#173177",
+	showInput: true,
+	showAlpha: true,
+	change: updateBorders,	
+	preferredFormat: "hex",
+});
+
+function updateBorders(color){
+	if(color) {
+        hexColor = color.toHexString();
+    }
+    $("#viewButton").css("background-color", hexColor);
+    $("#buttonColor").val(hexColor);
+}
+
+</script>
+
+
+
+{/block}
+

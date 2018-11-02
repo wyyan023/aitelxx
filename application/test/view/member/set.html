@@ -1,0 +1,124 @@
+{extend name="public/base" /}
+{block name="body"}
+
+<!-- datepicker statr -->
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+
+<style type="text/css">
+.textwidth{
+width:250px;
+}
+.nav-tabs {
+background: #ffffff;
+}
+.nav-tabs {
+border-bottom: 1px solid #ddd;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+color: #555;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+.panel-default>.panel-heading {
+background-color: #FFFFFF;
+border-color: #FFFFFF;
+color: #FFFFFF;
+border-radius: 0;
+background-clip: padding-box;
+}
+.margintop{
+margin-top:20px;
+}
+</style>
+     
+<div class="row">
+<div class="col-lg-12">
+	
+  
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <header class="main-box-header clearfix">
+		   <div class="pull-left">
+			  <h1><span>{$current|default=''}</span>会员设置</h1>
+		   </div>
+		</header>
+     </div>
+     <div class="panel-body">
+	   
+	    <div class="main-box-body clearfix">
+	        <form id="form" method="post" class="form-horizontal margintop" enctype="multipart/form-data" >	
+	    
+	           <div class="tab-content">
+					    <div class="form-group">
+							<label class="col-lg-2 control-label">注册奖励：</label>
+							<div class="col-lg-10 col-sm-10">
+								<input type="text" class="form-control textwidth" name="reg_reward" id="reg_reward" value="{$set.reg_reward|default='0'}" />
+							</div>
+					    </div>
+					 
+ 							<div class="form-group">
+								<label class="col-lg-2 control-label">邀请奖励：</label>
+								<div class="col-lg-10 col-sm-10">
+										<label class="control-label">一级奖励</label>
+		 					  		<input type="text" class="form-control textwidth" name="invite_reward1"  value="{$set.invite_reward_l1|default='0'}" />
+		 					    	<label class="control-label">二级奖励</label>
+		 					    	<input type="text" class="form-control textwidth" name="invite_reward2"  value="{$set.invite_reward_l2|default='0'}" />
+		 					     	<label class="control-label">三级奖励</label>
+		 					     	<input type="text" class="form-control textwidth" name="invite_reward3"  value="{$set.invite_reward_l3|default='0'}" />
+								</div>
+					    </div>
+					    
+							<div class="form-group">
+								<div class="col-lg-offset-2 col-lg-10">	
+									<input type="hidden"  id="act" name="act" value="{$act|default='insert'}" />
+
+									<button class="btn btn-success submit-btn" onclick="checkform();" type="button">确 定</button>
+									<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+								</div>
+						 	</div>
+					  </div>
+		     </form>
+	     </div>
+		
+	  </div>
+</div>
+<script>
+//检查表单的必填项
+function checkform(){
+	 var act = $("#act").val();
+	 $.ajax({
+	     type: "POST",
+	     dataType:'json',
+	     url: "{:url('member/set')}",
+	     cache: false,
+	     data: $("#form").serialize(),
+	     success: function(data) {
+	    	if (data.code == 0) {
+	    	     alert('保存成功！');
+	    	     if (act == 'insert'){
+	    	     		$("#act").val('update');
+	    	     }
+	    	 	
+	    	}else{
+	    		 alert(data.msg);	    		
+	    	}
+		
+	     },
+	     error: function(data) {
+	    	 alert("提交失败");
+	     }
+	 })  
+}
+</script>					
+
+
+</div>
+
+</div>
+
+{/block}
+

@@ -1,0 +1,351 @@
+{extend name="public/base" /}
+{block name="body"}
+<style type="text/css">
+.thisvalue{
+font-size:16px;
+color:green;
+margin-left:15px;
+}
+.table_main{
+width:90%;
+padding:5px; 
+margin:0 auto;
+}
+.table_left{
+width:50%;
+text-align:right;
+padding:3px;
+}
+
+.table_main table tbody tr td{
+width:11%;
+text-align:right;
+border: 1px solid green;
+padding: 8px;
+}
+.table_main table tbody tr .righttd{
+text-align:left;
+margin-left:5px;
+}
+.table_main table thead tr th {
+border: 1px solid green;
+padding: 8px
+}
+</style>
+
+<div class="row">
+<div class="col-lg-12">
+  <div class="main-box clearfix"> 
+    <header class="main-box-header clearfix">
+      <div class="pull-left">
+        <h1>任务详细信息</h1>
+      </div>
+    </header>
+       <section class="main-box-header clearfix">
+           <div class="pull-right" style="margin-right:43px;">
+               <button class="btn btn-primary" onclick="goback();" type="button">返回</button>  
+           </div> 
+       </section> 
+         <div class="table-responsive" style="width:100%;">
+         
+       <div class="table_main">
+          <table>
+          <!--  <thead>
+              <tr>
+                 <th class="table_left">字段</th> <th><span style="color:green;margin-left:15px;">值</span></th>
+              </tr>
+            </thead> -->
+           <tbody>
+            
+                <tr class="info">
+                  <td>任务编号（id）</td>
+                  <td colspan="7" class="righttd">
+                    <span class="thisvalue">{$list.id}</span>
+                  </td>
+                </tr>
+                  
+                <tr class="info">
+                  <td>派送人id</td>
+                  <td class="righttd" colspan="3">
+                    <span class="thisvalue">{$list.express_id}</span>
+                  </td>
+                  
+                  <td>派送人姓名</td>
+                  <td colspan="3" class="righttd">
+                    <span class="thisvalue">{$list.expusername}</span>
+                  </td>
+                </tr>
+                <tr class="info">
+                  <td>发货人id</td>
+                  <td  class="righttd">
+                    <span class="thisvalue">{$list.from_memer_id}</span>
+                  </td>
+                   <td>发货人姓名</td>
+                  <td class="righttd">
+                    <span class="thisvalue">{$list.serusername}</span>
+                  </td>
+                   <td>发货地址</td>
+                  <td class="righttd">
+                    <span class="thisvalue">{$list.from}</span>
+                  </td>
+                   <td>发货人电话</td>
+                  <td class="righttd">
+                   <span class="thisvalue">{$list.from_mobile}</span>
+                  </td>
+                </tr>
+
+                <tr class="info">
+                  <td>收件人地址</td>
+                  <td class="righttd"  colspan="3">
+                    <span class="thisvalue">{$list.to}</span>
+                  </td>
+              
+                  <td>收件人电话</td>
+                  <td colspan="3" class="righttd">
+                  <span class="thisvalue">{$list.to_mobile}</span>
+                  </td>
+                </tr>
+                 <tr class="info">
+                  <td>物品类型</td>
+                  <td colspan="7" class="righttd">
+                    <span class="thisvalue">{$list.goods_type}</span>
+                  </td>
+                </tr>
+                <tr class="info">
+                  <td>配送类型</td>
+                  <td colspan="7" class="righttd">
+                    <span class="thisvalue">
+                       {switch name="$list.distribution_type|default='0'" }
+                        {case value="1"}当日达{/case} 
+                        {default /}即时达
+                      {/switch}
+                    </span>
+                  </td>
+                </tr>
+                 <tr class="info">
+                  <td>订单所属的城市</td>
+                  <td colspan="7" class="righttd">
+                    <span class="thisvalue">{$list.city}</span>
+                  </td>
+                </tr>
+                 <tr class="info">
+                  <td>物品重量</td>
+                  <td colspan="7" class="righttd">
+                    <span class="thisvalue">{$list.weight}&nbsp;(公斤)</span>
+                  </td>
+                </tr>
+                <tr class="info">
+                  <td>物品数量</td>
+                  <td colspan="7" class="righttd">
+                    <span class="thisvalue">{$list.number}&nbsp;(件)</span>
+                  </td>
+                </tr>
+                <tr class="info">
+                  <td>总路程</td>
+                  <td colspan="7" class="righttd">
+                    <span class="thisvalue">{$list.distance}&nbsp;公里</span>
+                  </td>
+                </tr>
+                <tr class="info">
+                  <td>备注信息</td>
+                  <td  colspan="7" class="righttd">
+                   <span class="thisvalue">{$list.remark}</span>
+                  </td>
+                </tr>
+                 <tr class="info">
+                  <td>状态</td>
+                  <td  colspan="7" class="righttd">
+                    <span class="thisvalue">
+                     {eq name="$list.status" value="-1"}已取消订单{/eq}
+                     {eq name="$list.status" value="1"}已发布{/eq}
+                     {eq name="$list.status" value="2"}已接单{/eq}
+                 {eq name="$list.status" value="3"}已收件派送中{/eq}
+                 {eq name="$list.status" value="4"}已签收完成{/eq}
+                 </span>
+                   </td>
+                </tr>
+                 <tr class="info">
+                  <td>订单取消人</td>
+                  <td  colspan="7" class="righttd">
+                    <span class="thisvalue">
+                      {$list.cancelname}
+                    </span>
+                   </td>
+                </tr>
+                 <tr class="info">
+                  <td>快递类型</td>
+                   <td colspan="7" class="righttd">
+                    <span class="thisvalue">
+                     {eq name="$list.express_type" value="1"}送货{/eq}
+                 {eq name="$list.express_type" value="2"}取货{/eq}
+                 {eq name="$list.express_type" value="3"}物流{/eq}
+                 </span>
+                   </td>
+                </tr>
+                 <tr class="info">
+                  <td>总价格</td>
+                   <td  colspan="7" class="righttd">
+                     <span class="thisvalue">
+                      {$list.total_money}
+                      </span>
+                   </td>
+                </tr>
+                <tr class="info">
+                  <td>支付方式</td>
+                   <td  colspan="7" class="righttd">
+                     <span class="thisvalue">
+                      {switch name="$list.wx_pay|default='0'" }
+                        {case value="1"}微信支付{/case} 
+                        {case value="2"}支付宝支付{/case} 
+                        {case value="3"}余额支付{/case} 
+                        {case value="4"}货到付款{/case} 
+                        {default /}
+                      {/switch}
+                      </span>
+                   </td>
+                </tr>
+                <tr class="info">
+                  <td>商品价格</td>
+                   <td  colspan="7" class="righttd">
+                     <span class="thisvalue">
+                      {$list.goods_price}
+                      </span>
+                   </td>
+                </tr>
+                 <tr class="info">
+                  <td>优惠卷id</td>
+                   <td  colspan="7" class="righttd">
+                     <span class="thisvalue">
+                      {$list.card_id}
+                      </span>
+                   </td>
+                </tr>
+                 <tr class="info">
+                  <td>实付金额</td>
+                   <td  colspan="7" class="righttd">
+                     <span class="thisvalue">
+                      {$list.real_pay_money}
+                      </span>
+                   </td>
+                </tr>
+                 <tr class="info">
+                  <td>实付金额</td>
+                   <td  colspan="7" class="righttd">
+                      <span class="thisvalue">
+                        {$list.real_pay_money}
+                      </span>
+                   </td>
+                </tr>
+                 <tr class="info">
+                  <td>物品图片</td>
+                   <td  colspan="7" class="righttd">
+                      {notempty name="$list.imglist"}
+                       {volist name="$list.imglist" id="vo"}
+                       <span class="thisvalue">
+                          <img style="max-width:200px;" src="{$vo}" />
+                        </span>
+                       {/volist}
+                      {/notempty}
+                   </td>
+                </tr>
+                 <tr class="info">
+                  <td>收件图片</td>
+                   <td  colspan="7" class="righttd">
+                      {notempty name="$list.goods_img"}
+                      
+                       <span class="thisvalue">
+                          <img style="max-width:200px;" src="{$list.goods_img}" />
+                        </span>
+                     
+                      {/notempty}
+                   </td>
+                </tr>
+                 <tr class="info">
+                  <td>收货图片</td>
+                   <td  colspan="7" class="righttd">
+                      {notempty name="$list.goods_receipt_img"}
+                      
+                       <span class="thisvalue">
+                          <img style="max-width:200px;" src="{$list.goods_receipt_img}" />
+                        </span>
+                      {/notempty}
+                     
+                   </td>
+                </tr>
+                <tr class="info">
+                  <td>收货验证码</td>
+                   <td colspan="7" class="righttd">
+                     <span class="thisvalue">
+                     {$list.goods_receipt_code}
+                     </span>
+                   </td>
+                </tr>
+              
+                
+                 <tr class="info">
+                  <td>星级</td>
+                   <td colspan="7" class="righttd">
+                     <span class="thisvalue">
+                     {$list.score}
+                     </span>
+                   </td>
+                </tr>
+                <tr class="info">
+                  <td>评价</td>
+                   <td  colspan="7" class="righttd">
+                   <span class="thisvalue">
+                     {$list.rate}
+                     </span>
+                   </td>
+                </tr>
+                 <tr class="info">
+                  <td>物流车吨位类型</td>
+                   <td  colspan="7" class="righttd">
+                    <span class="thisvalue">
+                     {$list.car_type}
+                    </span>
+                   </td>
+                </tr>
+                <tr class="info">
+                  <td>保单金额</td>
+                   <td  colspan="7" class="righttd">
+                   <span class="thisvalue">
+                     {$list.insurance}
+                     </span>
+                   </td>
+                </tr>
+                <tr class="info">
+                  <td>快递预约时间</td>
+                   <td  colspan="7" class="righttd">
+                   <span class="thisvalue">
+                     {$list.scheduled_time}
+                     </span>
+                   </td>
+                </tr>
+                 <tr class="info">
+                  <td>下单时间</td>
+                   <td  colspan="7" class="righttd">
+                   <span class="thisvalue">
+                     {$list.create_time}
+                     </span>
+                   </td>
+                </tr>
+            </tbody>
+          </table>
+       </div>  
+    </div>
+          
+  </div>          
+    
+</div>
+
+ <script type="text/javascript">
+  function goback(){
+    window.location.href="{:url('index')}";
+  }
+ </script>
+  
+</div>
+
+{/block}
+

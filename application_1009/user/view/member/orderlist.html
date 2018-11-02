@@ -1,0 +1,144 @@
+{extend name="public/base" /}
+{block name="body"}
+<style type="text/css">
+.statusSelect{
+line-height:33px;
+float:left;
+}
+.topbot{
+margin-top:5px;
+}
+.phonebox{
+width:150px;
+}
+.SplitLine{
+height:10px;
+line-height:30px;
+background-color:#FBFBFB;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+.table-hover>tbody>tr:hover {
+background-color: #f5f5f5;
+}
+.table tbody>tr>td {
+padding: 12px 4px;
+}
+</style>
+<link href="__PUBLIC__/plugs/datepicker/css/foundation-datepicker.min.css" rel="stylesheet" type="text/css">
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.js"></script>
+<script src="__PUBLIC__/plugs/datepicker/js/foundation-datepicker.zh-CN.js"></script>
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		<header class="main-box-header clearfix">
+		  <div class="pull-left">
+			  <h1>我的订单</h1>
+		  </div>
+		</header>
+
+		<div class="main-box-body clearfix">
+		
+		     <div class="SplitLine"></div>
+		     
+			  <div class="table-responsive">
+			  
+				  <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					      
+					        <th class="text-center">订单编号</th>
+					        <th class="text-center">发货地址</th>
+					        <th class="text-center">收货地址</th>
+					        <th class="text-center">总金额</th>
+					        <th class="text-center">订单状态</th>
+					        <th class="text-center">订单类型</th>
+					        <th class="text-center">快递预约时间</th>
+					        <th class="text-center">下单时间</th>
+					        <th class="text-center">发货人ID</th>
+					   
+					    </tr>
+				    </thead>
+				   <tbody>
+				        {volist name="orderList" id="list"}
+                              <tr>
+                                 
+                                 <td class="text-center">{$list.id}</td>
+                                  <td class="text-center">{$list.from}</td>
+                                 <td class="text-left">
+                                 	
+                                 	 {switch name="$list.express_type|default='0'" }
+				                        {case value="3"}
+						                       {$list.to}
+				                        {/case} 
+				                        {default /}
+				                          {volist name="$list.to" id="vo"}
+				                              {$vo.address} 
+				                              <br/>
+					                      {/volist}
+				                        
+				                     {/switch}
+                                 	
+                                 </td>
+                                 <td class="text-center">{$list.total_money}</td>
+                                 <td class="text-center"> 
+                                   {switch name="$list.status" }
+									    {case value="0"}下单但是未付款{/case}
+									    {case value="1"}已发布{/case}
+									    {case value="2"}已接单{/case}
+									    {case value="3"}已收件派送中{/case}
+									    {case value="4"}已签收完成{/case}
+									    {default /}取消订单
+									{/switch}
+                                 </td>
+                                 <td class="text-center"> 
+                                    {switch name="$list.express_type" }
+									    {case value="1"}同城快递{/case}
+									    {case value="2"}专线{/case}
+									    {case value="3"}物流信息发布{/case}
+									    {default /}捎带
+									{/switch}
+                                 </td>
+                                 <td class="text-center">{$list.scheduled_time}</td>
+                                
+                                 <td class="text-center">{$list.create_time}</td>
+                                  <td class="text-center">
+                                    {$list.from_memer_id}
+                                 </td>
+                                
+                             </tr>
+                         {/volist}
+
+                       </tbody>
+				  </table>
+				   <div class="row">
+                        <div class="col-sm-4 text-left">
+                           <table class="table table-bordered table-hover" style="margin-bottom: 0px; ">
+                               <tr>
+                                 <td class="text-center">订单总数：
+                                 </td>
+                                 <td class="text-center">{$total}&nbsp;
+                                 </td>
+                                
+                               </tr> 
+                          </table>                                        
+                        </div>
+                        <div class="col-sm-8 text-right">{$page}</div>
+                    </div>
+			  </div>
+	
+		</div>
+					
+	</div>					
+    
+</div>
+
+ <script type="text/javascript">
+
+ </script>
+  
+</div>
+
+{/block}

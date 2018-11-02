@@ -1,0 +1,540 @@
+{extend name="public/base" /}
+{block name="body"}
+   
+<script type="text/javascript" src="__PUBLIC__/plugs/layer/layer.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugs/layer/theme/default/layer.css" />
+
+<style type="text/css">
+.table tbody>tr>td {
+padding: 6px 8px;
+}
+.table-responsive {
+min-height: .01%;
+overflow-x: hidden;
+}
+
+.messageinfo{
+ text-align:right;
+ 
+}
+.infotable tr td{
+ padding:5px;
+}
+</style>
+
+<div class="row">
+<div class="col-lg-12">
+	<div class="main-box clearfix">	
+		
+		<header class="main-box-header clearfix">
+		  <div class="pull-left">
+			  <h1>司机管理</h1>
+			  <a class="btn btn-primary" href="{:url('addDriver')}">新增司机</a>
+		  </div>
+		</header>
+		
+		 
+		<div class="main-box-body clearfix">
+		
+	        <section class="navbar navbar-default main-box-header clearfix">
+	         <div class="pull-right">
+			   <form class="form-inline"  method="get" role="form">
+			     
+				     <div class="form-group">
+					    <label>会员编号：</label>
+					    <input type="text" class="form-control" style="width:150px;" id="uid" name="uid" placeholder="请输入会员编号">
+					  </div>&nbsp;
+				
+					  <div class="form-group">
+					    <label>手机号码：</label>
+					    <input type="text" class="form-control" style="width:200px;" id="mobile" name="mobile" placeholder="请输入手机号码">
+					  </div>&nbsp;&nbsp;
+					  
+					 	  <div class="form-group"> 
+				          <label class="statusSelect">状态：</label>
+				          <select style="width:100px;" name="status" id="status" class="form-control">
+				            <option value=" " selected="">全部</option>
+				            <option value="0">禁用</option>
+				            <option value="1">启用</option>
+				            <option value="2">下班</option>
+				          </select>
+			         </div>&nbsp;&nbsp;
+			         
+			         <div class="form-group"> 
+				          <label class="statusSelect">审核状态：</label>
+				          <select style="width:100px;" name="audited" id="audited" class="form-control">
+				            <option value=" " selected="">全部</option>
+				            <option value="0">未通过</option>
+				            <option value="1">审核中</option>
+				            <option value="2">审核通过</option>
+			
+				          </select>
+			         </div>&nbsp;&nbsp;
+					  
+				  
+				  
+			    <button class="btn btn-primary" type="submit">搜索</button>
+			  </form>
+			 </div>
+		   </section>
+
+		     <div style="height:10px;line-height:30px;background-color:#FBFBFB;"></div>
+		     
+			  <div class="table-responsive">
+			  
+				  <table class="table table-bordered table-hover">
+				   <thead>
+					    <tr>
+					        <th class="text-center"></th>
+					        <th class="text-center">编号</th>
+					        <th class="text-center">头像</th>
+					        <th class="text-center">昵称</th>
+					        <th class="text-center">真实姓名</th>
+					        <th class="text-center">手机号</th>
+					        
+					        <th class="text-center">注册时间</th>
+					        <th class="text-center">内部员工</th>
+					     
+					        <th class="text-center">车长</th>
+					        <th class="text-center">车型</th>
+					        <th class="text-center">车号</th>  
+					        <th class="text-center">状态</th>
+					        <th class="text-center">审核状态</th>
+					        <th class="text-center">余额</th>
+					          
+					        <th class="text-center">操作</th> 
+					        
+					    </tr>
+				    </thead>
+				   <tbody>
+				      {volist  name="list" id="vo"}
+				        <tr>
+					     <td class="text-center"><input type="checkbox" name="driverids" class="driverids" value="{$vo.uid}"/></td>
+					     
+				          <td class="text-center">{$vo.uid}</td>
+				          <td class="text-center">
+				          	
+				          	{notempty name="$vo.headpicture"}
+							 	<img style="width:50px" src="{$vo.headpicture|default=""}" />
+				          	
+							{/notempty}
+				         
+				          </td>
+				          <td class="text-center">{$vo.nickname}</td>
+				          <td class="text-center">{$vo.real_name}</td>
+				          <td class="text-center">{$vo.mobile}</td>
+				  
+				          <td class="text-center">{$vo.reg_time}</td>
+				          <td class="text-center">
+						    {switch name="$vo.employee" }
+							    {case value="1"}
+                                  <a href="javascript:void(0);" onclick="changeemployee('{$vo.uid}',0);">是</a>
+							    {/case}
+							    {default /}
+                                  <a href="javascript:void(0);" onclick="changeemployee('{$vo.uid}',1);">否</a>
+							   {/switch}
+					      </td>		
+				        
+				           <td class="text-center">{$vo.vehicle_size}</td>
+				           <td class="text-center">{$vo.vehicle_type}</td>
+				           <td class="text-center">{$vo.vechicle_plate_number}</td>
+				           
+				           <td class="text-center">
+							    {switch name="$vo.status" }
+							        {case value="0"}
+	                                  <a href="javascript:void(0);" onclick="changestatus('{$vo.uid}',1);">禁用</a>
+								    {/case}
+								   
+								    {default /}
+	                                  <a href="javascript:void(0);" onclick="changestatus('{$vo.uid}',0);">启用</a>
+								{/switch}
+					       </td>		
+				           
+				          <td class="text-center">
+						    {eq name="$vo.Audited" value="0" }未通过{/eq}
+						    {eq name="$vo.Audited" value="1" }审核中{/eq}
+						    {eq name="$vo.Audited" value="2" }通过{/eq}
+						  </td>
+						   <td class="text-center">{$vo.money}</td>
+						  
+				          <td class="text-center">
+				           <a href="{:url('editDriver',['id'=>$vo.uid])}">编辑</a>
+				           <a href="javascript:void(0);" onclick="deldrivers('{$vo.uid}');">删除</a>
+                           <a href="{:url('orderList',['id'=>$vo.uid])}">我的订单</a>
+                           <a href="javascript:void(0);" onclick="showModal('{$vo.uid}');">审核</a>
+				          </td>
+				        </tr>
+		              {/volist}
+				    </tbody>
+				  </table>
+				  
+				    <div class="row">
+                        <div class="col-sm-4 text-left">
+                          <div class="pull-left">
+						    	<input class="check-all" onclick="allcheck();" type="checkbox"/>全选
+								<button class="btn btn-primary" onclick="deldrivers(0);" target-form="ids">删 除</button>
+							</div>
+                        </div>
+                        <div class="col-sm-8 text-right">{$page}</div>
+                    </div>
+				  
+			  </div>
+		
+			  
+			   <div class="row">
+		   	
+                     <div class="col-sm-4 text-left">
+                 	
+                      <table class="table table-bordered table-hover" style="margin-bottom: 0px; ">
+                           <tr>
+                             <td class="text-center">司机总数：
+                             </td>
+                             <td class="text-center">{$total}
+                             </td>
+                             
+                             <td class="text-center">总金额：
+                             </td>
+                             <td class="text-center">{$sum}
+                             </td>
+                             
+                           </tr> 
+                      </table>  
+                     
+                 </div> 
+                  
+                      <div class="col-sm-8 text-left"></div>
+               </div>
+		
+		</div>
+					
+	</div>					
+    
+</div>
+
+ <script type="text/javascript">
+ $(function(){
+		
+
+  
+  var mobile = "{$_GET['mobile']|default=''}";
+  $('#mobile').val(mobile);
+  
+  var uid = "{$_GET['uid']|default=''}";
+  $('#uid').val(uid);
+  
+  var status = "{$_GET['status']|default=' '}";
+  $('#status').val(status);
+  
+  var audited = "{$_GET['audited']|default=' '}";
+  $('#audited').val(audited);
+  
+  
+}) 
+
+//修改状态
+function changestatus(id,status){
+
+     var ids=[];
+
+  	if(id){
+ 		ids.push(id);
+ 	}else{
+ 		
+     	 var roleids = document.getElementsByName("userids");
+ 		 for ( var j = 0; j < roleids.length; j++) {
+ 		    if (roleids.item(j).checked == true) {
+ 		    	ids.push(roleids.item(j).value);
+ 		    }
+ 		 }
+ 	}
+ 
+ 	if(!ids.length){
+ 		alert("至少选择一条。");
+ 		 return false; 
+ 	}
+
+	$.post("{:url('memberStatus')}",{'mem_id':ids,'status':status},function(data){
+		if(data){
+			alert(data);
+		}else{
+			window.location.href=window.location.href;
+		}
+	}); 
+}
+
+
+
+//修改为是否内部员工
+function changeemployee(id,employee){
+
+     var ids=[];
+
+  	if(id){
+ 		ids.push(id);
+ 	}else{
+ 		
+     	 var roleids = document.getElementsByName("userids");
+ 		 for ( var j = 0; j < roleids.length; j++) {
+ 		    if (roleids.item(j).checked == true) {
+ 		    	ids.push(roleids.item(j).value);
+ 		    }
+ 		 }
+ 	}
+ 
+ 	if(!ids.length){
+ 		alert("至少选择一条。");
+ 		 return false; 
+ 	}
+
+	$.post("{:url('memberEmployee')}",{'mem_id':ids,'employee':employee},function(data){
+		if(data){
+			alert(data);
+		}else{
+			window.location.href=window.location.href;
+		}
+	}); 
+}
+//删除司机
+ function deldrivers(id){
+    var r=confirm('确认删除?');
+     	if (!r) 
+           return; 
+     	
+     	   var ids;
+ 	    	if(id){
+ 	    		var Ids=[];
+ 	    		Ids.push(id);
+ 	    		ids = Ids;
+ 	    	}else{
+ 	    		 var IdsVal = [];
+ 	        	 var roleids = document.getElementsByName("driverids");
+ 	    		 for ( var j = 0; j < roleids.length; j++) {
+ 	    		    if (roleids.item(j).checked == true) {
+ 	    		    	IdsVal.push(roleids.item(j).value);
+ 	    		    }
+ 	    		 }
+ 	    		 ids = IdsVal;
+ 	    	}
+ 		
+ 	    	if(!ids.length){
+ 	    		alert("至少选择一条。");
+ 	    		 return false; 
+ 	    	}
+ 	    	
+     		 $.post("{:url('delDriver')}",{'driverids':ids},function(data){
+ 				if(data){
+ 					alert(data);
+ 				}else{
+ 					window.location.href=window.location.href;
+ 				}
+ 				
+ 			}); 
+     
+
+ }
+//全选
+ function allcheck(){			
+ 	if ($('.check-all').is(":checked")) {	
+ 		$('.driverids').prop("checked","checked");
+ 	}else{
+ 		$('.driverids').prop("checked",false);
+ 	}
+
+ }
+  
+ </script>
+ 
+</div>
+
+<!-- Large modal -->
+
+<div class="modal fade bs-checkpage-modal-lg" id="checkpage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">审核的信息</h4>
+       </div>
+       <div class="modal-body pagelists">
+          <div class="pull-center" style="font-size:14px;">
+            <table class="infotable">
+              <tr>
+               <td class="messageinfo">是否通过：</td><td><span id="ready"></span></td>
+              </tr>
+              <tr>
+               <td class="messageinfo">用户名：</td><td><span id="realName"></span></td>
+              </tr>
+               <tr>
+               <td class="messageinfo">真实姓名：</td><td><span id="real_name"></span></td>
+              </tr>
+              <tr>
+               <td class="messageinfo">手机号码：</td><td><span id="realPhone"></span></td>
+               </tr>
+               <tr>
+               <td class="messageinfo">身份证号码：</td><td><span id="userId"></span></td>
+               </tr>
+               
+                <tr>
+                  <td class="messageinfo">车长：</td>
+                  <td>
+               	     <span id="vehicle_size"></span>
+                  </td>
+               </tr>
+               
+               <tr>
+                  <td class="messageinfo">车型：</td>
+                  <td>
+               	     <span id="vehicle_type"></span>
+                  </td>
+               </tr>
+               <!--
+               <tr>
+               <td class="messageinfo">身份证图像：</td><td><img style="max-width:100px;" onclick="getbig(this)" id="userIdPic" src="" /></td>
+              </tr>
+              
+              <tr>
+               <td class="messageinfo">图像一：</td><td><img style="max-width:100px;" onclick="getbig(this)" id="business_card_pic" src="" /></td>
+              </tr>
+              <tr>
+               <td class="messageinfo">图像二：</td><td><img style="max-width:100px;" onclick="getbig(this)" id="card_bg_pic" src="" /></td>
+              </tr>
+              <tr>
+               <td class="messageinfo">身份证图像2</td><td><img style="max-width:100px;" onclick="getbig(this)" id="id_card_pic2" src="" /></td>
+              </tr>
+              -->
+             
+              
+               <tr>
+                   <td class="messageinfo">驾驶证：</td>
+	               <td>
+	               	<img style="max-width:100px;" onclick="getbig(this)" id="vehicle_license_pic" src="" />
+	               </td>
+               </tr>
+               <tr>
+               <td class="messageinfo">行驶证：</td><td><img style="max-width:100px;" onclick="getbig(this)" id="vehicle_driving_pic" src="" /></td>
+              </tr>
+              
+               <tr>
+               <td class="messageinfo">车辆图片：</td><td><img style="max-width:100px;" onclick="getbig(this)" id="vehicle_pic_pic" src="" /></td>
+              </tr>
+              
+               
+                <tr>
+                   <td class="messageinfo">备注：</td>
+	               <td>
+	               	  <textarea id="remarks" style="width: 250px;height:auto"></textarea>
+	               </td>
+                </tr>
+        
+            </table>
+		    <input type="hidden" name="uid" id="Uid" value="" /> 
+		    <input type="hidden" name="Audited" id="Audited" value="" /> 
+		 </div>
+       </div>
+       <div style="clear:both"></div>
+      <div class="modal-footer">
+       <div style="width:190px;margin:0 auto;">
+          <button type="button" onclick="Savechange(2);" class="btn btn-primary">通过</button>
+           <button type="button" onclick="Savechange(0);" class="btn btn-primary">不通过</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+       </div>
+     
+      </div>
+    </div>
+           
+    </div>
+   
+      <script type="text/javascript">
+	      
+	      function showModal(id){
+	    	  $("#Uid").val(id);
+	    	  var url = "{:url('getMessage')}";	
+	    		 $.ajax({
+	    		        url : url,
+	    		        dataType : "json", 
+	    		        type : "post",
+	    		        data : {'driver':id},
+	    		        success: function(data){	
+	    		        	 $("#ready").text(data.audited_status); 
+	    		             $("#realName").text(data.username); 
+	    		             $("#real_name").text(data.real_name); 
+	    		             
+	    		             $("#realPhone").text(data.mobile); 
+	    		             $("#userId").text(data.id_card); 
+	                        // $("#userIdPic").attr("src", data.id_card_pic);
+	                         $("#Uid").val(data.uid);
+	                         $("#Audited").val(data.Audited);
+	                         
+	                        // $("#business_card_pic").attr("src", data.business_card_pic);
+                           //  $("#card_bg_pic").attr("src", data.card_bg_pic);
+                             
+                            // $("#id_card_pic2").attr("src", data.id_card_pic2);
+                            
+                             $("#vehicle_pic_pic").attr("src", data.vehicle_pic_pic);
+                             $("#vehicle_driving_pic").attr("src", data.vehicle_driving_pic);
+                             $("#vehicle_license_pic").attr("src", data.vehicle_license_pic);
+	                         $("#vehicle_size").text(data.vehicle_size); 
+	    		             $("#vehicle_type").text(data.vehicle_type); 
+	    		             
+                             $("#remarks").text(data.reasons);
+                             
+	    		             $('#checkpage').modal('show')
+	    		        },
+	    		        error : function() {
+	    		        	alert('审核信息失败。');
+	    		        }
+	    		  });
+	    	
+	      }
+	     
+	       //审核通过
+		  function Savechange(status){	
+	    	     var uid = $("#Uid").val();
+	    	     var remarks = $("#remarks").val();
+	    	   
+	    	     var url = "{:url('setPass')}";	
+	    		 $.ajax({
+	    		        url : url,
+	    		        type : "post",
+	    		        data : {'uid':uid,'Audited':status,remarks:remarks},
+	    		        success: function(data){	
+	    		        	$('#checkpage').modal('hide')
+	    		        	if(data){
+	    		        		alert(data);
+	    		        	}else{
+	    		        		location.reload();
+	    		        	}
+	    		        
+	    		        },
+	    		        error : function() {
+	    		        	alert('审核失败。');
+	    		        }
+	    		  });
+		  }	
+	      
+         //图片放大预览
+		  function getbig(obj) {
+		       var text = $(obj).attr('src');
+		
+			    // alert(text);
+			    layer.open({
+			        type: 1,
+			        title: false,
+			        closeBtn: 0,
+			        area: '400px',
+			        skin: 'layui-layer-nobg', //没有背景色
+			        shadeClose: true,
+			        content: "<img src='" + text + "' width='100%' height='100%'>"
+			    });
+		  }
+		
+		
+	    
+      </script>
+      
+   
+  </div>
+{/block}
+
